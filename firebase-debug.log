@@ -1,0 +1,25 @@
+[debug] [2024-10-03T16:39:14.109Z] ----------------------------------------------------------------------
+[debug] [2024-10-03T16:39:14.111Z] Command:       /usr/local/bin/firebase /Users/beckhamlam/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase init
+[debug] [2024-10-03T16:39:14.111Z] CLI Version:   13.20.2
+[debug] [2024-10-03T16:39:14.111Z] Platform:      darwin
+[debug] [2024-10-03T16:39:14.112Z] Node Version:  v18.5.0
+[debug] [2024-10-03T16:39:14.118Z] Time:          Thu Oct 03 2024 12:39:14 GMT-0400 (Eastern Daylight Time)
+[debug] [2024-10-03T16:39:14.118Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-03T16:39:14.237Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-03T16:39:14.238Z] > authorizing via signed-in user (liemlam73@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/beckhamlam/Downloads/CS2340/CS2340C_Team6/Project/Sprint0.5-main
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
