@@ -1,138 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.MainActivity"
-    android:background="#4F474D">
+    android:background="#4F474D"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/company_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="WanderSync"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
     <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/logo"
         android:layout_marginTop="100dp"
-        app:layout_constraintTop_toTopOf="@+id/company_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/company_name" />
-    <EditText
-        android:id="@+id/username_edit"
-        android:layout_width="300dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/welcome_company_name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="username"
-        android:textColorHint="@android:color/black"
-        android:background="@android:color/darker_gray"
+        android:text="WanderSync"
+        android:textSize="50sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="75dp"
-        android:padding="10dp"
-        />
-    <EditText
-        android:id="@+id/password_edit"
-        android:layout_width="300dp"
+        android:gravity="center"/>
+    <TextView
+        android:id="@+id/welcome_compay_motto"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="password"
-        android:textColorHint="@android:color/black"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintTop_toBottomOf="@+id/username_edit"
+        android:text="Make Your Adventure"
+        android:textColor="@color/black"
+        android:textStyle="italic"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
-        />
+        app:layout_constraintTop_toBottomOf="@id/welcome_company_name"
+        android:gravity="center"/>
     <Button
-        android:id="@+id/login_button"
-        android:layout_width="0dp"
+        android:id="@+id/welcome_enter"
+        android:layout_width="300dp"
         android:backgroundTint="#432b4a"
         android:textColor="@android:color/white"
         android:layout_height="wrap_content"
-        app:layout_constraintWidth_percent="0.5"
-        android:text="Login"
-        app:layout_constraintTop_toBottomOf="@+id/password_edit"
+        android:text="Enter"
+        app:layout_constraintTop_toBottomOf="@+id/welcome_company_motto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="50dp"
         />
-
-    <!-- Logistics Button -->
     <Button
-        android:id="@+id/icon_logistics"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Logistics"
+        android:id="@+id/welcome_close"
+        android:layout_width="300dp"
+        android:backgroundTint="@color/cardview_dark_background"
         android:textColor="@android:color/white"
-        android:background="?attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/icon_destinations"
-        app:layout_constraintWidth_percent="0.2"/>
-
-    <!-- Destinations Button -->
-    <Button
-        android:id="@+id/icon_destinations"
-        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Destinations"
-        android:textColor="@android:color/white"
-        android:background="?attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon_logistics"
-        app:layout_constraintEnd_toStartOf="@+id/icon_dining"
-        app:layout_constraintWidth_percent="0.2"/>
-
-    <!-- Dining Establishments Button -->
-    <Button
-        android:id="@+id/icon_dining"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Dining"
-        android:textColor="@android:color/white"
-        android:background="?attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon_destinations"
-        app:layout_constraintEnd_toStartOf="@+id/icon_accommodations"
-        app:layout_constraintWidth_percent="0.2"/>
-
-    <!-- Accommodations Button -->
-    <Button
-        android:id="@+id/icon_accommodations"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Accommodations"
-        android:textColor="@android:color/white"
-        android:background="?attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon_dining"
-        app:layout_constraintEnd_toStartOf="@+id/icon_travel_community"
-        app:layout_constraintWidth_percent="0.2"/>
-
-    <!-- Travel Community Button -->
-    <Button
-        android:id="@+id/icon_travel_community"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Community"
-        android:textColor="@android:color/white"
-        android:background="?attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon_accommodations"
+        android:text="Close"
+        app:layout_constraintTop_toBottomOf="@+id/welcome_enter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.2"/>
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>
+
