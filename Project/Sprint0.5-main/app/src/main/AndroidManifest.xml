@@ -16,12 +16,23 @@
             android:name=".views.MainActivity"
             android:exported="false">
         </activity>
+<<<<<<< HEAD
         <activity android:name=".views.LoginActivity" android:exported="false">
 
         </activity>
 
         <activity android:name=".views.RegisterActivity" android:exported="false"></activity>
 
+=======
+        <activity
+            android:name=".views.CreateAccountActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".views.LogisticsActivity"
+            android:exported="false">
+        </activity>
+>>>>>>> origin/main
         <activity
             android:name=".views.SplashActivity"
             android:exported="true"
