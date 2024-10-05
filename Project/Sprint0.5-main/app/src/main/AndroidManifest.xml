@@ -16,6 +16,11 @@
             android:name=".views.MainActivity"
             android:exported="false">
         </activity>
+        <activity android:name=".views.LoginActivity" android:exported="false">
+
+        </activity>
+
+        <activity android:name=".views.RegisterActivity" android:exported="false"></activity>
 
         <activity
             android:name=".views.SplashActivity"

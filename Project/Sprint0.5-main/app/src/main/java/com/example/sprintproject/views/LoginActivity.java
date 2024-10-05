@@ -8,22 +8,17 @@ import android.widget.Button;
 
 import com.example.sprintproject.R;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
-        findViewById(R.id.welcome_enter).setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        findViewById(R.id.register_button).setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
-
-        });
-
-        findViewById(R.id.welcome_close).setOnClickListener(v -> {
             finish();
-            System.exit(0);
         });
     }
 }
