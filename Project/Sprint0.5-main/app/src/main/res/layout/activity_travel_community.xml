@@ -8,6 +8,8 @@
     tools:context=".views.TravelCommunityActivity"
     android:background="#4F474D"> <!-- Set background color -->
 
+    <include layout="@layout/header"/>
+
     <!-- Title TextView -->
     <TextView
         android:id="@+id/title_text"
@@ -20,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/> <!-- Adjust top margin as needed -->
+        android:layout_marginTop="75dp"/> <!-- Adjust top margin as needed -->
 
     <!-- Logistics Button -->
     <Button
