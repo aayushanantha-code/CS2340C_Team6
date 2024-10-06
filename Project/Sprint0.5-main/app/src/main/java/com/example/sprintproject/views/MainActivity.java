@@ -41,51 +41,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.welcome_close).setOnClickListener(v -> {
             finish();
             System.exit(0);
-
-            Button createAccountButton = findViewById(R.id.createAccount_button);
-
-            createAccountButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent createAccountIntent = new Intent(MainActivity.this, CreateAccountActivity.class);
-                    startActivity(createAccountIntent);
-                }
-            });
-
-            Button loginButton = findViewById(R.id.login_button);
-            EditText passwordInput = findViewById(R.id.password_edit);
-            EditText usernameInput = findViewById(R.id.username_edit);
-
-            loginButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String password = passwordInput.getText().toString().trim();
-                    String username = usernameInput.getText().toString().trim();
-
-                    //make sure fields aren't empty
-                    if (!password.isEmpty() && !username.isEmpty()) {
-
-                        userDatabase = FirebaseDatabase.getInstance().getReference();
-                        userDatabase.child("users").child(username).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                // Check if Username and Password match a User on Firebase
-                                if (dataSnapshot.exists() && dataSnapshot.getValue(User.class).getPassword().equals(password)) {
-                                    Intent loginIntent = new Intent(MainActivity.this, LogisticsActivity.class);
-                                    startActivity(loginIntent);
-                                } else {
-                                    // Add an error here (probably return some red text saying "Username/Password Incorrect"
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                // Failure
-                            }
-                        });
-                    }
-                }
-            });
         });
     }
 }
