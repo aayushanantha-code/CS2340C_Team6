@@ -4,13 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.widget.Button;
-=======
 import android.view.View;
 import android.widget.Button;
+
+
+
+
 import android.widget.EditText;
->>>>>>> origin/main
+
 
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.User;
@@ -29,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
+
+
         findViewById(R.id.welcome_enter).setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.welcome_close).setOnClickListener(v -> {
             finish();
             System.exit(0);
-=======
+
         Button createAccountButton = findViewById(R.id.createAccount_button);
 
         createAccountButton.setOnClickListener(new View.OnClickListener(){
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             }
->>>>>>> origin/main
+
         });
     }
 }
