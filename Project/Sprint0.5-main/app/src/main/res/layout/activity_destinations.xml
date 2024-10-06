@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.DestinationsActivity"
+    android:background="#4F474D"> <!-- Set background color -->
+
+    <!-- Title TextView -->
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Destinations Screen"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/> <!-- Adjust top margin as needed -->
+
+    <!-- Logistics Button -->
+    <Button
+        android:id="@+id/icon_logistics"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Logistics"
+        android:textColor="@android:color/white"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/icon_destinations"
+        app:layout_constraintWidth_percent="0.2"/>
+
+    <!-- Destinations Button -->
+    <Button
+        android:id="@+id/icon_destinations"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Destinations"
+        android:textColor="@android:color/white"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/icon_logistics"
+        app:layout_constraintEnd_toStartOf="@+id/icon_dining"
+        app:layout_constraintWidth_percent="0.2"/>
+
+    <!-- Dining Establishments Button -->
+    <Button
+        android:id="@+id/icon_dining"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Dining"
+        android:textColor="@android:color/white"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/icon_destinations"
+        app:layout_constraintEnd_toStartOf="@+id/icon_accommodations"
+        app:layout_constraintWidth_percent="0.2"/>
+
+    <!-- Accommodations Button -->
+    <Button
+        android:id="@+id/icon_accommodations"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Accommodations"
+        android:textColor="@android:color/white"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/icon_dining"
+        app:layout_constraintEnd_toStartOf="@+id/icon_travel_community"
+        app:layout_constraintWidth_percent="0.2"/>
+
+    <!-- Travel Community Button -->
+    <Button
+        android:id="@+id/icon_travel_community"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Community"
+        android:textColor="@android:color/white"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/icon_accommodations"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.2"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
