@@ -16,23 +16,17 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Find the ImageView
         ImageView logoImageView = findViewById(R.id.logo2);
 
-        // Load the rotation animation
         Animation rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_animation);
 
-        // Start the rotation animation on the logo
         logoImageView.startAnimation(rotateAnimation);
 
-        // Handler to transition to MainActivity after SPLASH_DURATION
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Start MainActivity
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
-                // Finish SplashActivity so user can't go back to it
                 finish();
             }
         }, SPLASH_DURATION);
