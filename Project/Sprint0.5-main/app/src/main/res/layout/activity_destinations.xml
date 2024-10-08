@@ -15,7 +15,7 @@
         android:id="@+id/title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Destinations Screen"
+        android:text="Destination"
         android:textColor="@android:color/white"
         android:textSize="30sp"
         android:fontFamily="sans-serif-condensed"
@@ -23,6 +23,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="75dp"/> <!-- Adjust top margin as needed -->
+
+    <Button
+        android:id="@+id/log_travel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text= "Log Travel"
+        android:backgroundTint="#432b4a"
+        app:layout_constraintTop_toBottomOf="@+id/title_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
+    <Button
+        android:id="@+id/calculate_vacation_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text= "Calculate Vacation Time"
+        android:backgroundTint="#432b4a"
+        app:layout_constraintTop_toBottomOf="@+id/log_travel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.5"/>
+
+
+
 
     <!-- Logistics Button -->
     <Button
@@ -32,7 +58,7 @@
         android:padding="16dp"
         android:text="Logistics"
         android:textColor="@android:color/white"
-        android:background="?attr/selectableItemBackground"
+        android:background="@drawable/logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/icon_destinations"
