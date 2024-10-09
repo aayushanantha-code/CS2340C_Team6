@@ -1,15 +1,22 @@
 package com.example.sprintproject.views;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import java.util.Calendar;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
 
 public class DestinationsActivity extends AppCompatActivity {
+    private EditText dateEditText;
+    private String storeDate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +64,27 @@ public class DestinationsActivity extends AppCompatActivity {
                 startActivity(new Intent(DestinationsActivity.this, TravelCommunityActivity.class));
             }
         });
+
+        //initialize start date edit
+        dateEditText = findViewById(R.id.calculate_start_date_input);
+        dateEditText.setOnClickListener(v-> showDateEdit());
+
+        //initialize end date edit
+
+    }
+
+    private void showDateEdit() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth,  selectedDay) -> {
+            storeDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+            dateEditText.setText(storeDate);
+        }, year, month, day);
+
+        datePickerDialog.show();
     }
 
 
