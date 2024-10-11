@@ -15,8 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sprintproject.R;
 
 public class DestinationsActivity extends AppCompatActivity {
-    private EditText dateEditText;
-    private String storeDate;
+    private EditText startDateEdit;
+    private String startDateStore;
+    private EditText endDateEdit;
+    private String endDateStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,21 +69,25 @@ public class DestinationsActivity extends AppCompatActivity {
         });
 
         //initialize start date edit
-        dateEditText = findViewById(R.id.calculate_start_date_input);
-        dateEditText.setOnClickListener(v-> showDateEdit());
+        startDateEdit = findViewById(R.id.calculate_start_date_input);
+        startDateEdit.setOnClickListener(v-> showDateEdit(startDateEdit));
 
         //initialize end date edit
-
+        endDateEdit = findViewById(R.id.calculate_end_date_input);
+        endDateEdit.setOnClickListener(v->showDateEdit(endDateEdit));
     }
 
-    private void showDateEdit() {
+    //allows user to choose date and displays it
+    //used for both start and end date inputs
+    private void showDateEdit(EditText dateEditText) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth,  selectedDay) -> {
-            storeDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+
+            String storeDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
             dateEditText.setText(storeDate);
         }, year, month, day);
 
