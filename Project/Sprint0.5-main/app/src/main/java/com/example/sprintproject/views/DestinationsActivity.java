@@ -6,19 +6,26 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import java.util.Date;
 import com.example.sprintproject.R;
+import android.util.Log;
 
 public class DestinationsActivity extends AppCompatActivity {
     private EditText startDateEdit;
     private String startDateStore;
     private EditText endDateEdit;
     private String endDateStore;
+    private EditText durationEdit;
+    private String durationStore;
+    private Button submitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +82,12 @@ public class DestinationsActivity extends AppCompatActivity {
         //initialize end date edit
         endDateEdit = findViewById(R.id.calculate_end_date_input);
         endDateEdit.setOnClickListener(v->showDateEdit(endDateEdit));
+
+        durationEdit = findViewById(R.id.calculate_duration_input);
+        submitButton = findViewById(R.id.calculate_button);
+
+        submitButton.setOnClickListener(c -> calculate());
+
     }
 
     //allows user to choose date and displays it
@@ -93,6 +106,41 @@ public class DestinationsActivity extends AppCompatActivity {
 
         datePickerDialog.show();
     }
+
+    //should calculate the missing field if one is present
+    public void calculate() {
+        String startDate = startDateEdit.getText().toString().trim();
+        String endDate = endDateEdit.getText().toString().trim();
+        String duration = durationEdit.getText().toString().trim();
+
+        if (!startDate.isEmpty() && !endDate.isEmpty()) {
+            calculateDuration(startDate, endDate);
+            Log.d("TAG", "calculate duration method exited");
+        } else if(!startDate.isEmpty() && !duration.isEmpty()) {
+            //calculateEndDate(startDate, duration);
+        } else if(!endDate.isEmpty() && !duration.isEmpty()) {
+            //caclulateStartDate(endDate, duration);
+        } else {
+            //implement toast to enter another input
+        }
+    }
+
+    public void calculateDuration(String startDate, String endDate) {
+        Log.d("TAG", "calculate duration method entered");
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date formattedStartDate = format.parse(startDate);
+            Date formattedEndDate = format.parse(endDate);
+
+            long duration = (formattedEndDate.getTime() - formattedStartDate.getTime()) / (1000*60*60*24);
+            durationEdit.setText(String.valueOf(duration));
+        } catch(ParseException p) {
+            Log.d("TAG", "duration catch entered");
+            p.printStackTrace();
+        }
+
+    }
+
 
 
 }
