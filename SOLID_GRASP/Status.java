@@ -1,0 +1,6 @@
+public enum Status {
+    FINISHED,
+    IN_PROGRESS,
+    NOT_STARTED,
+    TEMPORARILY_FINISHED
+}
