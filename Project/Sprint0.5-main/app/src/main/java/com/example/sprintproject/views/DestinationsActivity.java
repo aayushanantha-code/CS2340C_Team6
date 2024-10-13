@@ -6,17 +6,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import java.util.Date;
 import com.example.sprintproject.R;
+import android.util.Log;
 
 public class DestinationsActivity extends AppCompatActivity {
-    private EditText dateEditText;
-    private String storeDate;
+    private EditText startDateEdit;
+    private String startDateStore;
+    private EditText endDateEdit;
+    private String endDateStore;
+    private EditText durationEdit;
+    private String durationStore;
+    private Button submitButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,26 +76,96 @@ public class DestinationsActivity extends AppCompatActivity {
         });
 
         //initialize start date edit
-        dateEditText = findViewById(R.id.calculate_start_date_input);
-        dateEditText.setOnClickListener(v-> showDateEdit());
+        startDateEdit = findViewById(R.id.calculate_start_date_input);
+        startDateEdit.setOnClickListener(v-> showDateEdit(startDateEdit));
 
         //initialize end date edit
+        endDateEdit = findViewById(R.id.calculate_end_date_input);
+        endDateEdit.setOnClickListener(v->showDateEdit(endDateEdit));
+
+        durationEdit = findViewById(R.id.calculate_duration_input);
+        submitButton = findViewById(R.id.calculate_button);
+
+        submitButton.setOnClickListener(c -> calculate());
 
     }
 
-    private void showDateEdit() {
+    //allows user to choose date and displays it
+    //used for both start and end date inputs
+    private void showDateEdit(EditText dateEditText) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth,  selectedDay) -> {
-            storeDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+
+            String storeDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
             dateEditText.setText(storeDate);
         }, year, month, day);
 
         datePickerDialog.show();
     }
+
+    //should calculate the missing field if one is present
+    public void calculate() {
+        String startDate = startDateEdit.getText().toString().trim();
+        String endDate = endDateEdit.getText().toString().trim();
+        String duration = durationEdit.getText().toString().trim();
+
+        if (!startDate.isEmpty() && !endDate.isEmpty()) {
+            calculateDuration(startDate, endDate);
+        } else if(!startDate.isEmpty() && !duration.isEmpty()) {
+            calculateEndDate(startDate, duration);
+        } else if(!endDate.isEmpty() && !duration.isEmpty()) {
+            calculateStartDate(endDate, duration);
+        } else {
+            //implement toast to enter another input
+        }
+    }
+
+    public void calculateDuration(String startDate, String endDate) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date formattedStartDate = format.parse(startDate);
+            Date formattedEndDate = format.parse(endDate);
+
+            long duration = (formattedEndDate.getTime() - formattedStartDate.getTime()) / (1000*60*60*24);
+            durationEdit.setText(String.valueOf(duration));
+        } catch(ParseException p) {
+            p.printStackTrace();
+        }
+
+    }
+
+    public void calculateEndDate(String startDate, String duration) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date formatStartDate = format.parse(startDate);
+            int durationInt = Integer.parseInt(duration);
+
+            long endDateMilliseconds = formatStartDate.getTime() + (durationInt * 1000L *60*60*24);
+            String endDate = format.format(new Date(endDateMilliseconds));
+            endDateEdit.setText(endDate);
+        } catch (ParseException p) {
+            p.printStackTrace();
+        }
+    }
+
+    public void calculateStartDate(String endDate, String duration) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date formatEndDate = format.parse(endDate);
+            int durationInt = Integer.parseInt(duration);
+
+            long endDateMilliseconds = formatEndDate.getTime() - (durationInt * 1000L *60*60 *24);
+            String startDate = format.format(new Date(endDateMilliseconds));
+            startDateEdit.setText(startDate);
+        } catch (ParseException p) {
+            p.printStackTrace();
+        }
+    }
+
 
 
 }

@@ -129,6 +129,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calculator_box_duration_header"/>
 
+        <Button
+            android:id="@+id/calculate_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Calculate"
+            android:layout_marginTop="20dp"
+            app:layout_constraintWidth_percent="0.75"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calculate_duration_input"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
