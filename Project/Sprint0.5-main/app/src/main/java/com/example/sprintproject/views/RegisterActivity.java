@@ -1,18 +1,12 @@
 package com.example.sprintproject.views;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import com.example.sprintproject.R;
-import com.example.sprintproject.model.User;
 import com.example.sprintproject.viewmodels.CreateAccountViewModel;
-import com.example.sprintproject.viewmodels.LoginViewModel;
 
 public class RegisterActivity extends AppCompatActivity {
 
