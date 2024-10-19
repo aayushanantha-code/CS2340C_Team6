@@ -1,4 +1,4 @@
-public abstract class Task {
+public abstract class Task implements TaskInterface {
     private String title;
     private String description;
     private String dueDate;
@@ -19,5 +19,25 @@ public abstract class Task {
 
     public void completeTask() {
         status = Status.FINISHED;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public String getStatus() {
+        return status.toString();
+    }
+
+    public int getPriority() {
+        return priority;
     }
 }
