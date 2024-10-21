@@ -1,20 +1,20 @@
-import java.util.List;
+import java.util.ArrayList;
 
 public class Project implements ManageTasks{
     private String name;
-    private String descrpiton;
+    private String description;
     private String startDate;
     private String endDate;
-    private List<Task> tasks;
-    private List<TeamMembers> group;
+    private ArrayList<Task> tasks;
+    private ArrayList<TeamMember> group;
 
-    public Project(String name, String descrpiton, String startDate, String endDate) {
+    public Project(String name, String description, String startDate, String endDate) {
         this.name = name;
-        this.description = descrpiton;
+        this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.tasks = new List<Task>();
-        this.group = new List<TeamMembers>();
+        this.tasks = new ArrayList<Task>();
+        this.group = new ArrayList<TeamMember>();
     }
 
     @Override
