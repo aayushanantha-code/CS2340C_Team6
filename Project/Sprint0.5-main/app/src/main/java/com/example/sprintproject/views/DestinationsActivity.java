@@ -5,18 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import android.widget.EditText;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Date;
 import com.example.sprintproject.R;
-import android.util.Log;
 
 public class DestinationsActivity extends AppCompatActivity {
     private EditText startDateEdit;
@@ -77,11 +73,11 @@ public class DestinationsActivity extends AppCompatActivity {
 
         //initialize start date edit
         startDateEdit = findViewById(R.id.calculate_start_date_input);
-        startDateEdit.setOnClickListener(v-> showDateEdit(startDateEdit));
+        startDateEdit.setOnClickListener(v -> showDateEdit(startDateEdit));
 
         //initialize end date edit
         endDateEdit = findViewById(R.id.calculate_end_date_input);
-        endDateEdit.setOnClickListener(v->showDateEdit(endDateEdit));
+        endDateEdit.setOnClickListener(v -> showDateEdit(endDateEdit));
 
         durationEdit = findViewById(R.id.calculate_duration_input);
         submitButton = findViewById(R.id.calculate_button);
@@ -115,9 +111,9 @@ public class DestinationsActivity extends AppCompatActivity {
 
         if (!startDate.isEmpty() && !endDate.isEmpty()) {
             calculateDuration(startDate, endDate);
-        } else if(!startDate.isEmpty() && !duration.isEmpty()) {
+        } else if (!startDate.isEmpty() && !duration.isEmpty()) {
             calculateEndDate(startDate, duration);
-        } else if(!endDate.isEmpty() && !duration.isEmpty()) {
+        } else if (!endDate.isEmpty() && !duration.isEmpty()) {
             calculateStartDate(endDate, duration);
         } else {
             //implement toast to enter another input
@@ -130,9 +126,9 @@ public class DestinationsActivity extends AppCompatActivity {
             Date formattedStartDate = format.parse(startDate);
             Date formattedEndDate = format.parse(endDate);
 
-            long duration = (formattedEndDate.getTime() - formattedStartDate.getTime()) / (1000*60*60*24);
+            long duration = (formattedEndDate.getTime() - formattedStartDate.getTime()) / (1000 * 60 * 60 * 24);
             durationEdit.setText(String.valueOf(duration));
-        } catch(ParseException p) {
+        } catch (ParseException p) {
             p.printStackTrace();
         }
 
@@ -144,7 +140,7 @@ public class DestinationsActivity extends AppCompatActivity {
             Date formatStartDate = format.parse(startDate);
             int durationInt = Integer.parseInt(duration);
 
-            long endDateMilliseconds = formatStartDate.getTime() + (durationInt * 1000L *60*60*24);
+            long endDateMilliseconds = formatStartDate.getTime() + (durationInt * 1000L * 60 * 60 * 24);
             String endDate = format.format(new Date(endDateMilliseconds));
             endDateEdit.setText(endDate);
         } catch (ParseException p) {
@@ -158,7 +154,7 @@ public class DestinationsActivity extends AppCompatActivity {
             Date formatEndDate = format.parse(endDate);
             int durationInt = Integer.parseInt(duration);
 
-            long endDateMilliseconds = formatEndDate.getTime() - (durationInt * 1000L *60*60 *24);
+            long endDateMilliseconds = formatEndDate.getTime() - (durationInt * 1000L * 60 * 60 * 24);
             String startDate = format.format(new Date(endDateMilliseconds));
             startDateEdit.setText(startDate);
         } catch (ParseException p) {
