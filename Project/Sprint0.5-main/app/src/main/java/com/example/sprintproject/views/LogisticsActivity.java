@@ -31,7 +31,6 @@ public class LogisticsActivity extends AppCompatActivity {
         diningButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, DiningEstablishmentsActivity.class)));
         accommodationsButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, AccommodationsActivity.class)));
         communityButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, TravelCommunityActivity.class)));
-
         datePickerButton.setOnClickListener(view -> showDatePickerDialog());
     }
 
