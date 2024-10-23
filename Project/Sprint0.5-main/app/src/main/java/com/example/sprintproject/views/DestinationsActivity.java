@@ -92,64 +92,73 @@ public class DestinationsActivity extends AppCompatActivity {
 
     public long calculateDuration(String startDate, String endDate) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        long duration = 0;
         try {
             Date formattedStartDate = format.parse(startDate);
             Date formattedEndDate = format.parse(endDate);
 
-            long duration = (formattedEndDate.getTime() - formattedStartDate.getTime()) / (1000 * 60 * 60 * 24);
+            duration = (formattedEndDate.getTime() - formattedStartDate.getTime()) / (1000 * 60 * 60 * 24);
             durationEdit.setText(String.valueOf(duration));
             return duration;
         } catch (ParseException p) {
             p.printStackTrace();
         }
-
+        return duration;
     }
 
-    public long calculateEndDate(String startDate, String duration) {
+    public String calculateEndDate(String startDate, String duration) {
+        String endDate = "";
         try {
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             Date formatStartDate = format.parse(startDate);
             int durationInt = Integer.parseInt(duration);
 
             long endDateMilliseconds = formatStartDate.getTime() + (durationInt * 1000L * 60 * 60 * 24);
-            String endDate = format.format(new Date(endDateMilliseconds));
+            endDate = format.format(new Date(endDateMilliseconds));
             endDateEdit.setText(endDate);
             return endDate;
         } catch (ParseException p) {
             p.printStackTrace();
         }
+        return endDate;
     }
 
-    public long calculateStartDate(String endDate, String duration) {
+    public String calculateStartDate(String endDate, String duration) {
+        String startDate = "";
         try {
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             Date formatEndDate = format.parse(endDate);
             int durationInt = Integer.parseInt(duration);
 
             long endDateMilliseconds = formatEndDate.getTime() - (durationInt * 1000L * 60 * 60 * 24);
-            String startDate = format.format(new Date(endDateMilliseconds));
+            startDate = format.format(new Date(endDateMilliseconds));
             startDateEdit.setText(startDate);
             return startDate;
         } catch (ParseException p) {
             p.printStackTrace();
         }
+        return startDate;
     }
 
     public Date getStartDate() {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date startDate = new Date();
         try {
-            return format.parse(startDateStore);
+            startDate = format.parse(startDateStore);
         } catch (ParseException p) {
             p.printStackTrace();
         }
+        return startDate;
     }
 
     public Date getEndDate() {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date endDate = new Date();
         try {
-            return format.parse(endDateStore);
+            endDate = format.parse(endDateStore);
         } catch (ParseException p) {
             p.printStackTrace();
         }
+        return endDate;
     }
 }

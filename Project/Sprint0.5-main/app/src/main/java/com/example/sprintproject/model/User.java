@@ -1,5 +1,8 @@
 package com.example.sprintproject.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
     private String userID;
     private String password;
