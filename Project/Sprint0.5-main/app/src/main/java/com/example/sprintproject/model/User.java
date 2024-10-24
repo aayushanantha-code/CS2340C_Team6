@@ -7,17 +7,18 @@ public class User {
     private String userID;
     private String password;
     // should have a list of Destinations
-    private List<Destination> destinations;
+    private List<String> destinationIDs;
 
     public User() {
         this.userID = null;
         this.password = null;
-        this.destinations = new ArrayList<>();
+        this.destinationIDs = new ArrayList<>();
     }
 
     public User(String userID, String password) {
         this.userID = userID;
         this.password = password;
+        this.destinationIDs = new ArrayList<>();
     }
 
     public String getUserID() {
@@ -28,15 +29,16 @@ public class User {
         return password;
     }
 
-    public List<Destination> getDestinations() {
-        return destinations;
+    public List<String> getDestinations() {
+        return destinationIDs;
     }
 
-    public void addDestination(Destination destination) {
-        destinations.add(destination);
+    public void addDestination(String destinationID) {
+        destinationIDs.add(destinationID);
     }
 
     public boolean successfulLogin(String userID, String password) {
         return userID.equals(this.userID) && (password.equals(this.password));
     }
+
 }
