@@ -17,6 +17,8 @@ import java.util.Date;
 import com.example.sprintproject.R;
 
 public class DestinationsActivity extends AppCompatActivity {
+    private EditText estimatedStart;
+    private EditText estimatedEnd;
     private EditText startDateEdit;
     private String startDateStore;
     private EditText endDateEdit;
@@ -34,12 +36,17 @@ public class DestinationsActivity extends AppCompatActivity {
 
         Button logTravelToggle = findViewById(R.id.log_travel);
         Button calculatorToggle = findViewById(R.id.calculate_vacation_time);
-        Button cancelLogTravelButton = findViewById(R.id.cancel_log_travel_button)
+        Button cancelLogTravelButton = findViewById(R.id.cancel_log_travel_button);
         Button logisticsButton = findViewById(R.id.icon_logistics);
         Button destinationsButton = findViewById(R.id.icon_destinations);
         Button diningButton = findViewById(R.id.icon_dining);
         Button accommodationsButton = findViewById(R.id.icon_accommodations);
         Button communityButton = findViewById(R.id.icon_travel_community);
+
+        estimatedStart = findViewById(R.id.estimated_start_input);
+        estimatedEnd = findViewById(R.id.estimated_end_input);
+        estimatedStart.setOnClickListener(v->showDateEdit(estimatedStart));
+        estimatedEnd.setOnClickListener(v->showDateEdit(estimatedEnd));
 
         logTravelBox = findViewById(R.id.log_travel_box);
         logTravelToggle.setOnClickListener(v -> toggleLogTravelBox(logTravelBox));
