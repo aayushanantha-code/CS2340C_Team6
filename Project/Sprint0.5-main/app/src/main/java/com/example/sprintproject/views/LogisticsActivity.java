@@ -30,6 +30,9 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 public class LogisticsActivity extends AppCompatActivity {
+
+    private boolean isGraphVisible = false; // Track graph visibility
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +44,12 @@ public class LogisticsActivity extends AppCompatActivity {
         Button accommodationsButton = findViewById(R.id.icon_accommodations);
         Button communityButton = findViewById(R.id.icon_travel_community);
         Button datePickerButton = findViewById(R.id.button_date_picker);
+        Button graphButton = findViewById(R.id.button_graph);
 
+        PieChart pieChart = findViewById(R.id.pieChart);
+        pieChart.setVisibility(View.GONE); // Initially hide the chart
+
+        // Set up button listeners
         logisticsButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, LogisticsActivity.class)));
         destinationsButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, DestinationsActivity.class)));
         diningButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, DiningEstablishmentsActivity.class)));
@@ -49,7 +57,19 @@ public class LogisticsActivity extends AppCompatActivity {
         communityButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, TravelCommunityActivity.class)));
         datePickerButton.setOnClickListener(view -> showDatePickerDialog());
 
-        drawRandomPieChart();
+        // Toggle graph visibility when button is clicked
+        graphButton.setOnClickListener(view -> {
+            if (isGraphVisible) {
+                // If the graph is visible, hide it
+                pieChart.setVisibility(View.GONE);
+            } else {
+                // If the graph is hidden, draw and show it
+                drawRandomPieChart();
+                pieChart.setVisibility(View.VISIBLE);
+            }
+            // Toggle the visibility flag
+            isGraphVisible = !isGraphVisible;
+        });
     }
 
     private void showDatePickerDialog() {
@@ -96,6 +116,4 @@ public class LogisticsActivity extends AppCompatActivity {
         // Redraw the chart
         pieChart.invalidate(); // Refresh the chart
     }
-
-
 }
