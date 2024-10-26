@@ -70,6 +70,17 @@ public class LogisticsActivity extends AppCompatActivity {
             // Toggle the visibility flag
             isGraphVisible = !isGraphVisible;
         });
+
+        // Initialize the invite button
+        Button inviteButton = findViewById(R.id.button_invite);
+
+        // Invite button listener
+        inviteButton.setOnClickListener(view -> {
+            Intent inviteIntent = new Intent(Intent.ACTION_SEND);
+            inviteIntent.setType("text/plain");
+            inviteIntent.putExtra(Intent.EXTRA_TEXT, "Join us for an exciting event!");
+            startActivity(Intent.createChooser(inviteIntent, "Invite via"));
+        });
     }
 
     private void showDatePickerDialog() {
