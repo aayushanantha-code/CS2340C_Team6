@@ -1,37 +1,34 @@
 package com.example.sprintproject.views;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ListView;
+//import android.widget.PieChart;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
-import android.app.DatePickerDialog;
-import android.widget.DatePicker;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
-
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 public class LogisticsActivity extends AppCompatActivity {
 
     private boolean isGraphVisible = false; // Track graph visibility
+    private List<String> notes = new ArrayList<>(); // List for collaborative notes
+    private ArrayAdapter<String> notesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +42,8 @@ public class LogisticsActivity extends AppCompatActivity {
         Button communityButton = findViewById(R.id.icon_travel_community);
         Button datePickerButton = findViewById(R.id.button_date_picker);
         Button graphButton = findViewById(R.id.button_graph);
+        Button inviteButton = findViewById(R.id.button_invite);
+        Button addNoteButton = findViewById(R.id.button_add_note);
 
         PieChart pieChart = findViewById(R.id.pieChart);
         pieChart.setVisibility(View.GONE); // Initially hide the chart
@@ -63,24 +62,28 @@ public class LogisticsActivity extends AppCompatActivity {
                 // If the graph is visible, hide it
                 pieChart.setVisibility(View.GONE);
             } else {
-                // If the graph is hidden, draw and show it
-                drawRandomPieChart();
+                // Draw and show the chart with actual data for allotted vs planned days
+                drawPieChart(5, 10); // Replace with real data values for allotted and planned days
                 pieChart.setVisibility(View.VISIBLE);
             }
-            // Toggle the visibility flag
             isGraphVisible = !isGraphVisible;
         });
 
-        // Initialize the invite button
-        Button inviteButton = findViewById(R.id.button_invite);
-
-        // Invite button listener
+        // Set up invite button to send invitation
         inviteButton.setOnClickListener(view -> {
             Intent inviteIntent = new Intent(Intent.ACTION_SEND);
             inviteIntent.setType("text/plain");
-            inviteIntent.putExtra(Intent.EXTRA_TEXT, "Join us for an exciting event!");
+            inviteIntent.putExtra(Intent.EXTRA_TEXT, "Join us for an exciting trip planning experience!");
             startActivity(Intent.createChooser(inviteIntent, "Invite via"));
         });
+
+        // Set up notes ListView and adapter
+        ListView notesListView = findViewById(R.id.notesListView);
+        notesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
+        notesListView.setAdapter(notesAdapter);
+
+        // Set up add note button
+        addNoteButton.setOnClickListener(view -> showAddNoteDialog());
     }
 
     private void showDatePickerDialog() {
@@ -93,38 +96,46 @@ public class LogisticsActivity extends AppCompatActivity {
                 LogisticsActivity.this,
                 (view, year1, month1, dayOfMonth) -> {
                     String selectedDate = dayOfMonth + "/" + (month1 + 1) + "/" + year1;
+                    // Optionally do something with the selected date
                 },
                 year, month, day
         );
         datePickerDialog.show();
     }
 
-    public void drawRandomPieChart() {
-        // Prepare random data for the pie chart
+    // Method to draw a pie chart representing allotted vs planned trip days
+    public void drawPieChart(int allottedDays, int plannedDays) {
         List<PieEntry> entries = new ArrayList<>();
-        Random random = new Random();
+        entries.add(new PieEntry(allottedDays, "Allotted Days"));
+        entries.add(new PieEntry(plannedDays - allottedDays, "Remaining Days"));
 
-        // Generate random data for 5 slices
-        for (int i = 0; i < 5; i++) {
-            entries.add(new PieEntry(random.nextInt(100), "Slice " + (i + 1)));
-        }
+        PieDataSet dataSet = new PieDataSet(entries, "Trip Days");
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
-        // Create a PieDataSet from the data entries
-        PieDataSet dataSet = new PieDataSet(entries, "Random Data");
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS); // Set colors for the slices
+        PieChart pieChart = findViewById(R.id.pieChart);
+        pieChart.setData(new PieData(dataSet));
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setUsePercentValues(true);
+        pieChart.invalidate();
+    }
 
-        // Find the PieChart view by ID and set the data
-        PieChart pieChart = findViewById(R.id.pieChart); // Match the new ID
-        pieChart.setData(new PieData(dataSet)); // Bind data to the chart
+    // Method to display a dialog for adding a new note
+    private void showAddNoteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add Note");
 
-        // Optional chart customization
-        pieChart.getDescription().setEnabled(false); // Hide description
-        pieChart.setUsePercentValues(true); // Display percentages
+        final EditText input = new EditText(this);
+        builder.setView(input);
 
-        // Customize legend
-        pieChart.getLegend().setEnabled(true);
+        builder.setPositiveButton("Add", (dialog, which) -> {
+            String note = input.getText().toString();
+            if (!note.isEmpty()) {
+                notes.add(note);
+                notesAdapter.notifyDataSetChanged();
+            }
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
-        // Redraw the chart
-        pieChart.invalidate(); // Refresh the chart
+        builder.show();
     }
 }
