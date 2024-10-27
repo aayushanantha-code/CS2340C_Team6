@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +32,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-public class LogisticsActivity extends AppCompatActivity {
+public class LogisticsActivity extends BottomNavigationActivity {
 
     private boolean isGraphVisible = false;
     private List<String> notes = new ArrayList<>();
@@ -45,13 +46,8 @@ public class LogisticsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logistics);
+        getLayoutInflater().inflate(R.layout.activity_logistics, (FrameLayout) findViewById(R.id.content_frame), true);
 
-        Button logisticsButton = findViewById(R.id.icon_logistics);
-        Button destinationsButton = findViewById(R.id.icon_destinations);
-        Button diningButton = findViewById(R.id.icon_dining);
-        Button accommodationsButton = findViewById(R.id.icon_accommodations);
-        Button communityButton = findViewById(R.id.icon_travel_community);
         Button datePickerButton = findViewById(R.id.button_date_picker);
         Button graphButton = findViewById(R.id.button_graph);
         Button inviteButton = findViewById(R.id.button_invite);
@@ -63,11 +59,6 @@ public class LogisticsActivity extends AppCompatActivity {
         dbRef = FirebaseDatabase.getInstance().getReference("InvitedGroups"); // Firebase database path
         groupId = getOrCreateGroupId(); // Get or create group ID for the session
 
-        logisticsButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, LogisticsActivity.class)));
-        destinationsButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, DestinationsActivity.class)));
-        diningButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, DiningEstablishmentsActivity.class)));
-        accommodationsButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, AccommodationsActivity.class)));
-        communityButton.setOnClickListener(view -> startActivity(new Intent(LogisticsActivity.this, TravelCommunityActivity.class)));
         datePickerButton.setOnClickListener(view -> showDatePickerDialog());
 
         graphButton.setOnClickListener(view -> {

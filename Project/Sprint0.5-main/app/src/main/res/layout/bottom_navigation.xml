@@ -1,78 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Logistics -->
-    <TextView
-        android:id="@+id/icon_logistics"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Logistics"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/icon_destinations" />
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <!-- Destinations -->
-    <TextView
-        android:id="@+id/icon_destinations"
-        android:layout_width="wrap_content"
+    
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Destinations"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon_logistics"
-        app:layout_constraintEnd_toStartOf="@+id/icon_dining" />
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:background="@android:color/darker_gray">
 
-    <!-- Dining Establishments -->
-    <TextView
-        android:id="@+id/icon_dining"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Dining"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon_destinations"
-        app:layout_constraintEnd_toStartOf="@+id/icon_accommodations" />
+        <!-- Logistics -->
+        <ImageButton
+            android:id="@+id/icon_logistics"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@android:color/darker_gray"
+            android:rotation="0"
+            android:src="@drawable/logistics"
+            android:translationX="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="parent" />
 
-    <!-- Accommodations -->
-    <TextView
-        android:id="@+id/icon_accommodations"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Accommodations"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon_dining"
-        app:layout_constraintEnd_toStartOf="@+id/icon_travel_community" />
+        <!-- Destinations -->
+        <ImageButton
+            android:id="@+id/icon_destinations"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@android:color/darker_gray"
+            android:rotation="0"
+            android:src="@drawable/destinations"
+            android:translationX="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/icon_dining"
+            app:layout_constraintStart_toEndOf="@+id/icon_logistics" />
 
-    <!-- Travel Community -->
-    <TextView
-        android:id="@+id/icon_travel_community"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Community"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon_accommodations"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Dining -->
+        <ImageButton
+            android:id="@+id/icon_dining"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@android:color/darker_gray"
+            android:rotation="0"
+            android:src="@drawable/dining"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/icon_accommodations"
+            app:layout_constraintStart_toEndOf="@+id/icon_logistics" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Accommodations -->
+        <ImageButton
+            android:id="@+id/icon_accommodations"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@android:color/darker_gray"
+            android:rotation="0"
+            android:src="@drawable/accommodations"
+            android:translationX="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/icon_travel_community"
+            app:layout_constraintStart_toEndOf="@+id/icon_dining" />
+
+        <!-- Community -->
+        <ImageButton
+            android:id="@+id/icon_travel_community"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@android:color/darker_gray"
+            android:rotation="0"
+            android:src="@drawable/community"
+            android:translationX="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/icon_accommodations"
+            app:layout_constraintStart_toEndOf="parent" />
+    </LinearLayout>
+</FrameLayout>
