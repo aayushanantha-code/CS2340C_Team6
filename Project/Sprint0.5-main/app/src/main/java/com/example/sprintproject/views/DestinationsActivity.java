@@ -10,13 +10,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
 import com.example.sprintproject.R;
 
-public class DestinationsActivity extends AppCompatActivity {
+public class DestinationsActivity extends BottomNavigationActivity {
     private EditText estimatedStart;
     private EditText estimatedEnd;
     private EditText startDateEdit;
@@ -32,16 +34,11 @@ public class DestinationsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_destinations);  // Tie this activity to its layout
+        getLayoutInflater().inflate(R.layout.activity_destinations, (FrameLayout) findViewById(R.id.content_frame), true);  // Tie this activity to its layout
 
         Button logTravelToggle = findViewById(R.id.log_travel);
         Button calculatorToggle = findViewById(R.id.calculate_vacation_time);
         Button cancelLogTravelButton = findViewById(R.id.cancel_log_travel_button);
-        Button logisticsButton = findViewById(R.id.icon_logistics);
-        Button destinationsButton = findViewById(R.id.icon_destinations);
-        Button diningButton = findViewById(R.id.icon_dining);
-        Button accommodationsButton = findViewById(R.id.icon_accommodations);
-        Button communityButton = findViewById(R.id.icon_travel_community);
 
         estimatedStart = findViewById(R.id.estimated_start_input);
         estimatedEnd = findViewById(R.id.estimated_end_input);
@@ -53,12 +50,7 @@ public class DestinationsActivity extends AppCompatActivity {
         cancelLogTravelButton.setOnClickListener(v -> toggleLogTravelBox(logTravelBox));
         calculateVacationTimeBox = findViewById(R.id.calculator_box);
         calculatorToggle.setOnClickListener(v -> toggleCalculatorBox(calculateVacationTimeBox));
-
-        logisticsButton.setOnClickListener(view -> startActivity(new Intent(DestinationsActivity.this, LogisticsActivity.class)));
-        destinationsButton.setOnClickListener(view -> startActivity(new Intent(DestinationsActivity.this, DestinationsActivity.class)));
-        diningButton.setOnClickListener(view -> startActivity(new Intent(DestinationsActivity.this, DiningEstablishmentsActivity.class)));
-        accommodationsButton.setOnClickListener(view -> startActivity(new Intent(DestinationsActivity.this, AccommodationsActivity.class)));
-        communityButton.setOnClickListener(view -> startActivity(new Intent(DestinationsActivity.this, TravelCommunityActivity.class)));
+        
 
         //initialize start date edit
         startDateEdit = findViewById(R.id.calculate_start_date_input);
