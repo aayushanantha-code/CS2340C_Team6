@@ -51,7 +51,6 @@
             android:background="@android:color/darker_gray"
             android:rotation="0"
             android:src="@drawable/dining"
-            android:translationX="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/icon_accommodations"
             app:layout_constraintStart_toEndOf="@+id/icon_logistics" />
