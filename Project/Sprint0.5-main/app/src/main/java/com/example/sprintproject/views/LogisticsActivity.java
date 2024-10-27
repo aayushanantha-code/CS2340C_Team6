@@ -71,10 +71,30 @@ public class LogisticsActivity extends AppCompatActivity {
 
         // Set up invite button to send invitation
         inviteButton.setOnClickListener(view -> {
-            Intent inviteIntent = new Intent(Intent.ACTION_SEND);
-            inviteIntent.setType("text/plain");
-            inviteIntent.putExtra(Intent.EXTRA_TEXT, "Join us for an exciting trip planning experience!");
-            startActivity(Intent.createChooser(inviteIntent, "Invite via"));
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Invite a Friend");
+
+            // Creates an input where users can add other users
+            final EditText input = new EditText(this);
+            input.setHint("Enter username");
+            builder.setView(input);
+
+            builder.setPositiveButton("Send Invite", (dialog, which) -> {
+                String username = input.getText().toString().trim();
+                String inviteMessage = "Join us for an exciting trip planning experience!";
+                if (!username.isEmpty()) {
+                    inviteMessage = "Hi " + username + "! " + inviteMessage;
+                }
+
+                // Create and send the invitation intent
+                Intent inviteIntent = new Intent(Intent.ACTION_SEND);
+                inviteIntent.setType("text/plain");
+                inviteIntent.putExtra(Intent.EXTRA_TEXT, inviteMessage);
+                startActivity(Intent.createChooser(inviteIntent, "Invite via"));
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            builder.show();
         });
 
         // Set up notes ListView and adapter
