@@ -35,6 +35,116 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.5" />
+    <!-- Log travel Section  -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/log_travel_box"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:paddingBottom="20dp"
+        android:background="#240d33"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        app:layout_constraintWidth_percent="0.5"
+        app:layout_constraintTop_toBottomOf="@+id/log_travel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/travel_location_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Destination"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/log_travel_box"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+            android:id="@+id/travel_location_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginTop="10dp"
+            android:focusable="false"
+            app:layout_constraintWidth_percent="0.75"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/travel_location_header"/>
+
+        <TextView
+            android:id="@+id/estimated_start_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estimated Start"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/travel_location_input"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+            android:id="@+id/estimated_start_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginTop="10dp"
+            app:layout_constraintWidth_percent="0.75"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/estimated_start_header"/>
+
+        <TextView
+            android:id="@+id/estimated_end_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estimated End"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/estimated_start_input"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+            android:id="@+id/estimated_end_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintWidth_percent="0.75"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/estimated_end_header"/>
+
+        <Button
+            android:id="@+id/cancel_log_travel_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:layout_marginTop="20dp"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintTop_toBottomOf="@+id/estimated_end_input"
+            app:layout_constraintEnd_toStartOf="@+id/submit_log_travel_button"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="4dp"/>
+
+        <Button
+            android:id="@+id/submit_log_travel_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_marginTop="20dp"
+            app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintTop_toBottomOf="@+id/estimated_end_input"
+        app:layout_constraintStart_toEndOf="@id/cancel_log_travel_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="4dp"
+        />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <Button
         android:id="@+id/calculate_vacation_time"
         android:layout_width="0dp"
@@ -42,7 +152,7 @@
         android:layout_marginTop="5dp"
         android:text= "Calculate Vacation Time"
         android:backgroundTint="#432b4a"
-        app:layout_constraintTop_toBottomOf="@+id/log_travel"
+        app:layout_constraintTop_toBottomOf="@+id/log_travel_box"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.5"/>
@@ -56,6 +166,7 @@
         android:paddingBottom="20dp"
         android:background="#240d33"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         app:layout_constraintWidth_percent="0.5"
         app:layout_constraintTop_toBottomOf="@+id/calculate_vacation_time"
         app:layout_constraintEnd_toEndOf="parent"
