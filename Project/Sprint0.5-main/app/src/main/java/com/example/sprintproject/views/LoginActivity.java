@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.User;
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.login_button);
         EditText passwordInput = findViewById(R.id.password_edit);
         EditText usernameInput = findViewById(R.id.username_edit);
+        TextView incorrectText = findViewById(R.id.incorrect_input);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent loginIntent = new Intent(LoginActivity.this, LogisticsActivity.class);
                                 startActivity(loginIntent);
                             } else {
-                                // Add an error here (probably return some red text saying "Username/Password Incorrect"
+                                incorrectText.setVisibility(View.VISIBLE);
                             }
                         }
 
