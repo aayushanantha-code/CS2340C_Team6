@@ -4,14 +4,15 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-//import android.widget.PieChart;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
@@ -20,16 +21,27 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 public class LogisticsActivity extends BottomNavigationActivity {
 
-    private boolean isGraphVisible = false; // Track graph visibility
-    private List<String> notes = new ArrayList<>(); // List for collaborative notes
+    private boolean isGraphVisible = false;
+    private List<String> notes = new ArrayList<>();
     private ArrayAdapter<String> notesAdapter;
+    private List<String> invitedUsers = new ArrayList<>(); // List to store invited users
+    private ArrayAdapter<String> invitedUsersAdapter;
+
+    private DatabaseReference dbRef; // Firebase database reference
+    private String groupId; // Unique group ID for invited users
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,30 +54,27 @@ public class LogisticsActivity extends BottomNavigationActivity {
         Button addNoteButton = findViewById(R.id.button_add_note);
 
         PieChart pieChart = findViewById(R.id.pieChart);
-        pieChart.setVisibility(View.GONE); // Initially hide the chart
+        pieChart.setVisibility(View.GONE);
 
-        // Set up button listeners
+        dbRef = FirebaseDatabase.getInstance().getReference("InvitedGroups"); // Firebase database path
+        groupId = getOrCreateGroupId(); // Get or create group ID for the session
+
         datePickerButton.setOnClickListener(view -> showDatePickerDialog());
 
-        // Toggle graph visibility when button is clicked
         graphButton.setOnClickListener(view -> {
             if (isGraphVisible) {
-                // If the graph is visible, hide it
                 pieChart.setVisibility(View.GONE);
             } else {
-                // Draw and show the chart with actual data for allotted vs planned days
-                drawPieChart(5, 10); // Replace with real data values for allotted and planned days
+                drawPieChart(5, 10);
                 pieChart.setVisibility(View.VISIBLE);
             }
             isGraphVisible = !isGraphVisible;
         });
 
-        // Set up invite button to send invitation
         inviteButton.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Invite a Friend");
 
-            // Creates an input where users can add other users
             final EditText input = new EditText(this);
             input.setHint("Enter username");
             builder.setView(input);
@@ -75,9 +84,9 @@ public class LogisticsActivity extends BottomNavigationActivity {
                 String inviteMessage = "Join us for an exciting trip planning experience!";
                 if (!username.isEmpty()) {
                     inviteMessage = "Hi " + username + "! " + inviteMessage;
+                    addInvitedUser(username); // Add invited user to Firebase
                 }
 
-                // Create and send the invitation intent
                 Intent inviteIntent = new Intent(Intent.ACTION_SEND);
                 inviteIntent.setType("text/plain");
                 inviteIntent.putExtra(Intent.EXTRA_TEXT, inviteMessage);
@@ -88,13 +97,16 @@ public class LogisticsActivity extends BottomNavigationActivity {
             builder.show();
         });
 
-        // Set up notes ListView and adapter
         ListView notesListView = findViewById(R.id.notesListView);
         notesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
         notesListView.setAdapter(notesAdapter);
 
-        // Set up add note button
+        ListView invitedUsersListView = findViewById(R.id.invitedUsersListView); // Ensure you have this ListView in XML
+        invitedUsersAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, invitedUsers);
+        invitedUsersListView.setAdapter(invitedUsersAdapter);
+
         addNoteButton.setOnClickListener(view -> showAddNoteDialog());
+        loadInvitedUsers(); // Load invited users from Firebase
     }
 
     private void showDatePickerDialog() {
@@ -107,14 +119,13 @@ public class LogisticsActivity extends BottomNavigationActivity {
                 LogisticsActivity.this,
                 (view, year1, month1, dayOfMonth) -> {
                     String selectedDate = dayOfMonth + "/" + (month1 + 1) + "/" + year1;
-                    // Optionally do something with the selected date
+                    // Optionally, do something with the selected date
                 },
                 year, month, day
         );
         datePickerDialog.show();
     }
 
-    // Method to draw a pie chart representing allotted vs planned trip days
     public void drawPieChart(int allottedDays, int plannedDays) {
         List<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(allottedDays, "Allotted Days"));
@@ -130,7 +141,6 @@ public class LogisticsActivity extends BottomNavigationActivity {
         pieChart.invalidate();
     }
 
-    // Method to display a dialog for adding a new note
     private void showAddNoteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add Note");
@@ -148,5 +158,40 @@ public class LogisticsActivity extends BottomNavigationActivity {
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         builder.show();
+    }
+
+    // Adds an invited user to Firebase under a group
+    private void addInvitedUser(String username) {
+        // Add the user to the group
+        dbRef.child(groupId).child(username).setValue(true)
+                .addOnSuccessListener(aVoid -> Log.d("Firebase", "User invited: " + username))
+                .addOnFailureListener(e -> Log.e("Firebase", "Failed to invite user", e));
+    }
+
+    // Loads invited users from Firebase and updates the ListView
+    private void loadInvitedUsers() {
+        dbRef.child(groupId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                invitedUsers.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String user = dataSnapshot.getKey();
+                    invitedUsers.add(user);
+                }
+                invitedUsersAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Failed to load invited users", error.toException());
+            }
+        });
+    }
+
+    // Function to get or create a unique group ID for the current user session
+    private String getOrCreateGroupId() {
+        // Here we would typically retrieve the group ID from shared preferences or a database
+        String userId = "someUniqueUserId"; // Replace with actual user ID retrieval logic
+        return dbRef.child("userGroups").child(userId).child("groupId").getKey(); // Retrieve existing group ID
     }
 }
