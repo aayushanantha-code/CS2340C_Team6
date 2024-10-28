@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Check if Username and Password match a User on Firebase
                             if (dataSnapshot.exists() && dataSnapshot.getValue(User.class).getPassword().equals(password)) {
                                 Intent loginIntent = new Intent(LoginActivity.this, LogisticsActivity.class);
+                                loginIntent.putExtra("username", username); // Pass the username
                                 startActivity(loginIntent);
                             } else {
                                 incorrectText.setVisibility(View.VISIBLE);
