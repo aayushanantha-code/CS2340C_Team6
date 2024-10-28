@@ -1,7 +1,6 @@
 package com.example.sprintproject.views;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +11,6 @@ import java.util.Calendar;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
@@ -31,6 +29,9 @@ public class DestinationsActivity extends BottomNavigationActivity {
     private ConstraintLayout logTravelBox;
     private ConstraintLayout calculateVacationTimeBox;
 
+    /**
+     * Constructor for DestinationsActivity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +68,10 @@ public class DestinationsActivity extends BottomNavigationActivity {
 
     }
 
+    /**
+     * Toggle the log travel box
+     * @param view the view
+     */
     private void toggleLogTravelBox(View view) {
         if (view.getVisibility() == View.GONE) {
             view.setVisibility(View.VISIBLE);
@@ -74,6 +79,11 @@ public class DestinationsActivity extends BottomNavigationActivity {
             view.setVisibility(View.GONE);
         }
     }
+
+    /**
+     * Toggle the calculator box
+     * @param view the view
+     */
     private void toggleCalculatorBox(View view) {
         if (view.getVisibility() == View.GONE) {
             view.setVisibility(View.VISIBLE);
@@ -84,6 +94,10 @@ public class DestinationsActivity extends BottomNavigationActivity {
 
     //allows user to choose date and displays it
     //used for both start and end date inputs
+    /**
+     * Allows user to choose date and displays it
+     * @param dateEditText the date edit text
+     */
     private void showDateEdit(EditText dateEditText) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -100,6 +114,9 @@ public class DestinationsActivity extends BottomNavigationActivity {
     }
 
     //should calculate the missing field if one is present
+    /**
+     * Calculate the missing field if one is present
+     */
     public void calculate() {
         String startDate = startDateEdit.getText().toString().trim();
         String endDate = endDateEdit.getText().toString().trim();
@@ -117,6 +134,12 @@ public class DestinationsActivity extends BottomNavigationActivity {
         // if nothing happened, then there's only 1 or 0 inputs
     }
 
+    /**
+     * Calculate the duration based on the start and end date
+     * @param startDate the start date
+     * @param endDate the end date
+     * @return the duration
+     */
     public long calculateDuration(String startDate, String endDate) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         long duration = 0;
@@ -133,6 +156,12 @@ public class DestinationsActivity extends BottomNavigationActivity {
         return duration;
     }
 
+    /**
+     * Calculate the end date based on the start date and duration
+     * @param startDate the start date
+     * @param duration the duration
+     * @return the end date
+     */
     public String calculateEndDate(String startDate, String duration) {
         String endDate = "";
         try {
@@ -150,6 +179,12 @@ public class DestinationsActivity extends BottomNavigationActivity {
         return endDate;
     }
 
+    /**
+     * Calculate the start date based on the end date and duration
+     * @param endDate the end date
+     * @param duration the duration
+     * @return the start date
+     */
     public String calculateStartDate(String endDate, String duration) {
         String startDate = "";
         try {
@@ -167,6 +202,10 @@ public class DestinationsActivity extends BottomNavigationActivity {
         return startDate;
     }
 
+    /**
+     * Get the start date in string format
+     * @return the start date in string format
+     */
     public Date getStartDate() {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date startDate = new Date();
@@ -178,6 +217,10 @@ public class DestinationsActivity extends BottomNavigationActivity {
         return startDate;
     }
 
+    /**
+     * Get the end date in string format
+     * @return the end date in string format
+     */
     public Date getEndDate() {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date endDate = new Date();
@@ -187,5 +230,37 @@ public class DestinationsActivity extends BottomNavigationActivity {
             p.printStackTrace();
         }
         return endDate;
+    }
+
+    /**
+     * Get the start date in string format
+     * @return the start date in string format
+     */
+    public String getStartDateStore() {
+        return startDateStore;
+    }
+
+    /**
+     * Set the start date in string format
+     * @param startDateStore the start date in string format
+     */
+    public void setStartDateStore(String startDateStore) {
+        this.startDateStore = startDateStore;
+    }
+
+    /**
+     * Get the end date in string format
+     * @return the end date in string format
+     */
+    public String getEndDateStore() {
+        return endDateStore;
+    }
+
+    /**
+     * Set the end date in string format
+     * @param endDateStore the end date in string format
+     */
+    public void setEndDateStore(String endDateStore) {
+        this.endDateStore = endDateStore;
     }
 }
