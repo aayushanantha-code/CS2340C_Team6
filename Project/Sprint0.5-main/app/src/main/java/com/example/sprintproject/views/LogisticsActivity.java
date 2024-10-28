@@ -45,7 +45,9 @@ public class LogisticsActivity extends BottomNavigationActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         getLayoutInflater().inflate(R.layout.activity_logistics, (FrameLayout) findViewById(R.id.content_frame), true);
 
         Button datePickerButton = findViewById(R.id.button_date_picker);
@@ -57,7 +59,7 @@ public class LogisticsActivity extends BottomNavigationActivity {
         pieChart.setVisibility(View.GONE);
 
         dbRef = FirebaseDatabase.getInstance().getReference("InvitedGroups"); // Firebase database path
-        groupId = getOrCreateGroupId(); // Get or create group ID for the session
+        getOrCreateGroupId(); // Get or create group ID for the session
 
         datePickerButton.setOnClickListener(view -> showDatePickerDialog());
 
@@ -189,9 +191,46 @@ public class LogisticsActivity extends BottomNavigationActivity {
     }
 
     // Function to get or create a unique group ID for the current user session
-    private String getOrCreateGroupId() {
-        // Here we would typically retrieve the group ID from shared preferences or a database
+    private void getOrCreateGroupId() {
         String userId = "someUniqueUserId"; // Replace with actual user ID retrieval logic
-        return dbRef.child("userGroups").child(userId).child("groupId").getKey(); // Retrieve existing group ID
+        DatabaseReference userGroupRef = dbRef.child("userGroups").child(userId).child("groupId");
+
+        String username = getIntent().getStringExtra("username");
+        groupId = username + "'s group"; // Create the group ID based on the username
+
+        // Store the new group ID in userGroups
+        userGroupRef.setValue(groupId);; // Store the new group ID
+        userGroupRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // User already has a group ID
+                    groupId = dataSnapshot.getValue(String.class);
+                    loadInvitedUsers(); // Load invited users for the existing group
+                } else {
+                    // User does not have a group ID, create a new one
+                    groupId = username + "'s group"; // Create the group ID based on the username
+                    userGroupRef.setValue(groupId) // Store the new group ID
+                            .addOnSuccessListener(aVoid -> {
+                                // Optionally handle success
+                                Log.d("Firebase", "New group created: " + groupId);
+                                loadInvitedUsers(); // Load invited users after creating the group
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle the error
+                                Log.e("Firebase", "Failed to create group ID", e);
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle the error
+                Log.e("Firebase", "Failed to retrieve group ID", databaseError.toException());
+            }
+        });
+
+
     }
+
 }

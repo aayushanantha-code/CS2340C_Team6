@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.apply();
 
                                 Intent loginIntent = new Intent(LoginActivity.this, LogisticsActivity.class);
+                                loginIntent.putExtra("username", username); // Pass the username
                                 startActivity(loginIntent);
                             } else {
                                 incorrectText.setVisibility(View.VISIBLE);
