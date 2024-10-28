@@ -88,7 +88,7 @@ public class LogisticsActivity extends BottomNavigationActivity {
                 // Check if user is already part of a group
                 for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
                     String groupName = groupSnapshot.getKey();
-                    if (groupSnapshot.hasChild(username)) {
+                    if (username != null && groupSnapshot.hasChild(username)) {
                         groupFound = true;
                         groupId = groupName;
                         loadInvitedUsers(groupName);
@@ -97,7 +97,7 @@ public class LogisticsActivity extends BottomNavigationActivity {
                 }
 
                 // If no group was found, create a new group named with the user's username
-                if (!groupFound) {
+                if (username != null && !groupFound) {
                     groupId = username + "'s group"; // Use the username as part of the group name
                     dbRef.child(groupId).child(username).setValue(true) // Add user to this new group
                             .addOnSuccessListener(aVoid -> {
