@@ -11,7 +11,7 @@ public class DestinationDatabase {
     private DestinationDatabase() {
         // Initialize the Firebase Database instance
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("destination"); // Replace with your reference
+        databaseReference = firebaseDatabase.getReference("destinations"); // Replace with your reference
     }
 
     public static DestinationDatabase getInstance() {
@@ -19,5 +19,9 @@ public class DestinationDatabase {
             instance = new DestinationDatabase();
         }
         return instance;
+    }
+
+    public DatabaseReference getDatabaseReference() {
+        return databaseReference;
     }
 }
