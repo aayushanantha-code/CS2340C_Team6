@@ -1,5 +1,6 @@
 package com.example.sprintproject.model;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,18 +8,18 @@ public class User {
     private String userID;
     private String password;
     // should have a list of Destinations
-    private ArrayList<Destination> destinationIDs;
+    private ArrayList<Destination> destinationList;
 
     public User() {
         this.userID = null;
         this.password = null;
-        this.destinationIDs = new ArrayList<>();
+        this.destinationList = new ArrayList<>();
     }
 
     public User(String userID, String password) {
         this.userID = userID;
         this.password = password;
-        this.destinationIDs = new ArrayList<>();
+        this.destinationList = new ArrayList<>();
     }
 
     public String getUserID() {
@@ -29,11 +30,26 @@ public class User {
         return password;
     }
 
-    public List<Destination> getDestinations() {
-        return destinationIDs;
+    public ArrayList<Destination> getDestinations() {
+        return destinationList;
     }
 
-    public void addDestination(Destination destinationID) {
-        destinationIDs.add(destinationID);
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDestination(ArrayList<Destination> destinationList) {
+        this.destinationList = destinationList;
+    }
+
+    public void addDestination(Destination destination) {
+        destinationList.add(destination);
+        for (int i=0; i<destinationList.size(); i++) {
+            System.out.println(destinationList.get(i).getName());
+        }
     }
 }
