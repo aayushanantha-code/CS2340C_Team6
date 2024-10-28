@@ -1,6 +1,7 @@
 package com.example.sprintproject.viewmodels;
 
 import com.example.sprintproject.model.Destination;
+import com.example.sprintproject.model.DestinationDatabase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -11,9 +12,9 @@ public class DestinationsViewModel {
 
 
     public DestinationsViewModel(String name, String start, String end, long duration, String userId) {
-        destinationDatabase = FirebaseDatabase.getInstance().getReference();
+        destinationDatabase = DestinationDatabase.getInstance().getDatabaseReference();
         Destination destination = new Destination(name, start, end, duration, userId);
-        destinationDatabase.child("destinations").child(name).setValue(destination);
+        destinationDatabase.child(name).setValue(destination);
     }
 
 

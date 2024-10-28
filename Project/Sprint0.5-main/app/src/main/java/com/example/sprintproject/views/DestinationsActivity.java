@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
 import com.example.sprintproject.R;
+import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.viewmodels.DestinationsViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -93,32 +94,16 @@ public class DestinationsActivity extends BottomNavigationActivity {
 
             if (!locationName.isEmpty()) {
                 userDatabase = FirebaseDatabase.getInstance().getReference().child("users");
-                destinationDatabase = FirebaseDatabase.getInstance().getReference("destinations");
+                destinationDatabase = DestinationDatabase.getInstance().getDatabaseReference();
                 destinationDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        boolean destinationExists = false;
-
-                        for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
-                            String existingDestination = destinationSnapshot.child("name").getValue(String.class);
-                            if (existingDestination != null && existingDestination.equals(locationName)) {
-                                destinationExists = true;
-                                break;
-                            }
-                        }
-
-                        if (destinationExists) {
-                            //Will change this in future
-                        } else {
                             //grabs userId from storage
                             SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("userId", null);
                             //Continue to add new location
                             DestinationsViewModel account = new DestinationsViewModel(locationName,startDate, endDate, duration, userId);
-
-                        }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         //error
