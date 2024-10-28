@@ -25,9 +25,7 @@ public class Destination {
         this.start = start;
         this.end = end;
         this.duration = duration;
-        if (userId == null) {
-            this.userIDs = new ArrayList<>();
-        }
+        this.userIDs = new ArrayList<>();
         this.userIDs.add(userId);
     }
 

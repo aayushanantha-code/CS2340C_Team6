@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -85,8 +87,8 @@ public class DestinationsActivity extends BottomNavigationActivity {
         travelLogButton.setOnClickListener(c -> {
 
             String locationName = locationInput.getText().toString().trim();
-            String startDate = startDateEdit.getText().toString().trim();
-            String endDate = endDateEdit.getText().toString().trim();
+            String startDate = estimatedStart.getText().toString().trim();
+            String endDate = estimatedEnd.getText().toString().trim();
             long duration = calculateDuration(startDate, endDate);
 
             if (!locationName.isEmpty()) {
