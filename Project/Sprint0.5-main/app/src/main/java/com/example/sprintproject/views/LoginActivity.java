@@ -60,18 +60,13 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString("userId", userId);
                                 editor.apply();
 
-//                                Intent loginIntent = new Intent(LoginActivity.this, LogisticsActivity.class);
-//                                loginIntent.putExtra("username", username); // Pass the username
-//                                Intent numberIntent = new Intent(LoginActivity.this, LogisticsActivity.class);
-//                                numberIntent.putExtra("number", "0"); // Pass the username
-//                                Intent loginNavigation = new Intent(LoginActivity.this, BottomNavigationActivity.class);
-//                                loginNavigation.putExtra("username", username); // Pass the username
-//                                startActivity(loginIntent);
                                 Intent loginIntent = new Intent(LoginActivity.this, LogisticsActivity.class);
                                 loginIntent.putExtra("username", username); // Pass the username
-                                loginIntent.putExtra("number", "0"); // Pass the "number" data
+                                Intent numberIntent = new Intent(LoginActivity.this, LogisticsActivity.class);
+                                numberIntent.putExtra("number", 0); // Pass the username
+                                Intent loginNavigation = new Intent(LoginActivity.this, BottomNavigationActivity.class);
+                                loginNavigation.putExtra("username", username); // Pass the username
                                 startActivity(loginIntent);
-
                             } else {
                                 incorrectText.setVisibility(View.VISIBLE);
                             }
