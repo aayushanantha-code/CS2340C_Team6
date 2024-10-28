@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +20,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
 import com.example.sprintproject.R;
+import com.example.sprintproject.model.DateComparison;
 import com.example.sprintproject.model.DestinationDatabase;
+import com.example.sprintproject.model.User;
 import com.example.sprintproject.viewmodels.DestinationsViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class DestinationsActivity extends BottomNavigationActivity {
+public class DestinationsActivity extends BottomNavigationActivity implements DateComparison {
     private EditText estimatedStart;
     private EditText estimatedEnd;
     private EditText startDateEdit;
@@ -56,18 +59,25 @@ public class DestinationsActivity extends BottomNavigationActivity {
         Button logTravelToggle = findViewById(R.id.log_travel);
         Button calculatorToggle = findViewById(R.id.calculate_vacation_time);
         Button cancelLogTravelButton = findViewById(R.id.cancel_log_travel_button);
+        TextView successfulText = findViewById(R.id.travel_successfully_logged);
 
         estimatedStart = findViewById(R.id.estimated_start_input);
         estimatedEnd = findViewById(R.id.estimated_end_input);
-        estimatedStart.setOnClickListener(v->showDateEdit(estimatedStart));
-        estimatedEnd.setOnClickListener(v->showDateEdit(estimatedEnd));
+        estimatedStart.setOnClickListener(v -> showDateEdit(estimatedStart));
+        estimatedEnd.setOnClickListener(v -> showDateEdit(estimatedEnd));
 
         logTravelBox = findViewById(R.id.log_travel_box);
-        logTravelToggle.setOnClickListener(v -> toggleLogTravelBox(logTravelBox));
+        logTravelToggle.setOnClickListener(v -> {
+            successfulText.setVisibility(View.GONE);
+            toggleLogTravelBox(logTravelBox);
+        });
         cancelLogTravelButton.setOnClickListener(v -> toggleLogTravelBox(logTravelBox));
         calculateVacationTimeBox = findViewById(R.id.calculator_box);
-        calculatorToggle.setOnClickListener(v -> toggleCalculatorBox(calculateVacationTimeBox));
-        
+        calculatorToggle.setOnClickListener(v -> {
+            successfulText.setVisibility(View.GONE);
+            toggleCalculatorBox(calculateVacationTimeBox);
+        });
+
 
         //initialize start date edit
         startDateEdit = findViewById(R.id.calculate_start_date_input);
@@ -84,25 +94,41 @@ public class DestinationsActivity extends BottomNavigationActivity {
 
         locationInput = findViewById(R.id.travel_location_input);
         travelLogButton = findViewById(R.id.submit_log_travel_button);
+
+
         // adds the destination to the list
         travelLogButton.setOnClickListener(c -> {
-
             String locationName = locationInput.getText().toString().trim();
             String startDate = estimatedStart.getText().toString().trim();
             String endDate = estimatedEnd.getText().toString().trim();
             long duration = calculateDuration(startDate, endDate);
 
-            if (!locationName.isEmpty()) {
-                userDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+            if (!locationName.isEmpty() && this.isStartDateBeforeEndDate(startDate, endDate)) {
                 destinationDatabase = DestinationDatabase.getInstance().getDatabaseReference();
                 destinationDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean destinationExists = false;
+
+                        for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
+                            String existingDestination = destinationSnapshot.child("name").getValue(String.class);
+                            if (existingDestination != null && existingDestination.equals(locationName)) {
+                                destinationExists = true;
+                                break;
+                            }
+                        }
+
+                        if (destinationExists) {
+                            //Will change this in future
+                        } else {
                             //grabs userId from storage
                             SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("userId", null);
                             //Continue to add new location
-                            DestinationsViewModel account = new DestinationsViewModel(locationName,startDate, endDate, duration, userId);
+                            DestinationsViewModel account = new DestinationsViewModel(locationName, startDate, endDate, duration, userId);
+                            toggleLogTravelBox(logTravelBox);
+                            successfulText.setVisibility(View.VISIBLE);
+                        }
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
@@ -110,8 +136,27 @@ public class DestinationsActivity extends BottomNavigationActivity {
                     }
                 });
             }
-
         });
+    }
+
+    @Override
+    public boolean isStartDateBeforeEndDate(String startDateStr, String endDateStr) {
+        // Define the date format
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date startDate = null;
+        Date endDate = null;
+
+        try {
+            // Parse the date strings into Date objects
+            startDate = sdf.parse(startDateStr);
+            endDate = sdf.parse(endDateStr);
+        } catch (ParseException e) {
+            e.printStackTrace(); // Handle the exception appropriately
+            return false; // Return false if parsing fails
+        }
+
+        // Compare the dates
+        return startDate.before(endDate);
     }
 
     /**
