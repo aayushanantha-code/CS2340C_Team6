@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -16,11 +17,17 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Date;
+import java.util.List;
+
 import com.example.sprintproject.R;
+import com.example.sprintproject.model.Destination;
 import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.viewmodels.DestinationsViewModel;
+import com.example.sprintproject.viewmodels.ItemAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +50,9 @@ public class DestinationsActivity extends BottomNavigationActivity {
     private DatabaseReference destinationDatabase;
     private DatabaseReference userDatabase;
     private Button travelLogButton;
+    private RecyclerView recyclerView;
+    private ItemAdapter itemAdapter;
+    private List<Destination> destinationList;
 
     @Override
     /**
@@ -85,6 +95,11 @@ public class DestinationsActivity extends BottomNavigationActivity {
         locationInput = findViewById(R.id.travel_location_input);
         travelLogButton = findViewById(R.id.submit_log_travel_button);
         // adds the destination to the list
+        destinationList = new ArrayList<>();
+        recyclerView = findViewById(R.id.destination_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        itemAdapter = new ItemAdapter(destinationList);
+        recyclerView.setAdapter(itemAdapter);
         travelLogButton.setOnClickListener(c -> {
 
             String locationName = locationInput.getText().toString().trim();
@@ -98,11 +113,33 @@ public class DestinationsActivity extends BottomNavigationActivity {
                 destinationDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean destinationExists = false;
+                        List<Destination> updated = new ArrayList<>();
+                        for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
+                            String existingDestination = destinationSnapshot.child("name").getValue(String.class);
+                            if (existingDestination != null && existingDestination.equals(locationName)) {
+                                destinationExists = true;
+                                break;
+                            }
+                        }
+
+                        if (destinationExists) {
+                            //Will change this in future
+                        } else {
                             //grabs userId from storage
                             SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("userId", null);
                             //Continue to add new location
                             DestinationsViewModel account = new DestinationsViewModel(locationName,startDate, endDate, duration, userId);
+
+
+                        }
+                        List<Destination> updatedItems = new ArrayList<>();
+                        for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                            Destination item = itemSnapshot.getValue(Destination.class);
+                            updatedItems.add(item);
+                        }
+                        itemAdapter.updateItems(updatedItems);
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
