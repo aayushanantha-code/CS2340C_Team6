@@ -40,6 +40,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     testImplementation 'org.robolectric:robolectric:4.9'
+    testImplementation 'org.mockito:mockito-core:5.3.1' // For unit tests
+    androidTestImplementation 'org.mockito:mockito-android:5.3.1' // For Android tests
+    androidTestImplementation 'androidx.test:core:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
 }
 
 apply plugin: "com.google.gms.google-services"
