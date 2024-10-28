@@ -3,7 +3,6 @@ package com.example.sprintproject.views;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -15,7 +14,7 @@ import java.util.Date;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 28, manifest = Config.NONE) // Specify the SDK version and disable manifest lookup
-public class Sprint1Test {
+public class Sprint2Test {
     private DestinationsActivity destinationsActivity;
 
     @Before
