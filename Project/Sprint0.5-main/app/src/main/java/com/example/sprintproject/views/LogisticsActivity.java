@@ -49,6 +49,10 @@ public class LogisticsActivity extends BottomNavigationActivity {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_logistics, (FrameLayout) findViewById(R.id.content_frame), true);
 
+        Intent loginIntent = new Intent(LogisticsActivity.this, BottomNavigationActivity.class);
+        String number = getIntent().getStringExtra("number");
+        loginIntent.putExtra("number", number);
+
         // Initialize components
         Button datePickerButton = findViewById(R.id.button_date_picker);
         Button graphButton = findViewById(R.id.button_graph);
@@ -148,7 +152,9 @@ public class LogisticsActivity extends BottomNavigationActivity {
         if (isGraphVisible) {
             pieChart.setVisibility(View.GONE);
         } else {
-            drawPieChart(5, 10);  // Example values; replace with dynamic data
+            String number = getIntent().getStringExtra("number");
+            int newNumber = Integer.parseInt(number);
+            drawPieChart(newNumber, 10);  // Example values; replace with dynamic data
             pieChart.setVisibility(View.VISIBLE);
         }
         isGraphVisible = !isGraphVisible;
