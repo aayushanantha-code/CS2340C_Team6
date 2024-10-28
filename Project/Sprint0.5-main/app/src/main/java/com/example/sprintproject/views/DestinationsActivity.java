@@ -11,12 +11,21 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
 import com.example.sprintproject.R;
+import com.example.sprintproject.viewmodels.CreateAccountViewModel;
+import com.example.sprintproject.viewmodels.DestinationsViewModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import android.content.SharedPreferences;
+import android.widget.Toast;
+
 
 public class DestinationsActivity extends BottomNavigationActivity {
     private EditText estimatedStart;
@@ -30,6 +39,11 @@ public class DestinationsActivity extends BottomNavigationActivity {
     private Button submitButton;
     private ConstraintLayout logTravelBox;
     private ConstraintLayout calculateVacationTimeBox;
+    private EditText locationInput;
+    private DatabaseReference destinationDatabase;
+    private DatabaseReference userDatabase;
+    private Button travelLogButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +76,56 @@ public class DestinationsActivity extends BottomNavigationActivity {
 
         durationEdit = findViewById(R.id.calculate_duration_input);
         submitButton = findViewById(R.id.calculate_button);
-
+        //calculates duration
         submitButton.setOnClickListener(c -> calculate());
+
+        locationInput = findViewById(R.id.travel_location_input);
+        travelLogButton = findViewById(R.id.submit_log_travel_button);
+        // adds the destination to the list
+        travelLogButton.setOnClickListener(c -> {
+
+            String locationName = locationInput.getText().toString().trim();
+            String startDate = startDateEdit.getText().toString().trim();
+            String endDate = endDateEdit.getText().toString().trim();
+            long duration = calculateDuration(startDate, endDate);
+
+            if (!locationName.isEmpty()) {
+                userDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+                destinationDatabase = FirebaseDatabase.getInstance().getReference("destinations");
+                destinationDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean destinationExists = false;
+
+                        for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
+                            String existingDestination = destinationSnapshot.child("name").getValue(String.class);
+                            if (existingDestination != null && existingDestination.equals(locationName)) {
+                                destinationExists = true;
+                                break;
+                            }
+                        }
+
+                        if (destinationExists) {
+                            //Will change this in future
+                        } else {
+                            //grabs userId from storage
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+                            String userId = sharedPreferences.getString("userId", null);
+                            //Continue to add new location
+                            DestinationsViewModel account = new DestinationsViewModel(locationName,startDate, endDate, duration, userId);
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        //error
+                    }
+                });
+            }
+
+        });
+
 
     }
 
