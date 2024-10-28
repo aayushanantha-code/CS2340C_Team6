@@ -252,7 +252,21 @@
             app:layout_constraintTop_toBottomOf="@+id/calculate_duration_input"/>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/travel_successfully_logged"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New travel has been logged!"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/holo_green_dark"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calculate_vacation_time"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

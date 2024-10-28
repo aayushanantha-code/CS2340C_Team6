@@ -7,7 +7,7 @@ public class User {
     private String userID;
     private String password;
     // should have a list of Destinations
-    private List<String> destinationIDs;
+    private ArrayList<Destination> destinationIDs;
 
     public User() {
         this.userID = null;
@@ -29,16 +29,11 @@ public class User {
         return password;
     }
 
-    public List<String> getDestinations() {
+    public List<Destination> getDestinations() {
         return destinationIDs;
     }
 
-    public void addDestination(String destinationID) {
+    public void addDestination(Destination destinationID) {
         destinationIDs.add(destinationID);
     }
-
-    public boolean successfulLogin(String userID, String password) {
-        return userID.equals(this.userID) && (password.equals(this.password));
-    }
-
 }
