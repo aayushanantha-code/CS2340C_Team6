@@ -12,6 +12,7 @@ import java.util.Calendar;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -66,9 +67,55 @@ public class DestinationsActivity extends BottomNavigationActivity {
 
         durationEdit = findViewById(R.id.calculate_duration_input);
         submitButton = findViewById(R.id.calculate_button);
-
+        //calculates duration
         submitButton.setOnClickListener(c -> calculate());
 
+        locationInput = findViewById(R.id.travel_location_input);
+        travelLogButton = findViewById(R.id.submit_log_travel_button);
+        // adds the destination to the list
+        travelLogButton.setOnClickListener(c -> {
+
+            String locationName = locationInput.getText().toString().trim();
+            String startDate = estimatedStart.getText().toString().trim();
+            String endDate = estimatedEnd.getText().toString().trim();
+            long duration = calculateDuration(startDate, endDate);
+
+            if (!locationName.isEmpty()) {
+                userDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+                destinationDatabase = FirebaseDatabase.getInstance().getReference("destinations");
+                destinationDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean destinationExists = false;
+
+                        for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
+                            String existingDestination = destinationSnapshot.child("name").getValue(String.class);
+                            if (existingDestination != null && existingDestination.equals(locationName)) {
+                                destinationExists = true;
+                                break;
+                            }
+                        }
+
+                        if (destinationExists) {
+                            //Will change this in future
+                        } else {
+                            //grabs userId from storage
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+                            String userId = sharedPreferences.getString("userId", null);
+                            //Continue to add new location
+                            DestinationsViewModel account = new DestinationsViewModel(locationName,startDate, endDate, duration, userId);
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        //error
+                    }
+                });
+            }
+
+        });
     }
 
     /**
