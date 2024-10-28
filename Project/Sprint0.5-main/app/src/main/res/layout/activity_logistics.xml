@@ -165,13 +165,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-    android:background="@android:color/white"
-    android:divider="@android:color/darker_gray"
-    android:dividerHeight="1dp"
-    android:padding="8dp"
-    app:layout_constraintTop_toTopOf="@+id/button_add_note"
-    app:layout_constraintBottom_toTopOf="@+id/button_invite"
-    app:layout_constraintVertical_bias="2.0" /> <!-- Add bias to move it upwards -->
+        android:background="@android:color/white"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:padding="8dp"
+        app:layout_constraintTop_toTopOf="@+id/button_add_note"
+        app:layout_constraintBottom_toTopOf="@+id/button_invite"
+        app:layout_constraintVertical_bias="2.0" />
 
 
 
