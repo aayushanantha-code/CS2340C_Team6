@@ -49,31 +49,27 @@ public class LogisticsActivity extends BottomNavigationActivity {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_logistics, (FrameLayout) findViewById(R.id.content_frame), true);
 
+        // Initialize components
         Button datePickerButton = findViewById(R.id.button_date_picker);
         Button graphButton = findViewById(R.id.button_graph);
         Button inviteButton = findViewById(R.id.button_invite);
         Button addNoteButton = findViewById(R.id.button_add_note);
-
         PieChart pieChart = findViewById(R.id.pieChart);
         pieChart.setVisibility(View.GONE);
 
         dbRef = FirebaseDatabase.getInstance().getReference("InvitedGroups");
-        getOrCreateGroupId();
 
+        // Retrieve the logged-in username
+        String username = getIntent().getStringExtra("username");
+        findUserGroup(username); // Check which group the user belongs to
+
+        // Other button listeners
         datePickerButton.setOnClickListener(view -> showDatePickerDialog());
-
-        graphButton.setOnClickListener(view -> {
-            if (isGraphVisible) {
-                pieChart.setVisibility(View.GONE);
-            } else {
-                drawPieChart(5, 10);
-                pieChart.setVisibility(View.VISIBLE);
-            }
-            isGraphVisible = !isGraphVisible;
-        });
-
+        graphButton.setOnClickListener(view -> togglePieChart(pieChart));
         inviteButton.setOnClickListener(view -> showInviteDialog());
+        addNoteButton.setOnClickListener(view -> showAddNoteDialog());
 
+        // Set up ListView for notes and invited users
         ListView notesListView = findViewById(R.id.notesListView);
         notesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
         notesListView.setAdapter(notesAdapter);
@@ -81,39 +77,84 @@ public class LogisticsActivity extends BottomNavigationActivity {
         ListView invitedUsersListView = findViewById(R.id.invitedUsersListView);
         invitedUsersAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, invitedUsers);
         invitedUsersListView.setAdapter(invitedUsersAdapter);
-
-        addNoteButton.setOnClickListener(view -> showAddNoteDialog());
-        loadInvitedUsers();
-
-        // Call to search for user's current destination
-        String username = getIntent().getStringExtra("username");
-        searchUserDestination(username); // Replace with the actual logged-in user ID
     }
 
-    private void showInviteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Invite a Friend");
+    private void findUserGroup(String username) {
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean groupFound = false;
 
-        final EditText input = new EditText(this);
-        input.setHint("Enter username");
-        builder.setView(input);
+                // Check if user is already part of a group
+                for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
+                    String groupName = groupSnapshot.getKey();
+                    if (groupSnapshot.hasChild(username)) {
+                        groupFound = true;
+                        groupId = groupName;
+                        loadInvitedUsers(groupName);
+                        break;
+                    }
+                }
 
-        builder.setPositiveButton("Send Invite", (dialog, which) -> {
-            String username = input.getText().toString().trim();
-            String inviteMessage = "Join us for an exciting trip planning experience!";
-            if (!username.isEmpty()) {
-                inviteMessage = "Hi " + username + "! " + inviteMessage;
-                addInvitedUser(username);
+                // If no group was found, create a new group and add the current user
+                if (!groupFound) {
+                    groupId = dbRef.push().getKey(); // Generate a new unique group ID
+                    dbRef.child(groupId).child(username).setValue(true) // Add user to this new group
+                            .addOnSuccessListener(aVoid -> {
+                                invitedUsers.add(username); // Add inviter to the list
+                                invitedUsersAdapter.notifyDataSetChanged();
+                                Toast.makeText(LogisticsActivity.this, "New group created with you as the first member.", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> Log.e("Firebase", "Failed to create new group", e));
+                }
             }
 
-            Intent inviteIntent = new Intent(Intent.ACTION_SEND);
-            inviteIntent.setType("text/plain");
-            inviteIntent.putExtra(Intent.EXTRA_TEXT, inviteMessage);
-            startActivity(Intent.createChooser(inviteIntent, "Invite via"));
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("Firebase", "Failed to check user groups", databaseError.toException());
+            }
         });
+    }
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-        builder.show();
+    private void loadInvitedUsers(String groupName) {
+        dbRef.child(groupName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                invitedUsers.clear();
+
+                // Add creator's name to the invited users list
+                String creator = snapshot.child("creator").getValue(String.class);
+                if (creator != null) {
+                    invitedUsers.add("Group Creator: " + creator);
+                }
+
+                // Add invited users (excluding the creator)
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String user = dataSnapshot.getKey();
+                    if (!user.equals("creator")) {
+                        invitedUsers.add(user);
+                    }
+                }
+
+                invitedUsersAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Failed to load invited users", error.toException());
+            }
+        });
+    }
+
+
+    private void togglePieChart(PieChart pieChart) {
+        if (isGraphVisible) {
+            pieChart.setVisibility(View.GONE);
+        } else {
+            drawPieChart(5, 10);  // Example values; replace with dynamic data
+            pieChart.setVisibility(View.VISIBLE);
+        }
+        isGraphVisible = !isGraphVisible;
     }
 
     private void showDatePickerDialog() {
@@ -133,47 +174,57 @@ public class LogisticsActivity extends BottomNavigationActivity {
         datePickerDialog.show();
     }
 
+    private void showInviteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Invite a Friend");
+
+        final EditText input = new EditText(this);
+        input.setHint("Enter username");
+        builder.setView(input);
+
+        builder.setPositiveButton("Send Invite", (dialog, which) -> {
+            String invitedUsername = input.getText().toString().trim();
+
+            if (!invitedUsername.isEmpty()) {
+                dbRef.child(groupId).child(invitedUsername).setValue(true)
+                        .addOnSuccessListener(aVoid -> {
+                            invitedUsers.add(invitedUsername); // Add invited user to the list
+                            invitedUsersAdapter.notifyDataSetChanged();
+                            Log.d("Firebase", "User invited: " + invitedUsername);
+                            Toast.makeText(LogisticsActivity.this, invitedUsername + " has been invited.", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> Log.e("Firebase", "Failed to invite user", e));
+            } else {
+                Toast.makeText(LogisticsActivity.this, "Please enter a username.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
     public void drawPieChart(int allottedDays, int plannedDays) {
-        // Create entries for the pie chart
         List<PieEntry> entries = new ArrayList<>();
-
-        // Check for the edge case when plannedDays is 0
-        if (plannedDays == 0) {
-            Toast.makeText(this, "No planned days available to visualize.", Toast.LENGTH_SHORT).show();
-            return; // Exit the method if there are no planned days
-        }
-
-        if (allottedDays == 0) {
-            Toast.makeText(this, "No allotted days available to visualize.", Toast.LENGTH_SHORT).show();
-            return; // Exit the method if there are no planned days
-        }
-
-        // Add entries for allotted days and planned days
         entries.add(new PieEntry(allottedDays, "Allotted Days"));
         entries.add(new PieEntry(plannedDays, "Planned Days"));
 
-        // Create a data set for the entries
         PieDataSet dataSet = new PieDataSet(entries, "Trip Days");
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS); // Set colors for the pie slices
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
-        // Create PieData object and set it to the PieChart
         PieData pieData = new PieData(dataSet);
-        pieData.setValueTextSize(12f); // Set text size for percentages
+        pieData.setValueTextSize(12f);
 
-        // Configure the PieChart
         PieChart pieChart = findViewById(R.id.pieChart);
         pieChart.setData(pieData);
-        pieChart.getDescription().setEnabled(false); // Disable the description
-        pieChart.setUsePercentValues(true); // Use percent values for pie slices
-        pieChart.setDrawHoleEnabled(true); // Enable hole in the center (optional)
-        pieChart.setHoleColor(Color.WHITE); // Set hole color (optional)
-        pieChart.setTransparentCircleColor(Color.WHITE); // Set color for the transparent circle
-        pieChart.setTransparentCircleAlpha(100); // Set transparency for the circle
-        pieChart.animateY(1000); // Add animation (optional)
-        pieChart.invalidate(); // Refresh the chart
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setUsePercentValues(true);
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleColor(Color.WHITE);
+        pieChart.setTransparentCircleColor(Color.WHITE);
+        pieChart.setTransparentCircleAlpha(100);
+        pieChart.animateY(1000);
+        pieChart.invalidate();
     }
-
-
 
     private void showAddNoteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -193,118 +244,5 @@ public class LogisticsActivity extends BottomNavigationActivity {
 
         builder.show();
     }
-
-    private void addInvitedUser(String username) {
-        dbRef.child(groupId).child(username).setValue(true)
-                .addOnSuccessListener(aVoid -> Log.d("Firebase", "User invited: " + username))
-                .addOnFailureListener(e -> Log.e("Firebase", "Failed to invite user", e));
-    }
-
-    private void loadInvitedUsers() {
-        dbRef.child(groupId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                invitedUsers.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String user = dataSnapshot.getKey();
-                    invitedUsers.add(user);
-                }
-                invitedUsersAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Failed to load invited users", error.toException());
-            }
-        });
-    }
-
-    private void getOrCreateGroupId() {
-        String userId = "someUniqueUserId"; // Replace with actual user ID retrieval logic
-        DatabaseReference userGroupRef = dbRef.child("userGroups").child(userId).child("groupId");
-
-        String username = getIntent().getStringExtra("username");
-        groupId = username + "'s group";
-
-        userGroupRef.setValue(groupId);
-        userGroupRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    groupId = dataSnapshot.getValue(String.class);
-                    loadInvitedUsers();
-                } else {
-                    userGroupRef.setValue(groupId)
-                            .addOnSuccessListener(aVoid -> {
-                                Log.d("Firebase", "New group created: " + groupId);
-                                loadInvitedUsers();
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("Firebase", "Failed to create group ID", e);
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase", "Failed to retrieve group ID", databaseError.toException());
-            }
-        });
-    }
-
-    private void searchUserDestination(String userId) {
-        DatabaseReference destinationsRef = FirebaseDatabase.getInstance().getReference("destinations");
-
-        destinationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                boolean found = false;
-
-                for (DataSnapshot destinationSnapshot : dataSnapshot.getChildren()) {
-                    DataSnapshot userIDsSnapshot = destinationSnapshot.child("userIDs");
-                    for (DataSnapshot userIDSnapshot : userIDsSnapshot.getChildren()) {
-                        String storedUserId = userIDSnapshot.getValue(String.class);
-                        if (storedUserId != null && storedUserId.equals(userId)) {
-                            found = true;
-                            String startDate = destinationSnapshot.child("start").getValue(String.class);
-                            String endDate = destinationSnapshot.child("end").getValue(String.class);
-                            String destinationName = destinationSnapshot.child("name").getValue(String.class);
-                            int plannedDays = destinationSnapshot.child("duration").getValue(Integer.class);
-                            int number = 0;
-                            if (getIntent().getStringExtra("number") != null) {
-                                number = Integer.parseInt(getIntent().getStringExtra("number"));
-                            }
-
-
-
-                            drawPieChart(number, plannedDays);
-
-                            Toast.makeText(LogisticsActivity.this, "Destination: " + destinationName + ", Start: " + startDate + ", End: " + endDate, Toast.LENGTH_LONG).show();
-                            break; // Exit loop if found
-                        }
-                    }
-                    if (found) break; // Exit outer loop if found
-                }
-
-                if (!found) {
-                    Toast.makeText(LogisticsActivity.this, "No destinations found for this user.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase", "Failed to retrieve user destinations", databaseError.toException());
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadInvitedUsers(); // Load data whenever the activity is resumed
-        String username = getIntent().getStringExtra("username");
-        searchUserDestination(username); // Re-check user destination
-    }
-
 
 }
