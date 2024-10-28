@@ -17,6 +17,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import android.content.SharedPreferences;
+import android.content.Context;
+
 public class LoginActivity extends AppCompatActivity {
 
     private DatabaseReference userDatabase;
@@ -50,6 +53,13 @@ public class LoginActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             // Check if Username and Password match a User on Firebase
                             if (dataSnapshot.exists() && dataSnapshot.getValue(User.class).getPassword().equals(password)) {
+                                String userId = dataSnapshot.getKey();
+
+                                SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("userId", userId);
+                                editor.apply();
+
                                 Intent loginIntent = new Intent(LoginActivity.this, LogisticsActivity.class);
                                 startActivity(loginIntent);
                             } else {
