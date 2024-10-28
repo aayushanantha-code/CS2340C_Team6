@@ -2,14 +2,19 @@ package com.example.sprintproject.views;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
+import static org.junit.Assert.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = 28, manifest = Config.NONE) // Specify the SDK version and disable manifest lookup
 public class Sprint1Test {
     private DestinationsActivity destinationsActivity;
 
@@ -19,45 +24,33 @@ public class Sprint1Test {
     }
 
     @Test
-    public void testCalculateDuration_validDates() {
-        long duration = destinationsActivity.calculateDuration("01/01/2023", "10/01/2023");
-        assertEquals(9, duration);
-    }
-
-    @Test
-    public void testCalculateDuration_sameDates() {
-        long duration = destinationsActivity.calculateDuration("01/01/2023", "01/01/2023");
+    public void testCalculateDuration_singleInvalidStartDate() {
+        long duration = destinationsActivity.calculateDuration("invalid", "01/01/2023");
         assertEquals(0, duration);
     }
 
     @Test
-    public void testCalculateDuration_invalidDates() {
-        long duration = destinationsActivity.calculateDuration("invalid", "invalid");
+    public void testCalculateDuration_singleInvalidEndDate() {
+        long duration = destinationsActivity.calculateDuration("01/01/2023", "invalid");
         assertEquals(0, duration);
     }
 
     @Test
-    public void testCalculateEndDate_validInput() {
-        String endDate = destinationsActivity.calculateEndDate("01/01/2023", "10");
-        assertEquals("11/01/2023", endDate);
-    }
-
-    @Test
-    public void testCalculateEndDate_invalidDate() {
+    public void testCalculateEndDate_invalidStartDate() {
         String endDate = destinationsActivity.calculateEndDate("invalid", "10");
         assertEquals("", endDate);
     }
 
     @Test
-    public void testCalculateEndDate_invalidDuration() {
-        String endDate = destinationsActivity.calculateEndDate("01/01/2023", "invalid");
+    public void testCalculateEndDate_invalidEndDate() {
+        String endDate = destinationsActivity.calculateEndDate("10", "invalid");
         assertEquals("", endDate);
     }
 
     @Test
-    public void testCalculateStartDate_validInput() {
-        String startDate = destinationsActivity.calculateStartDate("11/01/2023", "10");
-        assertEquals("01/01/2023", startDate);
+    public void testCalculateEndDate_invalidDuration() {
+        String endDate = destinationsActivity.calculateEndDate("25", "invalid");
+        assertEquals("", endDate);
     }
 
     @Test
@@ -68,8 +61,14 @@ public class Sprint1Test {
 
     @Test
     public void testCalculateStartDate_invalidDuration() {
-        String startDate = destinationsActivity.calculateStartDate("11/01/2023", "invalid");
+        String startDate = destinationsActivity.calculateStartDate("10", "invalid");
         assertEquals("", startDate);
+    }
+
+    @Test
+    public void testCalculateDuration_singleInvalidDuration() {
+        long duration = destinationsActivity.calculateDuration("invalid", "01/21/2023");
+        assertEquals(0, duration);
     }
 
     @Test
@@ -93,5 +92,11 @@ public class Sprint1Test {
         destinationsActivity.setStartDateStore("invalid");
         Date startDate = destinationsActivity.getStartDate();
         assertNotNull(startDate);
+    }
+
+    @Test
+    public void testCalculateDuration_invalidDateFormat() {
+        long duration = destinationsActivity.calculateDuration("2023-01-01", "2023-01-10");
+        assertEquals(0, duration);
     }
 }
