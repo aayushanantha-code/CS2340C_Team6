@@ -24,7 +24,11 @@ public class BottomNavigationActivity extends AppCompatActivity {
                 Intent loginIntent = new Intent(BottomNavigationActivity.this, LogisticsActivity.class);
                 String username = getIntent().getStringExtra("username");
                 String number = getIntent().getStringExtra("number");
-                loginIntent.putExtra("number", number);
+                if (number != null) {
+                    loginIntent.putExtra("number", number);
+                } else {
+                    loginIntent.putExtra("number", "0"); // Default value if null
+                }
                 loginIntent.putExtra("username", username); // Pass the username
                 startActivity(loginIntent);
             }

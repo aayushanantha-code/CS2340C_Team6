@@ -244,8 +244,7 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
         } catch (ParseException p) {
             p.printStackTrace();
         }
-        Intent loginIntent = new Intent(DestinationsActivity.this, BottomNavigationActivity.class);
-        loginIntent.putExtra("number", String.valueOf(duration));
+
         return duration;
     }
 
