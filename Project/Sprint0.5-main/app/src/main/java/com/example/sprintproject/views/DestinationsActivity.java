@@ -163,7 +163,7 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
      * Toggles the log travel box
      * @param view the view to toggle
      */
-    private void toggleLogTravelBox(View view) {
+    protected void toggleLogTravelBox(View view) {
         if (view.getVisibility() == View.GONE) {
             view.setVisibility(View.VISIBLE);
         } else {
@@ -175,7 +175,7 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
      * Toggles the calculator box
      * @param view the view to toggle
      */
-    private void toggleCalculatorBox(View view) {
+    protected void toggleCalculatorBox(View view) {
         if (view.getVisibility() == View.GONE) {
             view.setVisibility(View.VISIBLE);
         } else {
@@ -232,9 +232,9 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
      * @return the duration of the trip
      */
     public long calculateDuration(String startDate, String endDate) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         long duration = 0;
         try {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             Date formattedStartDate = format.parse(startDate);
             Date formattedEndDate = format.parse(endDate);
 
@@ -244,8 +244,6 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
         } catch (ParseException p) {
             p.printStackTrace();
         }
-        Intent loginIntent = new Intent(DestinationsActivity.this, BottomNavigationActivity.class);
-        loginIntent.putExtra("number", String.valueOf(duration));
         return duration;
     }
 
