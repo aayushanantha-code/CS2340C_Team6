@@ -3,11 +3,16 @@ package com.example.sprintproject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import android.view.View;
 
 import com.example.sprintproject.views.DestinationsActivity;
+import com.example.sprintproject.views.LogisticsActivity;
 
 import org.junit.Before;
 import org.junit.Test;
+
 
 public class MyStackTest {
     private DestinationsActivity destinationsActivity;
@@ -46,6 +51,19 @@ public class MyStackTest {
         String calculatedEndDate = destinationsActivity.calculateEndDate(startDate, duration);
         assertEquals(endDate, calculatedEndDate);
     }
+
+    private LogisticsActivity logisticsActivity;
+    @Before
+    public void setupLogisticsActivity() {
+        logisticsActivity = new LogisticsActivity();
+    }
+
+    @Test
+    public void testCreateGraphButton() {
+        logisticsActivity.findViewById(R.id.button_graph).performClick();
+        assertEquals(View.VISIBLE, logisticsActivity.findViewById(R.id.pieChart).getVisibility());
+    }
+
 
 
 }
