@@ -21,7 +21,12 @@ public class BottomNavigationActivity extends AppCompatActivity {
         logisticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BottomNavigationActivity.this, LogisticsActivity.class));
+                Intent loginIntent = new Intent(BottomNavigationActivity.this, LogisticsActivity.class);
+                String username = getIntent().getStringExtra("username");
+                String number = getIntent().getStringExtra("number");
+                loginIntent.putExtra("number", number);
+                loginIntent.putExtra("username", username); // Pass the username
+                startActivity(loginIntent);
             }
         });
 
@@ -30,7 +35,13 @@ public class BottomNavigationActivity extends AppCompatActivity {
         destinationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BottomNavigationActivity.this, DestinationsActivity.class));
+                Intent loginIntent = new Intent(BottomNavigationActivity.this, DestinationsActivity.class);
+                String username = getIntent().getStringExtra("username");
+                String number = getIntent().getStringExtra("number");
+                loginIntent.putExtra("number", number);
+                loginIntent.putExtra("username", username); // Pass the username
+                startActivity(loginIntent);
+
             }
         });
 
