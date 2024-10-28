@@ -18,16 +18,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
 import com.example.sprintproject.R;
-import com.example.sprintproject.viewmodels.CreateAccountViewModel;
-import com.example.sprintproject.viewmodels.DestinationsViewModel;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import android.content.SharedPreferences;
-import android.widget.Toast;
-
 
 public class DestinationsActivity extends BottomNavigationActivity {
     private EditText estimatedStart;
@@ -41,13 +31,12 @@ public class DestinationsActivity extends BottomNavigationActivity {
     private Button submitButton;
     private ConstraintLayout logTravelBox;
     private ConstraintLayout calculateVacationTimeBox;
-    private EditText locationInput;
-    private DatabaseReference destinationDatabase;
-    private DatabaseReference userDatabase;
-    private Button travelLogButton;
-
 
     @Override
+    /**
+     * Creates the DestinationsActivity
+     * @param savedInstanceState the saved instance state
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_destinations, (FrameLayout) findViewById(R.id.content_frame), true);  // Tie this activity to its layout
@@ -127,10 +116,12 @@ public class DestinationsActivity extends BottomNavigationActivity {
             }
 
         });
-
-
     }
 
+    /**
+     * Toggles the log travel box
+     * @param view the view to toggle
+     */
     private void toggleLogTravelBox(View view) {
         if (view.getVisibility() == View.GONE) {
             view.setVisibility(View.VISIBLE);
@@ -138,6 +129,11 @@ public class DestinationsActivity extends BottomNavigationActivity {
             view.setVisibility(View.GONE);
         }
     }
+
+    /**
+     * Toggles the calculator box
+     * @param view the view to toggle
+     */
     private void toggleCalculatorBox(View view) {
         if (view.getVisibility() == View.GONE) {
             view.setVisibility(View.VISIBLE);
@@ -148,6 +144,10 @@ public class DestinationsActivity extends BottomNavigationActivity {
 
     //allows user to choose date and displays it
     //used for both start and end date inputs
+    /**
+     * Allows the user to choose a date and displays it
+     * @param dateEditText the date input field
+     */
     private void showDateEdit(EditText dateEditText) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -164,6 +164,9 @@ public class DestinationsActivity extends BottomNavigationActivity {
     }
 
     //should calculate the missing field if one is present
+    /**
+     * Calculates the missing field if one is present
+     */
     public void calculate() {
         String startDate = startDateEdit.getText().toString().trim();
         String endDate = endDateEdit.getText().toString().trim();
@@ -181,6 +184,12 @@ public class DestinationsActivity extends BottomNavigationActivity {
         // if nothing happened, then there's only 1 or 0 inputs
     }
 
+    /**
+     * Calculates the duration of the trip
+     * @param startDate the start date of the trip
+     * @param endDate the end date of the trip
+     * @return the duration of the trip
+     */
     public long calculateDuration(String startDate, String endDate) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         long duration = 0;
@@ -197,6 +206,12 @@ public class DestinationsActivity extends BottomNavigationActivity {
         return duration;
     }
 
+    /**
+     * Calculates the end date of the trip
+     * @param startDate the start date of the trip
+     * @param duration the duration of the trip
+     * @return the end date of the trip
+     */
     public String calculateEndDate(String startDate, String duration) {
         String endDate = "";
         try {
@@ -214,6 +229,12 @@ public class DestinationsActivity extends BottomNavigationActivity {
         return endDate;
     }
 
+    /**
+     * Calculates the start date of the trip
+     * @param endDate the end date of the trip
+     * @param duration the duration of the trip
+     * @return the start date of the trip
+     */
     public String calculateStartDate(String endDate, String duration) {
         String startDate = "";
         try {
@@ -231,6 +252,10 @@ public class DestinationsActivity extends BottomNavigationActivity {
         return startDate;
     }
 
+    /**
+     * Gets the start date of the trip
+     * @return the start date of the trip
+     */
     public Date getStartDate() {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date startDate = new Date();
@@ -242,6 +267,10 @@ public class DestinationsActivity extends BottomNavigationActivity {
         return startDate;
     }
 
+    /**
+     * Gets the start date of the trip
+     * @return the start date of the trip
+     */
     public Date getEndDate() {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date endDate = new Date();
@@ -251,5 +280,37 @@ public class DestinationsActivity extends BottomNavigationActivity {
             p.printStackTrace();
         }
         return endDate;
+    }
+
+    /**
+     * Gets the start date of the trip
+     * @return the start date of the trip
+     */
+    public String getStartDateScore() {
+        return startDateStore;
+    }
+
+    /**
+     * Gets the end date of the trip
+     * @return the end date of the trip
+     */
+    public String getEndDateStore() {
+        return endDateStore;
+    }
+
+    /**
+     * Sets the start date of the trip
+     * @param startDate the start date of the trip
+     */
+    public void setStartDateStore(String startDate) {
+        startDateStore = startDate;
+    }
+
+    /**
+     * Sets the end date of the trip
+     * @param endDate the end date of the trip
+     */
+    public void setEndDateStore(String endDate) {
+        endDateStore = endDate;
     }
 }
