@@ -61,7 +61,7 @@ public class MyStackTest {
     @Test
     public void testCreateGraphButton() {
         logisticsActivity.findViewById(R.id.button_graph).performClick();
-        assertTrue(logisticsActivity.findViewById(R.id.pieChart).getVisibility() == View.VISIBLE);
+        assertEquals(View.VISIBLE, logisticsActivity.findViewById(R.id.pieChart).getVisibility());
     }
 
 
