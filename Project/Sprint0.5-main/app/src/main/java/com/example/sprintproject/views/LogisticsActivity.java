@@ -3,6 +3,7 @@ package com.example.sprintproject.views;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -41,6 +44,7 @@ public class LogisticsActivity extends BottomNavigationActivity {
     private List<String> invitedUsers = new ArrayList<>();
     private ArrayAdapter<String> invitedUsersAdapter;
 
+    private DatabaseReference userDatabase;
     private DatabaseReference dbRef;
     private String groupId;
 
@@ -50,7 +54,6 @@ public class LogisticsActivity extends BottomNavigationActivity {
         getLayoutInflater().inflate(R.layout.activity_logistics, (FrameLayout) findViewById(R.id.content_frame), true);
 
         // Initialize components
-        Button datePickerButton = findViewById(R.id.button_date_picker);
         Button graphButton = findViewById(R.id.button_graph);
         Button inviteButton = findViewById(R.id.button_invite);
         Button addNoteButton = findViewById(R.id.button_add_note);
@@ -64,7 +67,6 @@ public class LogisticsActivity extends BottomNavigationActivity {
         findUserGroup(username); // Check which group the user belongs to
 
         // Other button listeners
-        datePickerButton.setOnClickListener(view -> showDatePickerDialog());
         graphButton.setOnClickListener(view -> togglePieChart(pieChart));
         inviteButton.setOnClickListener(view -> showInviteDialog());
         addNoteButton.setOnClickListener(view -> showAddNoteDialog());
@@ -142,34 +144,36 @@ public class LogisticsActivity extends BottomNavigationActivity {
     }
 
 
-
-
     private void togglePieChart(PieChart pieChart) {
         if (isGraphVisible) {
             pieChart.setVisibility(View.GONE);
         } else {
-            drawPieChart(5, 10);  // Example values; replace with dynamic data
-            pieChart.setVisibility(View.VISIBLE);
+            SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+            String userId = sharedPreferences.getString("userId", null);
+            userDatabase = FirebaseDatabase.getInstance().getReference();
+
+            userDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Integer allocatedDays = dataSnapshot.child("allocatedVacationDays").getValue(Integer.class);
+                    Integer plannedDays = dataSnapshot.child("vacationDuration").getValue(Integer.class);
+                    if (allocatedDays != null && plannedDays != null && plannedDays <= allocatedDays) {
+                        int unplannedAllocatedDays = allocatedDays - plannedDays;
+                        drawPieChart(pieChart, unplannedAllocatedDays, plannedDays);  // Example values; replace with dynamic data
+                        pieChart.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Failure
+                }
+            });
         }
         isGraphVisible = !isGraphVisible;
     }
 
-    private void showDatePickerDialog() {
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                LogisticsActivity.this,
-                (view, year1, month1, dayOfMonth) -> {
-                    String selectedDate = dayOfMonth + "/" + (month1 + 1) + "/" + year1;
-                    // Optionally, do something with the selected date
-                },
-                year, month, day
-        );
-        datePickerDialog.show();
-    }
 
     private void showInviteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -219,20 +223,28 @@ public class LogisticsActivity extends BottomNavigationActivity {
     }
 
 
-    public void drawPieChart(int allottedDays, int plannedDays) {
+    public void drawPieChart(PieChart pieChart, int allottedDays, int plannedDays) {
         List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(allottedDays, "Allotted Days"));
+        entries.add(new PieEntry(allottedDays, "Unplanned Allotted Days"));
         entries.add(new PieEntry(plannedDays, "Planned Days"));
 
         PieDataSet dataSet = new PieDataSet(entries, "Trip Days");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
         PieData pieData = new PieData(dataSet);
-        pieData.setValueTextSize(12f);
+        pieData.setValueTextSize(30f);
+        Legend legend = pieChart.getLegend();
+        legend.setEnabled(true);
+        legend.setTextSize(18f);
+        legend.setTextColor(Color.WHITE);
 
-        PieChart pieChart = findViewById(R.id.pieChart);
+        Description description = new Description();
+        description.setText("Days of Vacation");
+        description.setTextSize(30f); // Set title text size
+        description.setTextColor(Color.WHITE); // Set title text color
+        pieChart.setDescription(description);
+
         pieChart.setData(pieData);
-        pieChart.getDescription().setEnabled(false);
         pieChart.setUsePercentValues(true);
         pieChart.setDrawHoleEnabled(true);
         pieChart.setHoleColor(Color.WHITE);

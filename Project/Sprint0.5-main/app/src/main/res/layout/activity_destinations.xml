@@ -150,7 +150,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text= "Calculate Vacation Time"
+        android:text= "Allocate Vacation Time"
         android:backgroundTint="#432b4a"
         app:layout_constraintTop_toBottomOf="@+id/log_travel_box"
         app:layout_constraintStart_toStartOf="parent"

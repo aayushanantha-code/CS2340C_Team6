@@ -89,8 +89,15 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
 
         durationEdit = findViewById(R.id.calculate_duration_input);
         submitButton = findViewById(R.id.calculate_button);
+
         //calculates duration
-        submitButton.setOnClickListener(c -> calculate());
+        submitButton.setOnClickListener(c -> {
+            long days = calculate();
+            DestinationsViewModel account = new DestinationsViewModel();
+            SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+            String userId = sharedPreferences.getString("userId", null);
+            account.allocateVacationDays(days, userId);
+        });
 
         locationInput = findViewById(R.id.travel_location_input);
         travelLogButton = findViewById(R.id.submit_log_travel_button);
@@ -125,7 +132,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                             SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("userId", null);
                             //Continue to add new location
-                            DestinationsViewModel account = new DestinationsViewModel(locationName, startDate, endDate, duration, userId);
+                            DestinationsViewModel account = new DestinationsViewModel();
+                            account.logNewDestination(locationName, startDate, endDate, duration, userId);
                             toggleLogTravelBox(logTravelBox);
                             successfulText.setVisibility(View.VISIBLE);
                         }
@@ -208,20 +216,24 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
     /**
      * Calculates the missing field if one is present
      */
-    public void calculate() {
+    public long calculate() {
         String startDate = startDateEdit.getText().toString().trim();
         String endDate = endDateEdit.getText().toString().trim();
         String duration = durationEdit.getText().toString().trim();
+        long days = 0;
 
         if (!startDate.isEmpty() && !endDate.isEmpty() && !duration.isEmpty()) {
-            calculateDuration(startDate, endDate);
+            days = calculateDuration(startDate, endDate);
         } else if (!startDate.isEmpty() && !endDate.isEmpty()) {
-            calculateDuration(startDate, endDate);
+            days = calculateDuration(startDate, endDate);
         } else if (!startDate.isEmpty() && !duration.isEmpty()) {
+            days = Long.parseLong(duration);
             calculateEndDate(startDate, duration);
         } else if (!endDate.isEmpty() && !duration.isEmpty()) {
+            days = Long.parseLong(duration);
             calculateStartDate(endDate, duration);
         }
+        return days;
         // if nothing happened, then there's only 1 or 0 inputs
     }
 
