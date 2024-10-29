@@ -189,7 +189,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                 }
                 if (destinationList != null && destinationList.size() > 0) {
                     for (int i = 0; i < destinationList.size(); i++) {
-                        userDestinations.add(destinationList.get(i).getName() + " - " + destinationList.get(i).getDuration() + " days");
+                        userDestinations.add(destinationList.get(i).getName()
+                                + " - " + destinationList.get(i).getDuration() + " days");
                         System.out.println(userDestinations.get(i));
                     }
                         if (userDestinations.size() > 5) {
