@@ -9,6 +9,11 @@ public class CreateAccountViewModel {
 
     private DatabaseReference userDatabase;
 
+    /**
+     * Constructor for CreateAccountViewModel
+     * @param username of the user
+     * @param password of the user
+     */
     public CreateAccountViewModel(String username, String password) {
         userDatabase = FirebaseDatabase.getInstance().getReference();
         User user = new User(username, password);
