@@ -25,4 +25,119 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="75dp"/> <!-- Adjust top margin as needed -->
 
+    <FrameLayout
+        android:id="@+id/dining_reservation_box"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="25dp"
+            android:layout_gravity="center"
+            android:background="@android:color/white"
+            android:elevation="10dp">
+            <TextView
+                android:id="@+id/overlay_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Reservation"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <EditText
+                android:id="@+id/date_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select Date"
+                android:inputType="date"
+                android:background="@android:color/darker_gray"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time"
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <EditText
+                android:id="@+id/time_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select Time"
+                android:inputType="time"
+                android:background="@android:color/darker_gray"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="URL"
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <EditText
+                android:id="@+id/url_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter URL"
+                android:inputType="textUri"
+                android:background="@android:color/darker_gray"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <EditText
+                android:id="@+id/location_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Location"
+                android:inputType="text"
+                android:background="@android:color/darker_gray"
+                android:padding="8dp"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/submit_reservation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Reservation"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/add_dining"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:text="+"
+        android:textSize="24sp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
