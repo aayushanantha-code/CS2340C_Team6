@@ -58,7 +58,9 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_destinations, (FrameLayout) findViewById(R.id.content_frame), true);  // Tie this activity to its layout
+        getLayoutInflater().inflate(R.layout.activity_destinations,
+                (FrameLayout) findViewById(R.id.content_frame),
+                true);  // Tie this activity to its layout
 
         Button logTravelToggle = findViewById(R.id.log_travel);
         Button calculatorToggle = findViewById(R.id.calculate_vacation_time);
@@ -115,8 +117,10 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                         boolean destinationExists = false;
 
                         for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
-                            String existingDestination = destinationSnapshot.child("name").getValue(String.class);
-                            if (existingDestination != null && existingDestination.equals(locationName)) {
+                            String existingDestination =
+                                    destinationSnapshot.child("name").getValue(String.class);
+                            if (existingDestination != null
+                                    && existingDestination.equals(locationName)) {
                                 destinationExists = true;
                                 break;
                             }
@@ -126,10 +130,12 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                             //Will change this in future
                         } else {
                             //grabs userId from storage
-                            SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+                            SharedPreferences sharedPreferences =
+                                    getSharedPreferences("MyApp", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("userId", null);
                             //Continue to add new location
-                            DestinationsViewModel account = new DestinationsViewModel(locationName, startDate, endDate, duration, userId);
+                            DestinationsViewModel account = new DestinationsViewModel(
+                                    locationName, startDate, endDate, duration, userId);
                             toggleLogTravelBox(logTravelBox);
                             successfulText.setVisibility(View.VISIBLE);
                         }
@@ -199,11 +205,12 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth,  selectedDay) -> {
+        DatePickerDialog datePickerDialog =
+                new DatePickerDialog(this, (view, selectedYear, selectedMonth,  selectedDay) -> {
 
-            String storeDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
-            dateEditText.setText(storeDate);
-        }, year, month, day);
+                    String storeDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                    dateEditText.setText(storeDate);
+                }, year, month, day);
 
         datePickerDialog.show();
     }
@@ -242,7 +249,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             Date formattedStartDate = format.parse(startDate);
             Date formattedEndDate = format.parse(endDate);
 
-            duration = (formattedEndDate.getTime() - formattedStartDate.getTime()) / (1000 * 60 * 60 * 24);
+            duration = (formattedEndDate.getTime() - formattedStartDate.getTime())
+                    / (1000 * 60 * 60 * 24);
             durationEdit.setText(String.valueOf(duration));
             return duration;
         } catch (ParseException p) {
@@ -264,7 +272,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             Date formatStartDate = format.parse(startDate);
             int durationInt = Integer.parseInt(duration);
 
-            long endDateMilliseconds = formatStartDate.getTime() + (durationInt * 1000L * 60 * 60 * 24);
+            long endDateMilliseconds = formatStartDate.getTime()
+                    + (durationInt * 1000L * 60 * 60 * 24);
             endDate = format.format(new Date(endDateMilliseconds));
             endDateEdit.setText(endDate);
             return endDate;
@@ -287,7 +296,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             Date formatEndDate = format.parse(endDate);
             int durationInt = Integer.parseInt(duration);
 
-            long endDateMilliseconds = formatEndDate.getTime() - (durationInt * 1000L * 60 * 60 * 24);
+            long endDateMilliseconds = formatEndDate.getTime()
+                    - (durationInt * 1000L * 60 * 60 * 24);
             startDate = format.format(new Date(endDateMilliseconds));
             startDateEdit.setText(startDate);
             return startDate;

@@ -48,7 +48,8 @@ public class LogisticsActivity extends BottomNavigationActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_logistics, (FrameLayout) findViewById(R.id.content_frame), true);
+        getLayoutInflater().inflate(R.layout.activity_logistics,
+                (FrameLayout) findViewById(R.id.content_frame), true);
 
         // Initialize components
         Button datePickerButton = findViewById(R.id.button_date_picker);
@@ -76,7 +77,8 @@ public class LogisticsActivity extends BottomNavigationActivity {
         notesListView.setAdapter(notesAdapter);
 
         ListView invitedUsersListView = findViewById(R.id.invitedUsersListView);
-        invitedUsersAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, invitedUsers);
+        invitedUsersAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                invitedUsers);
         invitedUsersListView.setAdapter(invitedUsersAdapter);
     }
 
@@ -100,19 +102,24 @@ public class LogisticsActivity extends BottomNavigationActivity {
                 // If no group was found, create a new group named with the user's username
                 if (username != null && !groupFound) {
                     groupId = username + "'s group"; // Use the username as part of the group name
-                    dbRef.child(groupId).child(username).setValue(true) // Add user to this new group
+                    // Add user to this new group
+                    dbRef.child(groupId).child(username).setValue(true)
                             .addOnSuccessListener(aVoid -> {
                                 invitedUsers.add(username); // Add inviter to the list
                                 invitedUsersAdapter.notifyDataSetChanged();
-                                Toast.makeText(LogisticsActivity.this, "New group created with you as the first member.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LogisticsActivity.this,
+                                        "New group created with you as the first member.",
+                                        Toast.LENGTH_SHORT).show();
                             })
-                            .addOnFailureListener(e -> Log.e("Firebase", "Failed to create new group", e));
+                            .addOnFailureListener(e -> Log.e("Firebase",
+                                    "Failed to create new group", e));
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase", "Failed to check user groups", databaseError.toException());
+                Log.e("Firebase", "Failed to check user groups",
+                        databaseError.toException());
             }
         });
     }
@@ -149,7 +156,8 @@ public class LogisticsActivity extends BottomNavigationActivity {
         if (isGraphVisible) {
             pieChart.setVisibility(View.GONE);
         } else {
-            drawPieChart(5, 10);  // Example values; replace with dynamic data
+            drawPieChart(5,
+                    10);  // Example values; replace with dynamic data
             pieChart.setVisibility(View.VISIBLE);
         }
         isGraphVisible = !isGraphVisible;
@@ -185,33 +193,42 @@ public class LogisticsActivity extends BottomNavigationActivity {
 
             if (!invitedUsername.isEmpty()) {
                 // Check if the user exists in the "users" branch
-                DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-                usersRef.child(invitedUsername).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            // User exists, proceed with the invitation
-                            dbRef.child(groupId).child(invitedUsername).setValue(true)
-                                    .addOnSuccessListener(aVoid -> {
-                                        invitedUsers.add(invitedUsername); // Add invited user to the list
-                                        invitedUsersAdapter.notifyDataSetChanged();
-                                        Log.d("Firebase", "User invited: " + invitedUsername);
-                                        Toast.makeText(LogisticsActivity.this, invitedUsername + " has been invited.", Toast.LENGTH_SHORT).show();
-                                    })
-                                    .addOnFailureListener(e -> Log.e("Firebase", "Failed to invite user", e));
-                        } else {
-                            // User doesn't exist, show a message
-                            Toast.makeText(LogisticsActivity.this, "User doesn't exist. Try again.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.e("Firebase", "Failed to check if user exists", databaseError.toException());
-                    }
-                });
+                DatabaseReference usersRef =
+                        FirebaseDatabase.getInstance().getReference("users");
+                usersRef.child(invitedUsername)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    // User exists, proceed with the invitation
+                                    dbRef.child(groupId).child(invitedUsername).setValue(true)
+                                        .addOnSuccessListener(aVoid -> {
+                                            // Add invited user to the list
+                                            invitedUsers.add(invitedUsername);
+                                            invitedUsersAdapter.notifyDataSetChanged();
+                                            Log.d("Firebase", "User invited: " + invitedUsername);
+                                            Toast.makeText(LogisticsActivity.this, invitedUsername
+                                                    + " has been invited.",
+                                                    Toast.LENGTH_SHORT).show();
+                                        })
+                                        .addOnFailureListener(e -> Log.e("Firebase",
+                                                "Failed to invite user", e));
+                                } else {
+                                    // User doesn't exist, show a message
+                                    Toast.makeText(LogisticsActivity.this,
+                                            "User doesn't exist. Try again.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.e("Firebase", "Failed to check if user exists",
+                                        databaseError.toException());
+                            }
+                        });
             } else {
-                Toast.makeText(LogisticsActivity.this, "Please enter a username.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LogisticsActivity.this,
+                        "Please enter a username.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -257,8 +274,10 @@ public class LogisticsActivity extends BottomNavigationActivity {
                 // Save the note under the correct groupId and username
                 dbRef.child(groupId).child(username).child("note").setValue(note)
                         .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(LogisticsActivity.this, "Note added successfully.", Toast.LENGTH_SHORT).show();
-                            loadInvitedUsers(groupId); // Refresh the notes list to display the newly added note
+                            Toast.makeText(LogisticsActivity.this,
+                                    "Note added successfully.", Toast.LENGTH_SHORT).show();
+                            // Refresh the notes list to display the newly added note
+                            loadInvitedUsers(groupId);
                         })
                         .addOnFailureListener(e -> Log.e("Firebase", "Failed to add note", e));
             }
