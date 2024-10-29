@@ -1,11 +1,7 @@
 package com.example.sprintproject.views;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.FrameLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
 

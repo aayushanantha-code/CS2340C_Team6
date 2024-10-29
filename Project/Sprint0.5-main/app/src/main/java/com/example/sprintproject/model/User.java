@@ -1,8 +1,6 @@
 package com.example.sprintproject.model;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class User {
     private String userID;
@@ -48,7 +46,7 @@ public class User {
 
     public void addDestination(Destination destination) {
         destinationList.add(destination);
-        for (int i=0; i<destinationList.size(); i++) {
+        for (int i = 0; i < destinationList.size(); i++) {
             System.out.println(destinationList.get(i).getName());
         }
     }

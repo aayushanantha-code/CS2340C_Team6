@@ -1,7 +1,6 @@
 package com.example.sprintproject.views;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -15,20 +14,22 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DateComparison;
 import com.example.sprintproject.model.DestinationDatabase;
-import com.example.sprintproject.model.User;
 import com.example.sprintproject.viewmodels.DestinationsViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
+import java.util.ArrayList;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class DestinationsActivity extends BottomNavigationActivity implements DateComparison {
     private EditText estimatedStart;
@@ -46,6 +47,9 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
     private DatabaseReference destinationDatabase;
     private DatabaseReference userDatabase;
     private Button travelLogButton;
+    private ListView destinationList;
+    private List<String> destinationData = new ArrayList<>();
+    private ArrayAdapter<String> destinationAdapter;
 
     @Override
     /**

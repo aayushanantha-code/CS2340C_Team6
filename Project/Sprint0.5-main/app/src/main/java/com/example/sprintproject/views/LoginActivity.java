@@ -18,7 +18,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import android.content.SharedPreferences;
-import android.content.Context;
 
 public class LoginActivity extends AppCompatActivity {
 
