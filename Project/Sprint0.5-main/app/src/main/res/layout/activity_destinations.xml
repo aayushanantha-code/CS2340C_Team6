@@ -36,6 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.5" />
+
     <!-- Log travel Section  -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/log_travel_box"
@@ -268,5 +269,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/calculate_vacation_time"
         />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
