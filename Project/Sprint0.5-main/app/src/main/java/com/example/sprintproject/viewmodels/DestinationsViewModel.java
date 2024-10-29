@@ -1,14 +1,7 @@
 package com.example.sprintproject.viewmodels;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.view.View;
-
 import com.example.sprintproject.model.Destination;
 import com.example.sprintproject.model.DestinationDatabase;
-import com.example.sprintproject.model.User;
-import com.example.sprintproject.views.LoginActivity;
-import com.example.sprintproject.views.LogisticsActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,8 +43,15 @@ public class DestinationsViewModel {
                     if (destination != null) {
                         destinationList.add(destination);
                     }
+                    destinationList.add(newDestination);
+                    userDatabase.child("users").child(userId).child("destinations")
+                            .setValue(destinationList);
                 }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Failure
+                }
                 destinationList.add(newDestination);
                 userDatabase.child("users").child(userId).child("destinations").setValue(destinationList);
                 userDatabase.child("users").child(userId).child("vacationDuration").setValue(duration);

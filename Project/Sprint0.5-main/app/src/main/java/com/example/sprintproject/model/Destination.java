@@ -2,7 +2,6 @@ package com.example.sprintproject.model;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class Destination {
@@ -14,7 +13,7 @@ public class Destination {
 
 
     public Destination() {
-        this.name= "";
+        this.name = "";
         this.start = "";
         this.end = "";
         this.duration = 0;

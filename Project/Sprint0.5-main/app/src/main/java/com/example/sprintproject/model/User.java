@@ -1,8 +1,6 @@
 package com.example.sprintproject.model;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class User {
     private String userID;
@@ -62,5 +60,6 @@ public class User {
 
     public void addVacationDays(int plannedDays) {
         this.plannedDays += plannedDays;
+        }
     }
 }
