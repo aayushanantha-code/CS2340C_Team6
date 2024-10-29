@@ -1,2 +1,2 @@
-package com.example.sprintproject.model;public class Group {
+package com.example.sprintproject.model; public class Group {
 }

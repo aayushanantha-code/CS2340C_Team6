@@ -1,7 +1,6 @@
 package com.example.sprintproject.views;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
@@ -27,13 +25,16 @@ import java.util.List;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DateComparison;
 import com.example.sprintproject.model.DestinationDatabase;
-import com.example.sprintproject.model.User;
 import com.example.sprintproject.viewmodels.DestinationsViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
+import java.util.ArrayList;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class DestinationsActivity extends BottomNavigationActivity implements DateComparison {
     private EditText estimatedStart;
@@ -51,9 +52,11 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
     private DatabaseReference destinationDatabase;
     private DatabaseReference userDatabase;
     private Button travelLogButton;
+
     private List<String> userDestinations; // Added to store user's destinations
     private ListView destinationsView; // ListView to display destinations
     private ArrayAdapter<String> destinationsAdapter; // Adapter for the ListView
+
 
     @Override
     /**
@@ -62,7 +65,9 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_destinations, (FrameLayout) findViewById(R.id.content_frame), true);  // Tie this activity to its layout
+        getLayoutInflater().inflate(R.layout.activity_destinations,
+                (FrameLayout) findViewById(R.id.content_frame),
+                true);  // Tie this activity to its layout
 
         Button logTravelToggle = findViewById(R.id.log_travel);
         Button calculatorToggle = findViewById(R.id.calculate_vacation_time);
@@ -109,8 +114,15 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
 
         durationEdit = findViewById(R.id.calculate_duration_input);
         submitButton = findViewById(R.id.calculate_button);
+
         //calculates duration
-        submitButton.setOnClickListener(c -> calculate());
+        submitButton.setOnClickListener(c -> {
+            long days = calculate();
+            DestinationsViewModel account = new DestinationsViewModel();
+            SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+            String userId = sharedPreferences.getString("userId", null);
+            account.allocateVacationDays(days, userId);
+        });
 
         locationInput = findViewById(R.id.travel_location_input);
         travelLogButton = findViewById(R.id.submit_log_travel_button);
@@ -250,11 +262,12 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth,  selectedDay) -> {
+        DatePickerDialog datePickerDialog =
+                new DatePickerDialog(this, (view, selectedYear, selectedMonth,  selectedDay) -> {
 
-            String storeDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
-            dateEditText.setText(storeDate);
-        }, year, month, day);
+                    String storeDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                    dateEditText.setText(storeDate);
+                }, year, month, day);
 
         datePickerDialog.show();
     }
@@ -262,21 +275,26 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
     //should calculate the missing field if one is present
     /**
      * Calculates the missing field if one is present
+     * @return date
      */
-    public void calculate() {
+    public long calculate() {
         String startDate = startDateEdit.getText().toString().trim();
         String endDate = endDateEdit.getText().toString().trim();
         String duration = durationEdit.getText().toString().trim();
+        long days = 0;
 
         if (!startDate.isEmpty() && !endDate.isEmpty() && !duration.isEmpty()) {
-            calculateDuration(startDate, endDate);
+            days = calculateDuration(startDate, endDate);
         } else if (!startDate.isEmpty() && !endDate.isEmpty()) {
-            calculateDuration(startDate, endDate);
+            days = calculateDuration(startDate, endDate);
         } else if (!startDate.isEmpty() && !duration.isEmpty()) {
+            days = Long.parseLong(duration);
             calculateEndDate(startDate, duration);
         } else if (!endDate.isEmpty() && !duration.isEmpty()) {
+            days = Long.parseLong(duration);
             calculateStartDate(endDate, duration);
         }
+        return days;
         // if nothing happened, then there's only 1 or 0 inputs
     }
 
@@ -293,7 +311,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             Date formattedStartDate = format.parse(startDate);
             Date formattedEndDate = format.parse(endDate);
 
-            duration = (formattedEndDate.getTime() - formattedStartDate.getTime()) / (1000 * 60 * 60 * 24);
+            duration = (formattedEndDate.getTime() - formattedStartDate.getTime())
+                    / (1000 * 60 * 60 * 24);
             durationEdit.setText(String.valueOf(duration));
             return duration;
         } catch (ParseException p) {
@@ -315,7 +334,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             Date formatStartDate = format.parse(startDate);
             int durationInt = Integer.parseInt(duration);
 
-            long endDateMilliseconds = formatStartDate.getTime() + (durationInt * 1000L * 60 * 60 * 24);
+            long endDateMilliseconds = formatStartDate.getTime()
+                    + (durationInt * 1000L * 60 * 60 * 24);
             endDate = format.format(new Date(endDateMilliseconds));
             endDateEdit.setText(endDate);
             return endDate;
@@ -338,7 +358,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             Date formatEndDate = format.parse(endDate);
             int durationInt = Integer.parseInt(duration);
 
-            long endDateMilliseconds = formatEndDate.getTime() - (durationInt * 1000L * 60 * 60 * 24);
+            long endDateMilliseconds = formatEndDate.getTime()
+                    - (durationInt * 1000L * 60 * 60 * 24);
             startDate = format.format(new Date(endDateMilliseconds));
             startDateEdit.setText(startDate);
             return startDate;

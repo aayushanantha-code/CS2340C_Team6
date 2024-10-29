@@ -9,15 +9,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.sprintproject.R;
-import com.example.sprintproject.model.User;
 import com.example.sprintproject.viewmodels.CreateAccountViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -56,7 +53,8 @@ public class RegisterActivity extends AppCompatActivity {
                             boolean usernameExists = false;
 
                             for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                                String existingUsername = userSnapshot.child("userID").getValue(String.class);
+                                String existingUsername = userSnapshot.child("userID").
+                                        getValue(String.class);
                                 if (existingUsername != null && existingUsername.equals(username)) {
                                     usernameExists = true;
                                     break;
@@ -68,8 +66,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 usernameTaken.setVisibility(View.VISIBLE);
                             } else {
                                 //Continue to make a new Account
-                                CreateAccountViewModel account = new CreateAccountViewModel(username, password);
-                                Intent createAccountIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                CreateAccountViewModel account =
+                                        new CreateAccountViewModel(username, password);
+                                Intent createAccountIntent =
+                                        new Intent(RegisterActivity.this, LoginActivity.class);
                                 startActivity(createAccountIntent);
                             }
                         }

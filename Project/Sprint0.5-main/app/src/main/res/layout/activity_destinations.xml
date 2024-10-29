@@ -36,6 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.5" />
+
     <!-- Log travel Section  -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/log_travel_box"
@@ -150,7 +151,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text= "Calculate Vacation Time"
+        android:text= "Allocate Vacation Time"
         android:backgroundTint="#432b4a"
         app:layout_constraintTop_toBottomOf="@+id/log_travel_box"
         app:layout_constraintStart_toStartOf="parent"
@@ -269,6 +270,7 @@
         app:layout_constraintTop_toBottomOf="@id/calculate_vacation_time"
         />
 
+
     <ListView
         android:id="@+id/destinations_View"
         android:layout_width="match_parent"
@@ -281,6 +283,7 @@
 
     app:layout_constraintTop_toBottomOf="@+id/calculate_button"
     app:layout_constraintBottom_toBottomOf="parent" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
