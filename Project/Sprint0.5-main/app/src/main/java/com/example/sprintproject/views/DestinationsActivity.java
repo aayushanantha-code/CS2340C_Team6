@@ -142,7 +142,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                             String userId = sharedPreferences.getString("userId", null);
                             //Continue to add new location
                             DestinationsViewModel account = new DestinationsViewModel();
-                            account.logNewDestination(locationName, startDate, endDate, duration, userId);
+                            account.logNewDestination(locationName, startDate,
+                                    endDate, duration, userId);
                             toggleLogTravelBox(logTravelBox);
                             successfulText.setVisibility(View.VISIBLE);
                         }
@@ -225,6 +226,7 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
     //should calculate the missing field if one is present
     /**
      * Calculates the missing field if one is present
+     * @return date
      */
     public long calculate() {
         String startDate = startDateEdit.getText().toString().trim();

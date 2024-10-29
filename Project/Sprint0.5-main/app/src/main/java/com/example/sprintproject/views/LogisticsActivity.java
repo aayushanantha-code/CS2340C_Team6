@@ -1,8 +1,6 @@
 package com.example.sprintproject.views;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,7 +30,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -161,23 +158,27 @@ public class LogisticsActivity extends BottomNavigationActivity {
             String userId = sharedPreferences.getString("userId", null);
             userDatabase = FirebaseDatabase.getInstance().getReference();
 
-            userDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Integer allocatedDays = dataSnapshot.child("allocatedVacationDays").getValue(Integer.class);
-                    Integer plannedDays = dataSnapshot.child("vacationDuration").getValue(Integer.class);
-                    if (allocatedDays != null && plannedDays != null && plannedDays <= allocatedDays) {
-                        int unplannedAllocatedDays = allocatedDays - plannedDays;
-                        drawPieChart(pieChart, unplannedAllocatedDays, plannedDays);  // Example values; replace with dynamic data
-                        pieChart.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Failure
-                }
-            });
+            userDatabase.child("users").child(userId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Integer allocatedDays = dataSnapshot.child(
+                                    "allocatedVacationDays").getValue(Integer.class);
+                            Integer plannedDays = dataSnapshot.child(
+                                    "vacationDuration").getValue(Integer.class);
+                            if (allocatedDays != null && plannedDays
+                                    != null && plannedDays <= allocatedDays) {
+                                int unplannedAllocatedDays = allocatedDays - plannedDays;
+                                // Example values; replace with dynamic data
+                                drawPieChart(pieChart, unplannedAllocatedDays, plannedDays);
+                                pieChart.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Failure
+                        }
+                    });
         }
         isGraphVisible = !isGraphVisible;
     }
