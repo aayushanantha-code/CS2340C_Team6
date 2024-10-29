@@ -82,6 +82,10 @@ public class LogisticsActivity extends BottomNavigationActivity {
         invitedUsersListView.setAdapter(invitedUsersAdapter);
     }
 
+    /**
+     * Check if the user is already part of a group. If not, create a new group.
+     * @param username The username of the logged-in user
+     */
     private void findUserGroup(String username) {
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -125,6 +129,10 @@ public class LogisticsActivity extends BottomNavigationActivity {
     }
 
 
+    /**
+     * Load the invited users for the given group and display them in the ListView.
+     * @param groupName The name of the group
+     */
     private void loadInvitedUsers(String groupName) {
         dbRef.child(groupName).addValueEventListener(new ValueEventListener() {
             @Override
@@ -150,6 +158,10 @@ public class LogisticsActivity extends BottomNavigationActivity {
     }
 
 
+    /**
+     * Toggle the visibility of the pie chart.
+     * @param pieChart The pie chart to toggle
+     */
     private void togglePieChart(PieChart pieChart) {
         if (isGraphVisible) {
             pieChart.setVisibility(View.GONE);
@@ -184,7 +196,9 @@ public class LogisticsActivity extends BottomNavigationActivity {
     }
 
 
-
+    /**
+     * Show a dialog to invite a friend to the group.
+     */
     private void showInviteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Invite a Friend");
@@ -242,6 +256,12 @@ public class LogisticsActivity extends BottomNavigationActivity {
     }
 
 
+    /**
+     * Draw a pie chart with the given data.
+     * @param pieChart The pie chart to draw
+     * @param allottedDays The number of unplanned allotted days
+     * @param plannedDays The number of planned days
+     */
     public void drawPieChart(PieChart pieChart, int allottedDays, int plannedDays) {
         List<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(allottedDays, "Unplanned Allotted Days"));
@@ -273,6 +293,9 @@ public class LogisticsActivity extends BottomNavigationActivity {
         pieChart.invalidate();
     }
 
+    /**
+     * Show a dialog to add a note to the group.
+     */
     private void showAddNoteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add Note");
@@ -299,8 +322,4 @@ public class LogisticsActivity extends BottomNavigationActivity {
 
         builder.show();
     }
-
-
-
-
 }

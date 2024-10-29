@@ -168,7 +168,10 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             }
         });
     }
-
+    /**
+     * Fetches the user's destinations
+     * @param username the username of the user
+     */
     public void fetchUserDestinations(String username) {
         userDatabase = FirebaseDatabase.getInstance().getReference();
         userDatabase.child("users").child(username).addListenerForSingleValueEvent(new ValueEventListener() {

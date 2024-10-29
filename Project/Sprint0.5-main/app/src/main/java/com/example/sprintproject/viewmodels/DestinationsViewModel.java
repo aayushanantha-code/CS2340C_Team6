@@ -16,9 +16,20 @@ public class DestinationsViewModel {
 
     //populates the destinations database
 
+    /**
+     * Constructor for DestinationsViewModel
+     */
     public DestinationsViewModel() {
     }
 
+    /**
+     * Logs a new destination
+     * @param name of the destination
+     * @param start date
+     * @param end date
+     * @param duration of the trip
+     * @param userId of the user
+     */
     public void logNewDestination(String name, String start, String end, long duration, String userId) {
         userDatabase = FirebaseDatabase.getInstance().getReference();
         destinationDatabase = DestinationDatabase.getInstance().getDatabaseReference();
@@ -57,6 +68,11 @@ public class DestinationsViewModel {
         destinationDatabase.child(name).setValue(newDestination);
     }
 
+    /**
+     * Allocates vacation days
+     * @param days of the trip
+     * @param userId of the user
+     */
     public void allocateVacationDays(long days, String userId) {
         userDatabase = FirebaseDatabase.getInstance().getReference();
         userDatabase.child("users").child(userId).child("allocatedVacationDays").setValue(days);
