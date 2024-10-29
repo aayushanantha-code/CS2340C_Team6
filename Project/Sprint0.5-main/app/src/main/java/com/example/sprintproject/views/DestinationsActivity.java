@@ -4,19 +4,24 @@ import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
+import java.util.List;
+
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DateComparison;
 import com.example.sprintproject.model.DestinationDatabase;
@@ -47,9 +52,11 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
     private DatabaseReference destinationDatabase;
     private DatabaseReference userDatabase;
     private Button travelLogButton;
-    private ListView destinationList;
-    private List<String> destinationData = new ArrayList<>();
-    private ArrayAdapter<String> destinationAdapter;
+
+    private List<String> userDestinations; // Added to store user's destinations
+    private ListView destinationsView; // ListView to display destinations
+    private ArrayAdapter<String> destinationsAdapter; // Adapter for the ListView
+
 
     @Override
     /**
@@ -83,6 +90,18 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             successfulText.setVisibility(View.GONE);
             toggleCalculatorBox(calculateVacationTimeBox);
         });
+
+        //scary!!!
+        String username = getIntent().getStringExtra("username");
+        userDestinations = new ArrayList<>();
+
+        // Initialize ListView and Adapter
+        destinationsView = findViewById(R.id.destinations_View);
+        destinationsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, userDestinations);
+        destinationsView.setAdapter(destinationsAdapter);
+
+        fetchUserDestinations(username);
+
 
 
         //initialize start date edit
@@ -121,30 +140,21 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                 destinationDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        boolean destinationExists = false;
+                        //boolean destinationExists = false;
 
-                        for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
-                            String existingDestination =
-                                    destinationSnapshot.child("name").getValue(String.class);
-                            if (existingDestination != null
-                                    && existingDestination.equals(locationName)) {
-                                destinationExists = true;
-                                break;
-                            }
-                        }
 
-                        if (!destinationExists) {
+
+                        //if (destinationExists) {
+                            //Will change this in future
+                       // } else {
                             //grabs userId from storage
-                            SharedPreferences sharedPreferences =
-                                    getSharedPreferences("MyApp", MODE_PRIVATE);
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("userId", null);
                             //Continue to add new location
-                            DestinationsViewModel account = new DestinationsViewModel();
-                            account.logNewDestination(locationName, startDate,
-                                    endDate, duration, userId);
+                            DestinationsViewModel account = new DestinationsViewModel(locationName, startDate, endDate, duration, userId);
                             toggleLogTravelBox(logTravelBox);
                             successfulText.setVisibility(View.VISIBLE);
-                        }
+                       // }
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
@@ -154,6 +164,47 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             }
         });
     }
+
+    private void fetchUserDestinations(String username) {
+        destinationDatabase = FirebaseDatabase.getInstance().getReference("destinations");
+
+        destinationDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userDestinations.clear(); // Clear list to prevent duplicates
+                for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
+                    List<String> userIDs = (List<String>) destinationSnapshot.child("userIDs").getValue();
+
+                    if (userIDs != null && userIDs.contains(username)) {
+                        String destinationName = destinationSnapshot.child("name").getValue(String.class);
+                        Long duration = destinationSnapshot.child("duration").getValue(Long.class); // Fetch duration
+
+                        if (destinationName != null && duration != null) {
+                            // Add destination name with duration to list
+
+                                userDestinations.add(destinationName + " - " + duration + " days");
+                            if (userDestinations.size() > 5) {
+                                userDestinations.remove(0);
+                            }
+
+                        }
+                    }
+                }
+
+
+                destinationsAdapter.notifyDataSetChanged(); // Update ListView
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error
+            }
+        });
+
+
+    }
+
 
     @Override
     public boolean isStartDateBeforeEndDate(String startDateStr, String endDateStr) {
