@@ -16,24 +16,32 @@ public class DestinationsViewModel {
 
     //populates the destinations database
 
+    public DestinationsViewModel() {
+    }
 
-    public DestinationsViewModel(
-            String name, String start, String end, long duration, String userId) {
+    public void logNewDestination(String name, String start, String end, long duration, String userId) {
         userDatabase = FirebaseDatabase.getInstance().getReference();
         destinationDatabase = DestinationDatabase.getInstance().getDatabaseReference();
         Destination newDestination = new Destination(name, start, end, duration, userId);
-        userDatabase.child("users").child(userId).addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    DataSnapshot destinationsSnapshot = dataSnapshot.child("destinations");
-                    ArrayList<Destination> destinationList = new ArrayList<>();
+        userDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Setting up total vacationDuration
+                DataSnapshot userSnapshot = dataSnapshot.child("vacationDuration");
+                int duration = 0;
+                if (userSnapshot.getValue() != null) {
+                    duration = userSnapshot.getValue(Integer.class);
+                }
+                duration += newDestination.getDuration();
 
-                    for (DataSnapshot destSnapshot : destinationsSnapshot.getChildren()) {
-                        Destination destination = destSnapshot.getValue(Destination.class);
-                        if (destination != null) {
-                            destinationList.add(destination);
-                        }
+                // Setting up new Destination
+                DataSnapshot destinationsSnapshot = dataSnapshot.child("destinations");
+                ArrayList<Destination> destinationList = new ArrayList<>();
+
+                for (DataSnapshot destSnapshot : destinationsSnapshot.getChildren()) {
+                    Destination destination = destSnapshot.getValue(Destination.class);
+                    if (destination != null) {
+                        destinationList.add(destination);
                     }
                     destinationList.add(newDestination);
                     userDatabase.child("users").child(userId).child("destinations")
@@ -44,8 +52,21 @@ public class DestinationsViewModel {
                 public void onCancelled(DatabaseError databaseError) {
                     // Failure
                 }
-            });
+                destinationList.add(newDestination);
+                userDatabase.child("users").child(userId).child("destinations").setValue(destinationList);
+                userDatabase.child("users").child(userId).child("vacationDuration").setValue(duration);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failure
+            }
+        });
         destinationDatabase.child(name).setValue(newDestination);
     }
 
+    public void allocateVacationDays(long days, String userId) {
+        userDatabase = FirebaseDatabase.getInstance().getReference();
+        userDatabase.child("users").child(userId).child("allocatedVacationDays").setValue(days);
+    }
 }
