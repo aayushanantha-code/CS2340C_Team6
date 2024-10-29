@@ -8,6 +8,9 @@ public class DestinationDatabase {
     private DatabaseReference databaseReference;
 
     // Private constructor to prevent instantiation
+    /**
+     * Constructor for DestinationDatabase
+     */
     private DestinationDatabase() {
         // Initialize the Firebase Database instance
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -15,6 +18,10 @@ public class DestinationDatabase {
         databaseReference = firebaseDatabase.getReference("destinations");
     }
 
+    /**
+     * Method to get the instance of the DestinationDatabase
+     * @return DestinationDatabase
+     */
     public static DestinationDatabase getInstance() {
         if (instance == null) {
             instance = new DestinationDatabase();
@@ -22,6 +29,10 @@ public class DestinationDatabase {
         return instance;
     }
 
+    /**
+     * Method to get the database reference
+     * @return DatabaseReference
+     */
     public DatabaseReference getDatabaseReference() {
         return databaseReference;
     }

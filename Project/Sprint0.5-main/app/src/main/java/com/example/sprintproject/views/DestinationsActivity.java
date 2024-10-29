@@ -166,6 +166,10 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             }
         });
     }
+    /**
+     * Fetches the user's destinations
+     * @param username the username of the user
+     */
     private void fetchUserDestinations(String username) {
         destinationDatabase = DestinationDatabase.getInstance().getDatabaseReference();
 
