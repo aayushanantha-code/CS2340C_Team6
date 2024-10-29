@@ -53,7 +53,8 @@ public class RegisterActivity extends AppCompatActivity {
                             boolean usernameExists = false;
 
                             for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                                String existingUsername = userSnapshot.child("userID").getValue(String.class);
+                                String existingUsername = userSnapshot.child("userID").
+                                        getValue(String.class);
                                 if (existingUsername != null && existingUsername.equals(username)) {
                                     usernameExists = true;
                                     break;
@@ -65,8 +66,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 usernameTaken.setVisibility(View.VISIBLE);
                             } else {
                                 //Continue to make a new Account
-                                CreateAccountViewModel account = new CreateAccountViewModel(username, password);
-                                Intent createAccountIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                CreateAccountViewModel account =
+                                        new CreateAccountViewModel(username, password);
+                                Intent createAccountIntent =
+                                        new Intent(RegisterActivity.this, LoginActivity.class);
                                 startActivity(createAccountIntent);
                             }
                         }

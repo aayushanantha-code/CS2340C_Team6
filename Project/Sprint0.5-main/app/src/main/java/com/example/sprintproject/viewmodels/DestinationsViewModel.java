@@ -17,31 +17,34 @@ public class DestinationsViewModel {
     //populates the destinations database
 
 
-    public DestinationsViewModel(String name, String start, String end, long duration, String userId) {
+    public DestinationsViewModel(
+            String name, String start, String end, long duration, String userId) {
         userDatabase = FirebaseDatabase.getInstance().getReference();
         destinationDatabase = DestinationDatabase.getInstance().getDatabaseReference();
         Destination newDestination = new Destination(name, start, end, duration, userId);
-        userDatabase.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                DataSnapshot destinationsSnapshot = dataSnapshot.child("destinations");
-                ArrayList<Destination> destinationList = new ArrayList<>();
+        userDatabase.child("users").child(userId).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    DataSnapshot destinationsSnapshot = dataSnapshot.child("destinations");
+                    ArrayList<Destination> destinationList = new ArrayList<>();
 
-                for (DataSnapshot destSnapshot : destinationsSnapshot.getChildren()) {
-                    Destination destination = destSnapshot.getValue(Destination.class);
-                    if (destination != null) {
-                        destinationList.add(destination);
+                    for (DataSnapshot destSnapshot : destinationsSnapshot.getChildren()) {
+                        Destination destination = destSnapshot.getValue(Destination.class);
+                        if (destination != null) {
+                            destinationList.add(destination);
+                        }
                     }
+                    destinationList.add(newDestination);
+                    userDatabase.child("users").child(userId).child("destinations")
+                            .setValue(destinationList);
                 }
-                destinationList.add(newDestination);
-                userDatabase.child("users").child(userId).child("destinations").setValue(destinationList);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failure
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Failure
+                }
+            });
         destinationDatabase.child(name).setValue(newDestination);
     }
 
