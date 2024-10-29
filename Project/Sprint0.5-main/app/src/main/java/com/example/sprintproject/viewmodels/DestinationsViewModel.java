@@ -43,14 +43,6 @@ public class DestinationsViewModel {
                     if (destination != null) {
                         destinationList.add(destination);
                     }
-                    destinationList.add(newDestination);
-                    userDatabase.child("users").child(userId).child("destinations")
-                            .setValue(destinationList);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Failure
                 }
                 destinationList.add(newDestination);
                 userDatabase.child("users").child(userId).child("destinations").setValue(destinationList);

@@ -62,4 +62,3 @@ public class User {
         this.plannedDays += plannedDays;
         }
     }
-}
