@@ -133,9 +133,7 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                             }
                         }
 
-                        if (destinationExists) {
-                            //Will change this in future
-                        } else {
+                        if (!destinationExists) {
                             //grabs userId from storage
                             SharedPreferences sharedPreferences =
                                     getSharedPreferences("MyApp", MODE_PRIVATE);
