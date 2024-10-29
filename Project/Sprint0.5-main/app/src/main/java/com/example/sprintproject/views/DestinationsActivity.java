@@ -19,11 +19,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.Date;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DateComparison;
+import com.example.sprintproject.model.Destination;
 import com.example.sprintproject.model.DestinationDatabase;
 import com.example.sprintproject.viewmodels.DestinationsViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
@@ -166,38 +168,39 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             }
         });
     }
-    private void fetchUserDestinations(String username) {
-        destinationDatabase = DestinationDatabase.getInstance().getDatabaseReference();
 
-        destinationDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+    public void fetchUserDestinations(String username) {
+        userDatabase = FirebaseDatabase.getInstance().getReference();
+        userDatabase.child("users").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
-                    List<String> userIDs = (List<String>) destinationSnapshot.child("userIDs").getValue();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Setting up new Destination
+                DataSnapshot destinationsSnapshot = dataSnapshot.child("destinations");
+                ArrayList<Destination> destinationList = new ArrayList<>();
 
-                    if (userIDs != null && userIDs.contains(username)) {
-                        String destinationName = destinationSnapshot.child("name").getValue(String.class);
-                        Long duration = destinationSnapshot.child("duration").getValue(Long.class); // Fetch duration
-
-                        if (destinationName != null && duration != null) {
-                            // Add destination name with duration to list
-
-                            userDestinations.add(destinationName + " - " + duration + " days");
-                            if (userDestinations.size() > 5) {
-                                userDestinations.remove(0);
-                            }
-                        }
+                for (DataSnapshot destSnapshot : destinationsSnapshot.getChildren()) {
+                    Destination destination = destSnapshot.getValue(Destination.class);
+                    if (destination != null) {
+                        destinationList.add(destination);
                     }
                 }
-                destinationsAdapter.notifyDataSetChanged(); // Update ListView
+                if (destinationList != null && destinationList.size() > 0) {
+                    for (int i = 0; i < destinationList.size(); i++) {
+                        userDestinations.add(destinationList.get(i).getName() + " - " + destinationList.get(i).getDuration() + " days");
+                        System.out.println(userDestinations.get(i));
+                    }
+                        if (userDestinations.size() > 5) {
+                            userDestinations.remove(0);
+                        }
+                    }
+                destinationsAdapter.notifyDataSetChanged();
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
+            public void onCancelled(DatabaseError databaseError) {
+                // Failure
             }
         });
-
-
     }
     @Override
     public boolean isStartDateBeforeEndDate(String startDateStr, String endDateStr) {
