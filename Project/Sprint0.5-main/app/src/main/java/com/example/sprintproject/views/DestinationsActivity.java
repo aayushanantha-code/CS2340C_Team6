@@ -50,6 +50,9 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
     private ListView destinationList;
     private List<String> destinationData = new ArrayList<>();
     private ArrayAdapter<String> destinationAdapter;
+    private List<String> userDestinations; // Added to store user's destinations
+    private ListView destinationsView; // ListView to display destinations
+    private ArrayAdapter<String> destinationsAdapter; // Adapter for the ListView
 
     @Override
     /**
@@ -83,7 +86,16 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             successfulText.setVisibility(View.GONE);
             toggleCalculatorBox(calculateVacationTimeBox);
         });
+        String username = getIntent().getStringExtra("username");
 
+        userDestinations = new ArrayList<>();
+
+        // Initialize ListView and Adapter
+        destinationsView = findViewById(R.id.destinations_View);
+        destinationsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, userDestinations);
+        destinationsView.setAdapter(destinationsAdapter);
+        //Create the List of Previous Destinations
+        fetchUserDestinations(username);
 
         //initialize start date edit
         startDateEdit = findViewById(R.id.calculate_start_date_input);
@@ -154,7 +166,39 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
             }
         });
     }
+    private void fetchUserDestinations(String username) {
+        destinationDatabase = DestinationDatabase.getInstance().getDatabaseReference();
 
+        destinationDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
+                    List<String> userIDs = (List<String>) destinationSnapshot.child("userIDs").getValue();
+
+                    if (userIDs != null && userIDs.contains(username)) {
+                        String destinationName = destinationSnapshot.child("name").getValue(String.class);
+                        Long duration = destinationSnapshot.child("duration").getValue(Long.class); // Fetch duration
+
+                        if (destinationName != null && duration != null) {
+                            // Add destination name with duration to list
+
+                            userDestinations.add(destinationName + " - " + duration + " days");
+                            if (userDestinations.size() > 5) {
+                                userDestinations.remove(0);
+                            }
+                        }
+                    }
+                }
+                destinationsAdapter.notifyDataSetChanged(); // Update ListView
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error
+            }
+        });
+
+
+    }
     @Override
     public boolean isStartDateBeforeEndDate(String startDateStr, String endDateStr) {
         // Define the date format
