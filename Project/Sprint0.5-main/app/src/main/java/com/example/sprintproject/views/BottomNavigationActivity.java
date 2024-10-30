@@ -20,13 +20,13 @@ public class BottomNavigationActivity extends AppCompatActivity {
         logisticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent loginIntent = new Intent(BottomNavigationActivity.this,
+                Intent logisticsIntent = new Intent(BottomNavigationActivity.this,
                         LogisticsActivity.class);
                 String username = getIntent().getStringExtra("username");
                 String number = getIntent().getStringExtra("number");
-                loginIntent.putExtra("number", number);
-                loginIntent.putExtra("username", username); // Pass the username
-                startActivity(loginIntent);
+                logisticsIntent.putExtra("number", number);
+                logisticsIntent.putExtra("username", username); // Pass the username
+                startActivity(logisticsIntent);
                 //startActivity(new Intent(BottomNavigationActivity.this, LogisticsActivity.class));
             }
         });
@@ -36,13 +36,13 @@ public class BottomNavigationActivity extends AppCompatActivity {
         destinationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent loginIntent = new Intent(BottomNavigationActivity.this,
+                Intent destionationsIntent = new Intent(BottomNavigationActivity.this,
                         DestinationsActivity.class);
                 String username = getIntent().getStringExtra("username");
                 String number = getIntent().getStringExtra("number");
-                loginIntent.putExtra("number", number);
-                loginIntent.putExtra("username", username); // Pass the username
-                startActivity(loginIntent);
+                destionationsIntent.putExtra("number", number);
+                destionationsIntent.putExtra("username", username); // Pass the username
+                startActivity(destionationsIntent);
                 //startActivity(new Intent(BottomNavigationActivity.this,
                 //DestinationsActivity.class));
             }
@@ -53,9 +53,14 @@ public class BottomNavigationActivity extends AppCompatActivity {
         diningButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(
-                        BottomNavigationActivity.this,
-                                DiningEstablishmentsActivity.class));
+                Intent diningIntent = new Intent(BottomNavigationActivity.this,
+                        DiningEstablishmentsActivity.class);
+                String username = getIntent().getStringExtra("username");
+                String number = getIntent().getStringExtra("number");
+                diningIntent.putExtra("number", number);
+                diningIntent.putExtra("username", username); // Pass the username
+                startActivity(diningIntent);
+                //startActivity(new Intent(BottomNavigationActivity.this, LogisticsActivity.class));
             }
         });
 
@@ -64,8 +69,14 @@ public class BottomNavigationActivity extends AppCompatActivity {
         accommodationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(
-                        BottomNavigationActivity.this, AccommodationsActivity.class));
+                Intent accomodationsIntent = new Intent(BottomNavigationActivity.this,
+                        AccommodationsActivity.class);
+                String username = getIntent().getStringExtra("username");
+                String number = getIntent().getStringExtra("number");
+                accomodationsIntent.putExtra("number", number);
+                accomodationsIntent.putExtra("username", username); // Pass the username
+                startActivity(accomodationsIntent);
+                //startActivity(new Intent(BottomNavigationActivity.this, LogisticsActivity.class));
             }
         });
 
@@ -74,8 +85,14 @@ public class BottomNavigationActivity extends AppCompatActivity {
         communityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(
-                        BottomNavigationActivity.this, TravelCommunityActivity.class));
+                Intent communityIntent = new Intent(BottomNavigationActivity.this,
+                        TravelCommunityActivity.class);
+                String username = getIntent().getStringExtra("username");
+                String number = getIntent().getStringExtra("number");
+                communityIntent.putExtra("number", number);
+                communityIntent.putExtra("username", username); // Pass the username
+                startActivity(communityIntent);
+                //startActivity(new Intent(BottomNavigationActivity.this, LogisticsActivity.class));
             }
         });
     }
