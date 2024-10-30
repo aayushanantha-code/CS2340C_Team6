@@ -4,7 +4,6 @@ public class Dining {
     private String location;
     private String url;
     private String name;
-    private int stars;
     private String date;
     private String time;
 
@@ -12,7 +11,6 @@ public class Dining {
         this.location = null;
         this.url = null;
         this.name = null;
-        this.stars = 0;
         this.date = null;
         this.time = null;
     }
@@ -21,7 +19,6 @@ public class Dining {
         this.location = location;
         this.url = url;
         this.name = name;
-        this.stars = stars;
         this.date = date;
         this.time = time;
     }
@@ -35,9 +32,7 @@ public class Dining {
     public String getRestaurantName() {
         return name;
     }
-    public int getStars() {
-        return stars;
-    }
+
     public String getDate() {
         return date;
     }
@@ -53,9 +48,7 @@ public class Dining {
     public void setRestaurantName(String name) {
         this.name = name;
     }
-    public void setStars(int stars) {
-        this.stars = stars;
-    }
+
     public void setDate(String date) {
         this.date = date;
     }
