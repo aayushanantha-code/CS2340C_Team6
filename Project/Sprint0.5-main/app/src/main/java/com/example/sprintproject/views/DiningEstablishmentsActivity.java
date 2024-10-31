@@ -21,11 +21,15 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         FrameLayout diningFrame = findViewById(R.id.dining_reservation_box);
 
         submitReservaton.setOnClickListener(c -> toggleDiningBox(diningFrame));
-        toggleDiningBox.setOnClickListener(c-> toggleDiningBox(diningFrame));
+        toggleDiningBox.setOnClickListener(c -> toggleDiningBox(diningFrame));
 
 
     }
 
+    /**
+     * Toggles the visibility of the dining box
+     * @param frameLayout The frame layout to toggle
+     */
     protected void toggleDiningBox(FrameLayout frameLayout) {
         if (frameLayout.getVisibility() == View.GONE) {
             frameLayout.setVisibility(View.VISIBLE);
