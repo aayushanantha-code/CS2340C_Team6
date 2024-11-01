@@ -46,38 +46,18 @@ public class LoginActivity extends AppCompatActivity {
                 //make sure fields aren't empty
                 if (!password.isEmpty() && !username.isEmpty()) {
 
-                    userDatabase = FirebaseDatabase.getInstance().getReference();
-                    userDatabase.child("users").child(username)
-                            .addValueEventListener(new ValueEventListener() {
+                    userDatabase = FirebaseDatabase.getInstance().getReference("users");
+                    userDatabase.child(username)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     // Check if Username and Password match a User on Firebase
-                                    if (dataSnapshot.exists() && dataSnapshot.getValue(User.class)
-                                            .getPassword().equals(password)) {
-                                            String userId = dataSnapshot.getKey();
-
-                                            SharedPreferences sharedPreferences =
-                                                    getSharedPreferences(
-                                                            "MyApp", MODE_PRIVATE);
-                                            SharedPreferences.Editor editor =
-                                                    sharedPreferences.edit();
-                                            editor.putString("userId", userId);
-                                            editor.apply();
-
-                                            Intent loginIntent = new Intent(
-                                                    LoginActivity.this, LogisticsActivity.class);
-                                            loginIntent.putExtra(
-                                                    "username", username); // Pass the username
-                                            Intent numberIntent = new Intent(
-                                                    LoginActivity.this, LogisticsActivity.class);
-                                            numberIntent.putExtra(
-                                                    "number", 0); // Pass the username
-                                            Intent loginNavigation = new Intent(
-                                                    LoginActivity.this,
-                                                    BottomNavigationActivity.class);
-                                            loginNavigation.putExtra(
-                                                    "username", username); // Pass the username
-                                            startActivity(loginIntent);
+                                    if (dataSnapshot.exists() && dataSnapshot.getValue(User.class).getPassword().equals(password)) {
+                                        String group = dataSnapshot.getValue(User.class).getGroupName();
+                                        Intent loginIntent = new Intent(LoginActivity.this, LogisticsActivity.class);
+                                        loginIntent.putExtra("username", username);
+                                        loginIntent.putExtra("groupname", group); // Pass the username
+                                        startActivity(loginIntent);
                                     } else {
                                         incorrectText.setVisibility(View.VISIBLE);
                                     }

@@ -5,22 +5,14 @@ import java.util.ArrayList;
 public class User {
     private String userID;
     private String password;
-    // should have a list of Destinations
-    private ArrayList<Destination> destinationList;
     private long allocatedVacationDays;
     private int plannedDays;
+    private boolean isInGroup;
+    private String note;
+    private String groupName;
 
-    /**
-     * Constructor for User
-     */
     public User() {
-        this.userID = null;
-        this.password = null;
-        this.destinationList = new ArrayList<>();
-        this.allocatedVacationDays = 0;
-        this.plannedDays = 0;
     }
-
     /**
      * Constructor for User
      * @param userID User's ID
@@ -29,9 +21,11 @@ public class User {
     public User(String userID, String password) {
         this.userID = userID;
         this.password = password;
-        this.destinationList = new ArrayList<>();
         this.allocatedVacationDays = 0;
         this.plannedDays = 0;
+        this.isInGroup = false;
+        this.note = "";
+        this.groupName = null;
     }
 
     /**
@@ -50,13 +44,15 @@ public class User {
         return password;
     }
 
-    /**
-     * Getters for Destinations
-     * @return List of Destinations
-     */
-    public ArrayList<Destination> getDestinations() {
-        return destinationList;
+    public String getNote() {
+        return note;
     }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) { this.groupName = groupName;}
 
     /**
      * Setter for User ID
@@ -75,22 +71,6 @@ public class User {
     }
 
     /**
-     * Setter for Destinations
-     * @param destinationList List of Destinations
-     */
-    public void setDestination(ArrayList<Destination> destinationList) {
-        this.destinationList = destinationList;
-    }
-
-    /**
-     * Adds new destiantion to the list of destinations
-     * @param destination The destination
-     */
-    public void addDestination(Destination destination) {
-        destinationList.add(destination);
-    }
-
-    /**
      * Setter for Allocated Vacation Days
      * @param vacationDays Number of vacation days
      */
@@ -104,5 +84,14 @@ public class User {
      */
     public void addVacationDays(int plannedDays) {
         this.plannedDays += plannedDays;
+    }
+
+    public boolean getIsInGroup() {
+        return isInGroup;
+    }
+
+    public void joinGroup(String groupName) {
+        isInGroup = true;
+        this.groupName = groupName;
     }
 }
