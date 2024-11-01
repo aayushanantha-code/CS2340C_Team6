@@ -9,7 +9,6 @@ public class Destination {
     private String start;
     private String end;
     private long duration;
-    private List<String> userIDs;
 
 
     /**
@@ -20,7 +19,6 @@ public class Destination {
         this.start = "";
         this.end = "";
         this.duration = 0;
-        this.userIDs = new ArrayList<>();
     }
     /**
      * Constructor for Destination
@@ -28,15 +26,12 @@ public class Destination {
      * @param start Start date of the destination
      * @param end End date of the destination
      * @param duration Duration of the destination
-     * @param userId User ID
      */
-    public Destination(String name, String start, String end, long duration, String userId) {
+    public Destination(String name, String start, String end, long duration) {
         this.name = name;
         this.start = start;
         this.end = end;
         this.duration = duration;
-        this.userIDs = new ArrayList<>();
-        this.userIDs.add(userId);
     }
 
     /**
@@ -101,31 +96,5 @@ public class Destination {
      */
     public void setDuration(long duration) {
         this.duration = duration;
-    }
-
-    /**
-     * Getters for User IDs
-     * @return List of User IDs
-     */
-    public List<String> getUserIDs() {
-        return userIDs;
-    }
-
-    /**
-     * Setters for User IDs
-     * @param userIDs List of User IDs
-     */
-    public void setUserIDs(List<String> userIDs) {
-        this.userIDs = userIDs;
-    }
-
-    /**
-     * Add User ID
-     * @param userID User ID
-     */
-    public void addUserID(String userID) {
-        if (!userIDs.contains(userID)) {
-            userIDs.add(userID);
-        }
     }
 }

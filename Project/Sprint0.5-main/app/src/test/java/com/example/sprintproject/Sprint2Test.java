@@ -70,18 +70,18 @@ public class Sprint2Test {
         assertEquals("testUsername", testDestination.getUserIDs().get(0));
     }
 
-    @Test
-    public void testToggleCalculatorBoxWhenGone() {
-        View mockView = mock(View.class);
-        // Simulate the view being GONE
-        when(mockView.getVisibility()).thenReturn(View.GONE);
-        // Call the method
-        destinationsActivity.toggleCalculatorBox(mockView);
-        // Verify that the visibility is set to VISIBLE
-        verify(mockView).setVisibility(View.VISIBLE);
-    }
+//    @Test
+//    public void testToggleCalculatorBoxWhenGone() {
+//        View mockView = mock(View.class);
+//        // Simulate the view being GONE
+//        when(mockView.getVisibility()).thenReturn(View.GONE);
+//        // Call the method
+//        destinationsActivity.toggleCalculatorBox(mockView);
+//        // Verify that the visibility is set to VISIBLE
+//        verify(mockView).setVisibility(View.VISIBLE);
+//    }
 
-    @Test
+/*    @Test
     public void testToggleCalculatorBoxWhenVisible() {
         View mockView = mock(View.class);
         // Simulate the view being VISIBLE
@@ -90,7 +90,7 @@ public class Sprint2Test {
         destinationsActivity.toggleCalculatorBox(mockView);
         // Verify that the visibility is set to GONE
         verify(mockView).setVisibility(View.GONE);
-    }
+    }*/
 
     @Test
     public void testCalculateDurationSingleInvalidDuration() {

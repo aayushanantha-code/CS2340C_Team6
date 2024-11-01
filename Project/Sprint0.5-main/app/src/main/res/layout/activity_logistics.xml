@@ -24,17 +24,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="75dp"/> <!-- Adjust top margin as needed -->
 
-    <Button
-        android:id="@+id/button_graph"
+
+
+    <TextView
+        android:id="@+id/make_a_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Create Graph"
-        app:layout_constraintTop_toBottomOf="@+id/title_text"
+        android:text="Please make a group first!"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_create_group"
         />
-
 
     <Button
         android:id="@+id/button_invite"
@@ -60,37 +64,123 @@
         app:layout_constraintVertical_bias="0.866"
         app:layout_goneMarginRight="16dp"/>
 
-    <ListView
-        android:id="@+id/notesListView"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/button_create_group"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:text="Create Group"
+        android:background="@drawable/glow_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button_graph" />
+        app:layout_constraintStart_toEndOf="@+id/button_invite"
+        app:layout_constraintEnd_toStartOf="@+id/button_add_note"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.866"
+        app:layout_goneMarginRight="16dp" />
 
-    <ListView
-        android:id="@+id/invitedUsersListView"
+    <FrameLayout
+        android:id="@+id/usersAndNotes_Box"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/white"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-        android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_invite"
-        app:layout_constraintVertical_bias="2.0" />
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="25dp"
+            android:layout_gravity="center"
+            android:background="@android:color/darker_gray"
+            android:elevation="10dp">
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pieChart"
-        android:layout_width="300dp"
-        android:layout_height="400dp"
-        android:textStyle="bold"
-        android:background="@color/black"
+            <ListView
+                android:id="@+id/notesListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/button_graph" />
+
+            <ListView
+                android:id="@+id/invitedUsersListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@android:color/white"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp"
+                android:padding="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_invite"
+                app:layout_constraintVertical_bias="2.0" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/pieChart_box"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="25dp"
+            android:layout_gravity="center"
+            android:background="@android:color/darker_gray"
+            android:elevation="10dp">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_width="300dp"
+                android:layout_height="400dp"
+                android:textStyle="bold"
+                android:background="@android:color/background_dark"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_graph" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/button_graph"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Show Vacation Days"
+        app:layout_constraintTop_toBottomOf="@+id/title_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_graph" />
+        />
+
+    <Button
+        android:id="@+id/button_userList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Show Notes and Users"
+        app:layout_constraintTop_toBottomOf="@+id/button_graph"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/too_many_planned_warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Too many days planned!"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_userList"
+        />
 
 
 

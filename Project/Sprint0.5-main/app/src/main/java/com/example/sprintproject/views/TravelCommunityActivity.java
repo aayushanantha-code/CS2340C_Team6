@@ -12,5 +12,8 @@ public class TravelCommunityActivity extends BottomNavigationActivity {
         // Tie this activity to its layout
         getLayoutInflater().inflate(R.layout.activity_travel_community,
                 (FrameLayout) findViewById(R.id.content_frame), true);
+
+        // Gets the group Name from intents (Use this for all database stuff)
+        String group = getIntent().getStringExtra("groupName");
     }
 }
