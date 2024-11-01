@@ -16,6 +16,9 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         getLayoutInflater().inflate(R.layout.activity_dining_establishments,
                 (FrameLayout) findViewById(R.id.content_frame), true);
 
+        // Gets the group Name from intents (Use this for all database stuff)
+        String group = getIntent().getStringExtra("groupName");
+
         Button submitReservaton =  findViewById(R.id.submit_reservation);
         toggleDiningBox = findViewById(R.id.add_dining);
         FrameLayout diningFrame = findViewById(R.id.dining_reservation_box);

@@ -88,7 +88,6 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
         calculateVacationTimeBox = findViewById(R.id.calculator_box);
         calculatorToggle.setOnClickListener(v -> toggleCalculatorBox(calculateVacationTimeBox));
 
-        String username = getIntent().getStringExtra("username");
         String group = getIntent().getStringExtra("groupName");
 
         groupDestinations = new ArrayList<>();

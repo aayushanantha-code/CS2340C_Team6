@@ -13,6 +13,8 @@ public class AccommodationsActivity extends BottomNavigationActivity {
                 (FrameLayout) findViewById(R.id.content_frame),
                 true);
 
+        // Gets the group Name from intents (Use this for all database stuff)
+        String group = getIntent().getStringExtra("groupName");
     }
 
 
