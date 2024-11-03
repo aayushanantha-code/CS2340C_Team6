@@ -1,11 +1,12 @@
 In the Order.java file, a code smell was identified in the method calculateTotalPrice(). 
 The first code smell would be considered “Bloaters” because of its long method which is lengthy and handles multiple responsibilities.
 We refactor it into smaller methods like calculateItemTotal, applyDiscount, and calculateTax. 
-All of the methods manage the bloat and make the code easier to handle and understand.
+All methods manage the bloat and make the code easier to handle and understand.
 
-Also, in the Order.java file, there was a code smell“Object-Orientation Abusers” because it uses 
+Also, in the Order.java file, there was a code smell “Object-Orientation Abusers” because it uses 
 switch statements that don’t fully exploit the possibilities of object-oriented design.
-We refactored the code to fully utilize OOP while also making the code easier to understand.
+We refactored the code to fully utilize OOP while also making the code easier to understand 
+by removing the excess switch statements and replacing it with multiple smaller methods.
 
 In the TaxableItem.java, there was a code smell identified in the constructor which hard coded taxRate.
 This would cause problems as if we needed to change the taxRate, the code would need to be updated wherever 
@@ -14,7 +15,7 @@ This “Bloater” wouldcause data clumps because the class holds a taxRate that
 We fixed this by removing the hardcoded tax rates from the Taxable Item class.
 
 In the GiftCardItem.java, we can see duplicated code from the code compared to the Item.java.
-We removed the code smell “Dispensables” because of its use of repeated code and was a lazy class itself.
+We removed the code smell “Dispensables” because of its use of repeated code and because it was a lazy class itself.
 We refactored the code by eliminating the GiftCardItem class as it’s the same as Item, and added another 
 parameter to the Item constructor to flag if an item is a gift card. 
 By changing these classes, we reduced redundancy and improved maintainability, making the code simpler and more cohesive. 
