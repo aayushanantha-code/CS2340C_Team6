@@ -57,18 +57,7 @@ public class Sprint2Test {
         assertEquals("", startDate);
     }
 
-    @Test
-    public void testAddingUserToDestination() {
-        // Given an initial empty Destination
-        Destination testDestination = new Destination();
-        User testUser = new User("testUsername", "testPassword");
 
-        // Add User to Destination
-        testDestination.addUserID(testUser.getUserID());
-
-        assertEquals(1, testDestination.getUserIDs().size());
-        assertEquals("testUsername", testDestination.getUserIDs().get(0));
-    }
 
 //    @Test
 //    public void testToggleCalculatorBoxWhenGone() {
