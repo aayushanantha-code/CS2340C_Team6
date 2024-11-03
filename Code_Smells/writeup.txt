@@ -1,4 +1,4 @@
-In the Order.java file, there was a code smell identified in the method calculateTotalPrice(). 
+In the Order.java file, a code smell was identified in the method calculateTotalPrice(). 
 The first code smell would be considered “Bloaters” because of its long method which is lengthy and handles multiple responsibilities.
 We refactor it into smaller methods like calculateItemTotal, applyDiscount, and calculateTax. 
 All of the methods manage the bloat and make the code easier to handle and understand.
@@ -21,7 +21,7 @@ By changing these classes, we reduced redundancy and improved maintainability, m
 
 Also, in the GiftCardItem.java, by removing the duplicated code, we have found another code smells “Object-Orientation Abusers”
 because these different classes share responsibilities but have inconsistent interfaces or behaviors, which can lead to multiple problems.
- This change will make the code more maintainable by keeping all item-specific functionality within a single class.
+This change will make the code more maintainable by keeping all item-specific functionality within a single class.
 
 In the OrderEmailSender.java, the sendEmail method was static which made it hard to test and extend functionality. 
 To fix this code smell “Change Preventers” we made the sendEmail method a non-static method to improve 
