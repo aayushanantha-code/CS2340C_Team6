@@ -27,3 +27,11 @@ This change will make the code more maintainable by keeping all item-specific fu
 In the OrderEmailSender.java, the sendEmail method was static which made it hard to test and extend functionality. 
 To fix this code smell “Change Preventers” we made the sendEmail method a non-static method to improve 
 the flexibility of the code and make it easier to adapt and test in response to future changes.
+
+Participating Members:
+Beckham Lam
+Euan Ham
+Nityam Mulani
+Aayush Anantha
+Blake Berman
+James De Ocampo
