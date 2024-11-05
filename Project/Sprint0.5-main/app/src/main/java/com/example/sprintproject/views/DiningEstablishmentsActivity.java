@@ -2,31 +2,76 @@ package com.example.sprintproject.views;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Button;
-
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.sprintproject.R;
+import com.example.sprintproject.model.Dining;
+import com.example.sprintproject.model.Destination;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DiningEstablishmentsActivity extends BottomNavigationActivity {
     private Button toggleDiningBox;
+    private DatabaseReference groupDatabase;
+    private String groupName;
+    private Spinner locationSpinner;
+    private List<String> destinationNames;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_dining_establishments,
                 (FrameLayout) findViewById(R.id.content_frame), true);
 
-        // Gets the group Name from intents (Use this for all database stuff)
-        String group = getIntent().getStringExtra("groupName");
+        groupName = getIntent().getStringExtra("groupName");
+        groupDatabase = FirebaseDatabase.getInstance().getReference().child("groups").child(groupName);
 
-        Button submitReservaton =  findViewById(R.id.submit_reservation);
+        locationSpinner = findViewById(R.id.location_spinner);
+        destinationNames = new ArrayList<>();
+
+        loadDestinations();
+
+        Button submitReservation = findViewById(R.id.submit_reservation);
         toggleDiningBox = findViewById(R.id.add_dining);
         FrameLayout diningFrame = findViewById(R.id.dining_reservation_box);
 
-        submitReservaton.setOnClickListener(c -> toggleDiningBox(diningFrame));
+        submitReservation.setOnClickListener(c -> {
+            addDiningToDestination();
+            toggleDiningBox(diningFrame);
+        });
         toggleDiningBox.setOnClickListener(c -> toggleDiningBox(diningFrame));
+    }
 
+    private void loadDestinations() {
+        groupDatabase.child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Destination destination = snapshot.getValue(Destination.class);
+                    destinationNames.add(destination.getName());
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(DiningEstablishmentsActivity.this,
+                        android.R.layout.simple_spinner_item, destinationNames);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                locationSpinner.setAdapter(adapter);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(DiningEstablishmentsActivity.this, "Failed to load destinations", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -43,5 +88,28 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         }
     }
 
+    /**
+     * Adds a dining reservation to the destination's dining list
+     */
+    private void addDiningToDestination() {
+        EditText nameInput = findViewById(R.id.name_input);
+        EditText dateInput = findViewById(R.id.date_input);
+        EditText timeInput = findViewById(R.id.time_input);
+        EditText urlInput = findViewById(R.id.url_input);
 
+        String name = nameInput.getText().toString();
+        String date = dateInput.getText().toString();
+        String time = timeInput.getText().toString();
+        String url = urlInput.getText().toString();
+        String location = locationSpinner.getSelectedItem().toString();
+
+        if (name.isEmpty() || date.isEmpty() || time.isEmpty() || location.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Dining dining = new Dining(location, url, name, date, time);
+        groupDatabase.child("destinationList").child(location).child("diningList").child(name).setValue(dining);
+        Toast.makeText(this, "Dining reservation added", Toast.LENGTH_SHORT).show();
+    }
 }

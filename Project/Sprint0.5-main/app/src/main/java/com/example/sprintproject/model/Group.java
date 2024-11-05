@@ -8,45 +8,66 @@ public class Group {
     private long allocatedVacationDays;
     private int plannedDays;
 
+    /**
+     * Constructor for Group
+     */
     public Group() {
     }
+
+    /**
+     * Constructor for Group
+     * @param user User
+     */
     public Group(User user) {
-        userList = new ArrayList<User>();
+        userList = new ArrayList<>();
         userList.add(user);
         this.destinationList = new ArrayList<>();
         this.allocatedVacationDays = 0;
         this.plannedDays = 0;
     }
 
+    /**
+     * Getters for User List
+     * @return List of Users
+     */
     public ArrayList<User> getUserList() {
         return userList;
     }
 
+    /**
+     * Getters for Destination List
+     * @return List of Destinations
+     */
     public ArrayList<Destination> getDestinationList() {
         return destinationList;
     }
 
+    /**
+     * Getters for Allocated Vacation Days
+     * @return Allocated Vacation Days
+     */
     public long getAllocatedVacationDays() {
         return allocatedVacationDays;
     }
 
+    /**
+     * Getters for Planned Days
+     * @return Planned Days
+     */
     public int getPlannedDays() {
         return plannedDays;
     }
+
     /**
-     * Adds new destiantion to the list of destinations
-     * @param destination The destination
+     * Add Destination
+     * @param destination Destination
      */
     public void addDestination(Destination destination) {
         destinationList.add(destination);
     }
 
-    public void addUser(User user) {
-        userList.add(user);
-    }
-
     /**
-     * Setter for Allocated Vacation Days
+     * Sets number of vacation days
      * @param vacationDays Number of vacation days
      */
     public void setAllocatedVacationDays(long vacationDays) {
@@ -54,7 +75,7 @@ public class Group {
     }
 
     /**
-     * Getter for Allocated Vacation Days
+     * Add vacation days
      * @param plannedDays Number of planned days
      */
     public void addVacationDays(int plannedDays) {

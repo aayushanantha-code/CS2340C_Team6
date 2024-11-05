@@ -9,16 +9,14 @@ public class Destination {
     private String start;
     private String end;
     private long duration;
+    private List<Dining> diningList;
 
 
     /**
      * Constructor for Destination
      */
     public Destination() {
-        this.name = "";
-        this.start = "";
-        this.end = "";
-        this.duration = 0;
+        this("", "", "", 0);
     }
     /**
      * Constructor for Destination
@@ -32,6 +30,7 @@ public class Destination {
         this.start = start;
         this.end = end;
         this.duration = duration;
+        this.diningList = new ArrayList<>();
     }
 
     /**
@@ -96,5 +95,21 @@ public class Destination {
      */
     public void setDuration(long duration) {
         this.duration = duration;
+    }
+
+    /**
+     * Getters for Dining List
+     * @return List of Dining
+     */
+    public List<Dining> getDiningList() {
+        return diningList;
+    }
+
+    /**
+     * Add Dining
+     * @param dining Dining
+     */
+    public void addDining(Dining dining) {
+        diningList.add(dining);
     }
 }

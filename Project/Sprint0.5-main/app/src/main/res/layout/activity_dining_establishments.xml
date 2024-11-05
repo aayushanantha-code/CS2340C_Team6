@@ -6,12 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.DiningEstablishmentsActivity"
-    android:background="#4F474D"> <!-- Set background color -->
+    android:background="#4F474D">
 
     <include layout="@layout/header"/>
     <include layout="@layout/bottom_navigation" />
 
-    <!-- Title TextView -->
     <TextView
         android:id="@+id/title_text"
         android:layout_width="wrap_content"
@@ -23,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="75dp"/> <!-- Adjust top margin as needed -->
+        android:layout_marginTop="75dp"/>
 
     <FrameLayout
         android:id="@+id/dining_reservation_box"
@@ -39,6 +38,7 @@
             android:layout_gravity="center"
             android:background="@android:color/white"
             android:elevation="10dp">
+
             <TextView
                 android:id="@+id/overlay_title"
                 android:layout_width="wrap_content"
@@ -49,6 +49,35 @@
                 android:textColor="@android:color/black"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <Spinner
+                android:id="@+id/location_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <EditText
+                android:id="@+id/name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Name"
+                android:background="@android:color/darker_gray"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,23 +128,6 @@
                 android:inputType="textUri"
                 android:background="@android:color/darker_gray"
                 android:padding="8dp"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location"
-                android:textSize="25sp"
-                android:textColor="@android:color/black"/>
-
-            <EditText
-                android:id="@+id/location_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter Location"
-                android:inputType="text"
-                android:background="@android:color/darker_gray"
-                android:padding="8dp"
                 android:layout_marginBottom="16dp"/>
 
             <Button
@@ -124,7 +136,6 @@
                 android:layout_height="wrap_content"
                 android:text="Add Reservation"
                 android:layout_gravity="center"/>
-
         </LinearLayout>
     </FrameLayout>
 
@@ -138,6 +149,4 @@
         android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
