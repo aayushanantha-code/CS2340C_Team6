@@ -39,7 +39,7 @@ public class BottomNavigationActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String group = dataSnapshot.getValue(User.class).getGroupName();
-                        logisticsIntent.putExtra("username", username);// Pass the username
+                        logisticsIntent.putExtra("username", username); // Pass the username
                         logisticsIntent.putExtra("groupName", group); // Pass the Group
                         startActivity(logisticsIntent);
                     }
@@ -66,7 +66,7 @@ public class BottomNavigationActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String group = dataSnapshot.getValue(User.class).getGroupName();
-                        destinationsIntent.putExtra("username", username);// Pass the username
+                        destinationsIntent.putExtra("username", username); // Pass the username
                         destinationsIntent.putExtra("groupName", group); // Pass the Group
                         startActivity(destinationsIntent);
                     }
@@ -92,7 +92,7 @@ public class BottomNavigationActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String group = dataSnapshot.getValue(User.class).getGroupName();
-                        diningIntent.putExtra("username", username);// Pass the username
+                        diningIntent.putExtra("username", username); // Pass the username
                         diningIntent.putExtra("groupName", group); // Pass the Group
                         startActivity(diningIntent);
                     }
@@ -118,7 +118,7 @@ public class BottomNavigationActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String group = dataSnapshot.getValue(User.class).getGroupName();
-                        accomodationsIntent.putExtra("username", username);// Pass the username
+                        accomodationsIntent.putExtra("username", username); // Pass the username
                         accomodationsIntent.putExtra("groupName", group); // Pass the Group
                         startActivity(accomodationsIntent);
                     }
@@ -144,7 +144,7 @@ public class BottomNavigationActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String group = dataSnapshot.getValue(User.class).getGroupName();
-                        communityIntent.putExtra("username", username);// Pass the username
+                        communityIntent.putExtra("username", username); // Pass the username
                         communityIntent.putExtra("groupName", group); // Pass the Group
                         startActivity(communityIntent);
                     }

@@ -141,7 +141,7 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
      * @param group the username of the group
      */
     public void fetchGroupDestinations(String group) {
-       groupDatabase.child(group).child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
+        groupDatabase.child(group).child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Setting up new Destination
@@ -156,7 +156,7 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                 groupDestinations.clear();
                 if (destinationList != null && destinationList.size() > 0) {
                     if (destinationList.size() >= 5) {
-                        for (int i = destinationList.size()-5; i < destinationList.size(); i++) {
+                        for (int i = destinationList.size() - 5; i < destinationList.size(); i++) {
                             groupDestinations.add(destinationList.get(i).getName() + " - " + destinationList.get(i).getDuration() + " days");
                         }
                     } else {
