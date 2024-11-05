@@ -42,19 +42,9 @@ public class DestinationsViewModel {
                 }
                 duration += newDestination.getDuration();
 
-                // Setting up new Destination
-                DataSnapshot destinationsSnapshot = dataSnapshot.child("destinationList");
-                ArrayList<Destination> destinationList = new ArrayList<>();
-
-                for (DataSnapshot destSnapshot : destinationsSnapshot.getChildren()) {
-                    Destination destination = destSnapshot.getValue(Destination.class);
-                    if (destination != null) {
-                        destinationList.add(destination);
-                    }
-                }
-                destinationList.add(newDestination);
+                // Add the new Destination using the name as the key
                 groupDatabase.child(group).child("plannedDays").setValue(duration);
-                groupDatabase.child(group).child("destinationList").setValue(destinationList);
+                groupDatabase.child(group).child("destinationList").child(name).setValue(newDestination);
             }
 
             @Override
