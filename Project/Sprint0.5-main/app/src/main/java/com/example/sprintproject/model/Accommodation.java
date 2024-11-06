@@ -32,7 +32,8 @@ public class Accommodation {
      * @param numRooms Number of rooms
      * @param roomTypes Types of rooms
      */
-    public Accommodation(Destination dest, String name, String ciD, String coD, int numRooms, List<String> roomTypes) {
+    public Accommodation(Destination dest, String name, String ciD,
+                         String coD, int numRooms, List<String> roomTypes) {
         this.destination = dest;
         this.name = name;
         this.checkinDate = ciD;

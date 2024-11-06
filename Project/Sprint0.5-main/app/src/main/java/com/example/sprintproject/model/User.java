@@ -1,7 +1,5 @@
 package com.example.sprintproject.model;
 
-import java.util.ArrayList;
-
 public class User {
     private String userID;
     private String password;
@@ -52,7 +50,7 @@ public class User {
         return groupName;
     }
 
-    public void setGroupName(String groupName) { this.groupName = groupName;}
+    public void setGroupName(String groupName) { this.groupName = groupName; }
 
     /**
      * Setter for User ID
