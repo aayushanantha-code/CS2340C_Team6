@@ -24,6 +24,7 @@ public class AccommodationsActivity extends BottomNavigationActivity {
                 (FrameLayout) findViewById(R.id.content_frame),
                 true);
 
+
         Spinner numberOfRooms = findViewById(R.id.number_of_rooms_spinner);
         ArrayAdapter<CharSequence> numberOfRoomsAdapter = ArrayAdapter.createFromResource(this,
                 R.array.number_of_rooms, android.R.layout.simple_spinner_item);
@@ -44,6 +45,8 @@ public class AccommodationsActivity extends BottomNavigationActivity {
         FrameLayout accommodationsBox = findViewById(R.id.accommodations_box);
         toggleAccommodations = findViewById(R.id.add_accommodation);
         toggleAccommodations.setOnClickListener(c-> toggleAccomodationsView(accommodationsBox));
+      // Gets the group Name from intents (Use this for all database stuff)
+        String group = getIntent().getStringExtra("groupName");
     }
 
     /**
@@ -58,6 +61,7 @@ public class AccommodationsActivity extends BottomNavigationActivity {
             frameLayout.setVisibility(View.GONE);
             toggleAccommodations.setText("+");
         }
+        
     }
 
     //allows user to choose date and displays it

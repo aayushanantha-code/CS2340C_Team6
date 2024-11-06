@@ -1,7 +1,6 @@
 package com.example.sprintproject.views;
 
 import android.app.DatePickerDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,18 +13,16 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.DateComparison;
 import com.example.sprintproject.model.Destination;
-import com.example.sprintproject.model.DestinationDatabase;
+import com.example.sprintproject.model.GroupDatabase;
 import com.example.sprintproject.viewmodels.DestinationsViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
@@ -41,18 +38,20 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
     private EditText endDateEdit;
     private String endDateStore;
     private EditText durationEdit;
+    private TextView successfulText;
+
     private String durationStore;
     private Button submitButton;
-    private ConstraintLayout logTravelBox;
-    private ConstraintLayout calculateVacationTimeBox;
+    private FrameLayout logTravelBox;
+    private FrameLayout calculateVacationTimeBox;
+    private FrameLayout destinationListView;
     private EditText locationInput;
-    private DatabaseReference destinationDatabase;
-    private DatabaseReference userDatabase;
+    private DatabaseReference groupDatabase;
     private Button travelLogButton;
     private ListView destinationList;
     private List<String> destinationData = new ArrayList<>();
     private ArrayAdapter<String> destinationAdapter;
-    private List<String> userDestinations; // Added to store user's destinations
+    private List<String> groupDestinations; // Added to store user's destinations
     private ListView destinationsView; // ListView to display destinations
     private ArrayAdapter<String> destinationsAdapter; // Adapter for the ListView
 
@@ -68,36 +67,45 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                 true);  // Tie this activity to its layout
 
         Button logTravelToggle = findViewById(R.id.log_travel);
-        Button calculatorToggle = findViewById(R.id.calculate_vacation_time);
+        Button calculatorToggle = findViewById(R.id.allocate_vacation_time);
         Button cancelLogTravelButton = findViewById(R.id.cancel_log_travel_button);
-        TextView successfulText = findViewById(R.id.travel_successfully_logged);
+        Button destinationListButton = findViewById(R.id.button_view_list);
 
+        groupDatabase = GroupDatabase.getInstance().getDatabaseReference();
+
+        successfulText = findViewById(R.id.travel_successfully_logged);
         estimatedStart = findViewById(R.id.estimated_start_input);
         estimatedEnd = findViewById(R.id.estimated_end_input);
         estimatedStart.setOnClickListener(v -> showDateEdit(estimatedStart));
         estimatedEnd.setOnClickListener(v -> showDateEdit(estimatedEnd));
 
+        // Open Travel Box
         logTravelBox = findViewById(R.id.log_travel_box);
-        logTravelToggle.setOnClickListener(v -> {
-            successfulText.setVisibility(View.GONE);
-            toggleLogTravelBox(logTravelBox);
-        });
+        logTravelToggle.setOnClickListener(v -> toggleLogTravelBox(logTravelBox));
         cancelLogTravelButton.setOnClickListener(v -> toggleLogTravelBox(logTravelBox));
-        calculateVacationTimeBox = findViewById(R.id.calculator_box);
-        calculatorToggle.setOnClickListener(v -> {
-            successfulText.setVisibility(View.GONE);
-            toggleCalculatorBox(calculateVacationTimeBox);
-        });
-        String username = getIntent().getStringExtra("username");
 
-        userDestinations = new ArrayList<>();
+        // Open Calculator Box
+        calculateVacationTimeBox = findViewById(R.id.calculator_box);
+        calculatorToggle.setOnClickListener(v -> toggleCalculatorBox(calculateVacationTimeBox));
+
+        String group = getIntent().getStringExtra("groupName");
+
+        groupDestinations = new ArrayList<>();
+        // Open Calculator Box
+        destinationListView = findViewById(R.id.destinations_box);
+        destinationListButton.setOnClickListener(v -> {
+            fetchGroupDestinations(group);
+            toggleListBox(destinationListView);
+        });
+
+
 
         // Initialize ListView and Adapter
         destinationsView = findViewById(R.id.destinations_View);
-        destinationsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, userDestinations);
+        destinationsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupDestinations);
         destinationsView.setAdapter(destinationsAdapter);
         //Create the List of Previous Destinations
-        fetchUserDestinations(username);
+
 
         //initialize start date edit
         startDateEdit = findViewById(R.id.calculate_start_date_input);
@@ -113,10 +121,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
         //calculates duration
         submitButton.setOnClickListener(c -> {
             long days = calculate();
-            DestinationsViewModel account = new DestinationsViewModel();
-            SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
-            String userId = sharedPreferences.getString("userId", null);
-            account.allocateVacationDays(days, userId);
+            DestinationsViewModel groupDestinations = new DestinationsViewModel();
+            groupDestinations.allocateVacationDays(days, group);
         });
 
         locationInput = findViewById(R.id.travel_location_input);
@@ -125,78 +131,40 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
 
         // adds the destination to the list
         travelLogButton.setOnClickListener(c -> {
-            String locationName = locationInput.getText().toString().trim();
-            String startDate = estimatedStart.getText().toString().trim();
-            String endDate = estimatedEnd.getText().toString().trim();
-            long duration = calculateDuration(startDate, endDate);
-
-            if (!locationName.isEmpty() && this.isStartDateBeforeEndDate(startDate, endDate)) {
-                destinationDatabase = DestinationDatabase.getInstance().getDatabaseReference();
-                destinationDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        boolean destinationExists = false;
-
-                        for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
-                            String existingDestination =
-                                    destinationSnapshot.child("name").getValue(String.class);
-                            if (existingDestination != null
-                                    && existingDestination.equals(locationName)) {
-                                destinationExists = true;
-                                break;
-                            }
-                        }
-
-                        if (!destinationExists) {
-                            //grabs userId from storage
-                            SharedPreferences sharedPreferences =
-                                    getSharedPreferences("MyApp", MODE_PRIVATE);
-                            String userId = sharedPreferences.getString("userId", null);
-                            //Continue to add new location
-                            DestinationsViewModel account = new DestinationsViewModel();
-                            account.logNewDestination(locationName, startDate,
-                                    endDate, duration, userId);
-                            toggleLogTravelBox(logTravelBox);
-                            successfulText.setVisibility(View.VISIBLE);
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        //error
-                    }
-                });
-            }
+            logTravel(group);
+            fetchGroupDestinations(group);
         });
     }
+
     /**
      * Fetches the user's destinations
-     * @param username the username of the user
+     * @param group the username of the group
      */
-    public void fetchUserDestinations(String username) {
-        userDatabase = FirebaseDatabase.getInstance().getReference();
-        userDatabase.child("users").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void fetchGroupDestinations(String group) {
+        groupDatabase.child(group).child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Setting up new Destination
-                DataSnapshot destinationsSnapshot = dataSnapshot.child("destinations");
                 ArrayList<Destination> destinationList = new ArrayList<>();
 
-                for (DataSnapshot destSnapshot : destinationsSnapshot.getChildren()) {
+                for (DataSnapshot destSnapshot : dataSnapshot.getChildren()) {
                     Destination destination = destSnapshot.getValue(Destination.class);
                     if (destination != null) {
                         destinationList.add(destination);
                     }
                 }
+                groupDestinations.clear();
                 if (destinationList != null && destinationList.size() > 0) {
-                    for (int i = 0; i < destinationList.size(); i++) {
-                        userDestinations.add(destinationList.get(i).getName()
-                                + " - " + destinationList.get(i).getDuration() + " days");
-                        System.out.println(userDestinations.get(i));
-                    }
-                        if (userDestinations.size() > 5) {
-                            userDestinations.remove(0);
+                    if (destinationList.size() >= 5) {
+                        for (int i = destinationList.size() - 5; i < destinationList.size(); i++) {
+                            groupDestinations.add(destinationList.get(i).getName() + " - " + destinationList.get(i).getDuration() + " days");
+                        }
+                    } else {
+                        for (int i = 0; i < destinationList.size(); i++) {
+                            groupDestinations.add(destinationList.get(i).getName() + " - " + destinationList.get(i).getDuration() + " days");
                         }
                     }
+                }
                 destinationsAdapter.notifyDataSetChanged();
             }
 
@@ -205,6 +173,43 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                 // Failure
             }
         });
+    }
+
+    private void logTravel(String group) {
+        String locationName = locationInput.getText().toString().trim();
+        String startDate = estimatedStart.getText().toString().trim();
+        String endDate = estimatedEnd.getText().toString().trim();
+        long duration = calculateDuration(startDate, endDate);
+
+        if (!locationName.isEmpty() && this.isStartDateBeforeEndDate(startDate, endDate)) {
+            groupDatabase.child(group).child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    boolean destinationExists = false;
+
+                    for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
+                        String existingDestination = destinationSnapshot.child("name").getValue(String.class);
+                        if (existingDestination != null && existingDestination.equals(locationName)) {
+                            destinationExists = true;
+                            break;
+                        }
+                    }
+
+                    if (!destinationExists) {
+                        //Continue to add new location
+                        DestinationsViewModel account = new DestinationsViewModel();
+                        account.logNewDestination(locationName, startDate, endDate, duration, group);
+                        toggleLogTravelBox(logTravelBox);
+                        successfulText.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    //error
+                }
+            });
+        }
     }
     @Override
     public boolean isStartDateBeforeEndDate(String startDateStr, String endDateStr) {
@@ -228,27 +233,48 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
 
     /**
      * Toggles the log travel box
-     * @param view the view to toggle
+     * @param frameLayout the view to toggle
      */
-    protected void toggleLogTravelBox(View view) {
-        if (view.getVisibility() == View.GONE) {
-            view.setVisibility(View.VISIBLE);
+    protected void toggleLogTravelBox(FrameLayout frameLayout) {
+        successfulText.setVisibility(View.GONE);
+        destinationListView.setVisibility(View.GONE);
+        calculateVacationTimeBox.setVisibility(View.GONE);
+        if (frameLayout.getVisibility() == View.GONE) {
+            frameLayout.setVisibility(View.VISIBLE);
         } else {
-            view.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.GONE);
         }
     }
 
     /**
      * Toggles the calculator box
-     * @param view the view to toggle
+     * @param frameLayout the view to toggle
      */
-    protected void toggleCalculatorBox(View view) {
-        if (view.getVisibility() == View.GONE) {
-            view.setVisibility(View.VISIBLE);
+    protected void toggleCalculatorBox(FrameLayout frameLayout) {
+        successfulText.setVisibility(View.GONE);
+        destinationListView.setVisibility(View.GONE);
+        logTravelBox.setVisibility(View.GONE);
+        if (frameLayout.getVisibility() == View.GONE) {
+            frameLayout.setVisibility(View.VISIBLE);
         } else {
-            view.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.GONE);
         }
     }
+    /**
+     * Toggles the log travel box
+     * @param frameLayout the view to toggle
+     */
+    protected void toggleListBox(FrameLayout frameLayout) {
+        successfulText.setVisibility(View.GONE);
+        calculateVacationTimeBox.setVisibility(View.GONE);
+        logTravelBox.setVisibility(View.GONE);
+        if (frameLayout.getVisibility() == View.GONE) {
+            frameLayout.setVisibility(View.VISIBLE);
+        } else {
+            frameLayout.setVisibility(View.GONE);
+        }
+    }
+
 
     //allows user to choose date and displays it
     //used for both start and end date inputs

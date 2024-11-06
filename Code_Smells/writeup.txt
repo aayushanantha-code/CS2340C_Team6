@@ -1,0 +1,37 @@
+In the Order.java file, a code smell was identified in the method calculateTotalPrice(). 
+The first code smell would be considered “Bloaters” because of its long method which is lengthy and handles multiple responsibilities.
+We refactor it into smaller methods like calculateItemTotal, applyDiscount, and calculateTax. 
+All methods manage the bloat and make the code easier to handle and understand.
+
+Also, in the Order.java file, there was a code smell “Object-Orientation Abusers” because it uses 
+switch statements that don’t fully exploit the possibilities of object-oriented design.
+We refactored the code to fully utilize OOP while also making the code easier to understand 
+by removing the excess switch statements and replacing it with multiple smaller methods.
+
+In the TaxableItem.java, there was a code smell identified in the constructor which hard coded taxRate.
+This would cause problems as if we needed to change the taxRate, the code would need to be updated wherever 
+this rate is used, making it hard to adapt to different scenarios or requirements. 
+This “Bloater” wouldcause data clumps because the class holds a taxRate that may vary but is clumped in a way that’s hard to change. 
+We fixed this by removing the hardcoded tax rates from the Taxable Item class.
+
+In the GiftCardItem.java, we can see duplicated code from the code compared to the Item.java.
+We removed the code smell “Dispensables” because of its use of repeated code and because it was a lazy class itself.
+We refactored the code by eliminating the GiftCardItem class as it’s the same as Item, and added another 
+parameter to the Item constructor to flag if an item is a gift card. 
+By changing these classes, we reduced redundancy and improved maintainability, making the code simpler and more cohesive. 
+
+Also, in the GiftCardItem.java, by removing the duplicated code, we have found another code smells “Object-Orientation Abusers”
+because these different classes share responsibilities but have inconsistent interfaces or behaviors, which can lead to multiple problems.
+This change will make the code more maintainable by keeping all item-specific functionality within a single class.
+
+In the OrderEmailSender.java, the sendEmail method was static which made it hard to test and extend functionality. 
+To fix this code smell “Change Preventers” we made the sendEmail method a non-static method to improve 
+the flexibility of the code and make it easier to adapt and test in response to future changes.
+
+Participating Members:
+Beckham Lam
+Euan Ham
+Nityam Mulani
+Aayush Anantha
+Blake Berman
+James De Ocampo
