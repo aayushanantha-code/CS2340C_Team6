@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">SprintProject</string>
+    <string-array name = "number_of_rooms">
+        <item>Enter Number of Rooms</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="room_type">
+        <item>Enter Room Type</item>
+        <item>Single Room</item>
+        <item>Double Room</item>
+        <item>Twin Room</item>
+        <item>Queen Suite</item>
+        <item>King Suite</item>
+        <item>Executive Suite</item>
+        <item>Penthouse</item>
+    </string-array>
 </resources>

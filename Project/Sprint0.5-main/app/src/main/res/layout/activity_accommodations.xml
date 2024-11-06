@@ -25,4 +25,129 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="75dp"/> <!-- Adjust top margin as needed -->
 
+    <FrameLayout
+        android:id="@+id/accommodations_box"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="25dp"
+            android:layout_gravity="center"
+            android:background="@android:color/white"
+            android:elevation="10dp">
+            <TextView
+                android:id="@+id/accommodations_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Accommodation"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check In: "
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <EditText
+                android:id="@+id/checkin_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter check-in"
+                android:inputType="date"
+                android:background="@android:color/darker_gray"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check Out: "
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <EditText
+                android:id="@+id/checkout_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter check-out"
+                android:inputType="date"
+                android:background="@android:color/darker_gray"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"/>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location: "
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <EditText
+                android:id="@+id/location_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Location"
+                android:inputType="textUri"
+                android:background="@android:color/darker_gray"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Rooms: "
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+            <Spinner
+                android:id="@+id/number_of_rooms_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="2"
+                android:spinnerMode="dropdown"
+                android:background="@android:color/darker_gray"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Room Type: "
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+            <Spinner
+                android:id="@+id/room_type_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="2"
+                android:spinnerMode="dropdown"
+                android:background="@android:color/darker_gray"/>
+
+            <Button
+                android:id="@+id/submit_accommodation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Accommodation"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/add_accommodation"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:text="+"
+        android:textSize="24sp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
