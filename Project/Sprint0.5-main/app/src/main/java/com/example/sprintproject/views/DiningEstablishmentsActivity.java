@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -22,12 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sprintproject.R;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Calendar;
 
 public class DiningEstablishmentsActivity extends BottomNavigationActivity {
@@ -36,7 +34,12 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
     private String groupName;
     private Spinner locationSpinner;
     private List<String> destinationNames;
+    private List<Dining> allDiningEstablishments;  // List to store all dining establishments
     private DiningEstablishmentsViewModel diningViewModel;
+
+    private ListView diningListView;  // ListView to display dining establishments
+    private DiningListAdapter diningListAdapter;  // Adapter to bind data to ListView
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +51,15 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
 
         locationSpinner = findViewById(R.id.location_spinner);
         destinationNames = new ArrayList<>();
+        allDiningEstablishments = new ArrayList<>();  // Initialize the list
         diningViewModel = new DiningEstablishmentsViewModel();
+
+        diningListView = findViewById(R.id.dining_list);  // Initialize the ListView
+        diningListAdapter = new DiningListAdapter(this, allDiningEstablishments);  // Initialize the Adapter
+        diningListView.setAdapter(diningListAdapter);  // Set the adapter for the ListView
+
         loadDestinations();
+
         Button submitReservation = findViewById(R.id.submit_reservation);
         toggleDiningBox = findViewById(R.id.add_dining);
         FrameLayout diningFrame = findViewById(R.id.dining_reservation_box);
@@ -58,6 +68,7 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
             addDiningToDestination();
             toggleDiningBox(diningFrame);
         });
+
         toggleDiningBox.setOnClickListener(c -> toggleDiningBox(diningFrame));
 
         EditText reservationDate = findViewById(R.id.date_input);
@@ -71,7 +82,8 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         groupDatabase.child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                destinationNames.clear(); // Clear the list to avoid duplication
+                destinationNames.clear();  // Clear the list to avoid duplication
+                allDiningEstablishments.clear();  // Clear the dining establishments list
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     // Ensure that the snapshot has a "name" field before adding
@@ -79,6 +91,9 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
                     if (destinationName != null) {
                         destinationNames.add(destinationName);
                     }
+
+                    // Now, load all dining establishments for this destination
+                    loadDiningForDestination(snapshot);
                 }
 
                 if (destinationNames.isEmpty()) {
@@ -99,67 +114,57 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         });
     }
 
+    private void loadDiningForDestination(DataSnapshot destinationSnapshot) {
+        // Get the dining list for the current destination
+        String destinationKey = destinationSnapshot.getKey();
+        DatabaseReference diningRef = groupDatabase.child("destinationList").child(destinationKey).child("diningList");
 
-    /**
-     * Toggles the visibility of the dining box
-     * @param frameLayout The frame layout to toggle
-     */
-    protected void toggleDiningBox(FrameLayout frameLayout) { // Unchanged: kept this method as it is
-        if (frameLayout.getVisibility() == View.GONE) {
-            frameLayout.setVisibility(View.VISIBLE);
-            toggleDiningBox.setText("-");
+        diningRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot diningSnapshot : dataSnapshot.getChildren()) {
+                    Dining dining = diningSnapshot.getValue(Dining.class);
+                    if (dining != null) {
+                        allDiningEstablishments.add(dining);  // Add dining to the allDiningEstablishments list
+                    }
+                }
+
+                // Update the adapter to reflect the new data
+                diningListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(DiningEstablishmentsActivity.this, "Failed to load dining establishments: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void toggleDiningBox(FrameLayout diningFrame) {
+        if (diningFrame.getVisibility() == View.VISIBLE) {
+            diningFrame.setVisibility(View.GONE);
         } else {
-            frameLayout.setVisibility(View.GONE);
-            toggleDiningBox.setText("+");
+            diningFrame.setVisibility(View.VISIBLE);
         }
     }
 
-    /**
-     * Allows the user to choose a date and displays it
-     * @param dateEditText the date input field
-     */
-    private void showDateEdit(EditText dateEditText) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog =
-                new DatePickerDialog(this, (view, selectedYear, selectedMonth, selectedDay) -> {
-                    String storeDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
-                    dateEditText.setText(storeDate);
-                }, year, month, day);
-
+    private void showDateEdit(EditText reservationDate) {
+        final Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(DiningEstablishmentsActivity.this,
+                (view, year, month, dayOfMonth) -> reservationDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year),
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
-    /**
-     * Allows the user to pick the time of their reservation.
-     * @param reservationTime the time input field
-     */
     private void showTimeEdit(EditText reservationTime) {
-        // Get the current hour and minute
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
-        // Create and show a TimePickerDialog
-        TimePickerDialog timePickerDialog = new TimePickerDialog(
-                this,
-                (view, selectedHour, selectedMinute) -> {
-                    String formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute);
-                    reservationTime.setText(formattedTime);
-                },
-                hour,
-                minute,
-                true // true for 24-hour format, false for 12-hour format
-        );
+        final Calendar calendar = Calendar.getInstance();
+        TimePickerDialog timePickerDialog = new TimePickerDialog(DiningEstablishmentsActivity.this,
+                (view, hourOfDay, minute) -> reservationTime.setText(hourOfDay + ":" + minute),
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
         timePickerDialog.show();
     }
 
-    /**
-     * Adds a dining reservation to the destination's dining list
-     */
+    // Original addDiningToDestination() method
     private void addDiningToDestination() {
         EditText nameInput = findViewById(R.id.name_input);
         EditText dateInput = findViewById(R.id.date_input);
