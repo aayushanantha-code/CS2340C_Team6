@@ -28,6 +28,7 @@ public class Dining {
         this.name = name;
         this.date = date;
         this.time = time;
+
     }
 
     /**
@@ -70,6 +71,8 @@ public class Dining {
         return time;
     }
 
+
+
     /**
      * Setters for Location
      * @param location Location of the restaurant
@@ -109,4 +112,6 @@ public class Dining {
     public void setTime(String time) {
         this.time = time;
     }
+
+
 }

@@ -11,15 +11,20 @@ import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.Dining;
 import com.example.sprintproject.model.Destination;
+import com.example.sprintproject.viewmodels.DiningEstablishmentsViewModel;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.sprintproject.R;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +36,7 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
     private String groupName;
     private Spinner locationSpinner;
     private List<String> destinationNames;
-
+    private DiningEstablishmentsViewModel diningViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +48,8 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
 
         locationSpinner = findViewById(R.id.location_spinner);
         destinationNames = new ArrayList<>();
-
+        diningViewModel = new DiningEstablishmentsViewModel();
         loadDestinations();
-
         Button submitReservation = findViewById(R.id.submit_reservation);
         toggleDiningBox = findViewById(R.id.add_dining);
         FrameLayout diningFrame = findViewById(R.id.dining_reservation_box);
@@ -63,26 +67,38 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         reservationTime.setOnClickListener(c -> showTimeEdit(reservationTime));
     }
 
-    private void loadDestinations() { // Unchanged: kept this method as it is
+    private void loadDestinations() {
         groupDatabase.child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                destinationNames.clear(); // Clear the list to avoid duplication
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Destination destination = snapshot.getValue(Destination.class);
-                    destinationNames.add(destination.getName());
+                    // Ensure that the snapshot has a "name" field before adding
+                    String destinationName = snapshot.child("name").getValue(String.class);
+                    if (destinationName != null) {
+                        destinationNames.add(destinationName);
+                    }
                 }
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(DiningEstablishmentsActivity.this,
-                        android.R.layout.simple_spinner_item, destinationNames);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                locationSpinner.setAdapter(adapter);
+
+                if (destinationNames.isEmpty()) {
+                    Toast.makeText(DiningEstablishmentsActivity.this, "No destinations found", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Create and set the adapter for the Spinner
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(DiningEstablishmentsActivity.this,
+                            android.R.layout.simple_spinner_item, destinationNames);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    locationSpinner.setAdapter(adapter);
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(DiningEstablishmentsActivity.this, "Failed to load destinations", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DiningEstablishmentsActivity.this, "Failed to load destinations: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
     /**
      * Toggles the visibility of the dining box
@@ -161,8 +177,7 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
             return;
         }
 
-        Dining dining = new Dining(location, url, name, date, time);
-        groupDatabase.child("destinationList").child(location).child("diningList").child(name).setValue(dining);
+        diningViewModel.logNewDiningReservation(groupName, location, name, date, time, url);
         Toast.makeText(this, "Dining reservation added", Toast.LENGTH_SHORT).show();
     }
 }
