@@ -30,13 +30,21 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
 
         Dining dining = diningList.get(position);
 
+        TextView locationTextView = convertView.findViewById(R.id.location_name);
+        locationTextView.setText(dining.getLocation());
+
         TextView restaurantNameTextView = convertView.findViewById(R.id.restaurant_name);
         restaurantNameTextView.setText(dining.getRestaurantName());
 
         // Add any other details you want to show for each dining establishment
         // For example:
-        // TextView diningAddressTextView = convertView.findViewById(R.id.dining_address);
-        // diningAddressTextView.setText(dining.getAddress());
+        TextView diningAddressTextView = convertView.findViewById(R.id.restaurant_address);
+        diningAddressTextView.setText(dining.getUrl());
+
+        TextView timeTextView = convertView.findViewById(R.id.time_display);
+        timeTextView.setText(dining.getTime());
+
+
 
         return convertView;
     }

@@ -8,9 +8,13 @@
     tools:context=".views.DiningEstablishmentsActivity"
     android:background="#4F474D">
 
+    <!-- Include Header Layout -->
     <include layout="@layout/header"/>
+
+    <!-- Include Bottom Navigation Layout -->
     <include layout="@layout/bottom_navigation" />
 
+    <!-- Title TextView -->
     <TextView
         android:id="@+id/title_text"
         android:layout_width="wrap_content"
@@ -24,12 +28,48 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="75dp"/>
 
+    <!-- Dining List (Non-clickable ListView) -->
+
+    <ListView
+        android:id="@+id/dining_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp"
+        android:padding="10dp"
+        android:clickable="false"
+        android:focusable="false"
+        app:layout_constraintTop_toBottomOf="@id/title_text"
+        app:layout_constraintBottom_toTopOf="@id/add_dining"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <!-- Add Dining Button (Floating Action Button) -->
+    <Button
+        android:id="@+id/add_dining"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:text="+"
+        android:textSize="24sp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Reservation Overlay FrameLayout (Hidden Initially) -->
     <FrameLayout
         android:id="@+id/dining_reservation_box"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="#80000000"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Reservation Linear Layout -->
         <LinearLayout
             android:layout_width="275dp"
             android:layout_height="wrap_content"
@@ -39,6 +79,7 @@
             android:background="@android:color/white"
             android:elevation="10dp">
 
+            <!-- Overlay Title -->
             <TextView
                 android:id="@+id/overlay_title"
                 android:layout_width="wrap_content"
@@ -50,6 +91,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"/>
 
+            <!-- Location Label -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -57,12 +99,14 @@
                 android:textSize="25sp"
                 android:textColor="@android:color/black"/>
 
+            <!-- Location Spinner -->
             <Spinner
                 android:id="@+id/location_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"/>
 
+            <!-- Name Label -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,6 +114,7 @@
                 android:textSize="25sp"
                 android:textColor="@android:color/black"/>
 
+            <!-- Name Input -->
             <EditText
                 android:id="@+id/name_input"
                 android:layout_width="match_parent"
@@ -79,6 +124,7 @@
                 android:padding="8dp"
                 android:layout_marginBottom="8dp"/>
 
+            <!-- Date Label -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,6 +132,7 @@
                 android:textSize="25sp"
                 android:textColor="@android:color/black"/>
 
+            <!-- Date Input -->
             <EditText
                 android:id="@+id/date_input"
                 android:layout_width="match_parent"
@@ -96,6 +143,7 @@
                 android:padding="8dp"
                 android:layout_marginBottom="8dp"/>
 
+            <!-- Time Label -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -103,6 +151,7 @@
                 android:textSize="25sp"
                 android:textColor="@android:color/black"/>
 
+            <!-- Time Input -->
             <EditText
                 android:id="@+id/time_input"
                 android:layout_width="match_parent"
@@ -113,6 +162,7 @@
                 android:padding="8dp"
                 android:layout_marginBottom="8dp"/>
 
+            <!-- URL Label -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -120,6 +170,7 @@
                 android:textSize="25sp"
                 android:textColor="@android:color/black"/>
 
+            <!-- URL Input -->
             <EditText
                 android:id="@+id/url_input"
                 android:layout_width="match_parent"
@@ -130,37 +181,13 @@
                 android:padding="8dp"
                 android:layout_marginBottom="16dp"/>
 
+            <!-- Submit Button -->
             <Button
                 android:id="@+id/submit_reservation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add Reservation"
                 android:layout_gravity="center"/>
-
-
-
-
-
         </LinearLayout>
     </FrameLayout>
-
-    <ListView
-        android:id="@+id/dining_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="0.5dp"
-        android:padding="10dp"
-        />
-        />
-    <Button
-        android:id="@+id/add_dining"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:text="+"
-        android:textSize="24sp"
-        android:layout_marginBottom="100dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
