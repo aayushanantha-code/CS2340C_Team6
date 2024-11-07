@@ -189,7 +189,14 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
 
         diningViewModel.logNewDiningReservation(groupName, location, name, date, time, url);
         Toast.makeText(this, "Dining reservation added", Toast.LENGTH_SHORT).show();
+
+        // Add the new dining reservation to the list and notify the adapter
+        Dining newDining = new Dining(name, date, time, url, location);
+        allDiningEstablishments.add(newDining);
+        sortDiningByDateTime();  // Optionally re-sort if needed
+        diningListAdapter.notifyDataSetChanged();  // Refresh the ListView
     }
+
 
     private void sortDiningByDateTime() {
         allDiningEstablishments.sort((d1, d2) -> {

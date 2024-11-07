@@ -13,7 +13,9 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textColor="#000000"
-        android:text="Restaurant Name" />
+        android:text="Restaurant Name"
+        android:textStyle="bold" />
+
 
     <!-- Optional: Address or additional details of the restaurant -->
     <TextView
@@ -21,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="#777777"
+        android:textColor="#FFFFFF"
         android:text="Restaurant Address" />
 
     <TextView
@@ -29,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="#777777"
+        android:textColor="#FFFFFF"
         android:text="Location Name" />
 
     <TextView
@@ -37,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="#777777"
+        android:textColor="#FFFFFF"
         android:text="Time Display" />
 
 </LinearLayout>
