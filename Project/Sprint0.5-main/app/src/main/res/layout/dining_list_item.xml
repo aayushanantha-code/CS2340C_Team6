@@ -24,4 +24,20 @@
         android:textColor="#777777"
         android:text="Restaurant Address" />
 
+    <TextView
+        android:id="@+id/location_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#777777"
+        android:text="Location Name" />
+
+    <TextView
+        android:id="@+id/time_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#777777"
+        android:text="Time Display" />
+
 </LinearLayout>

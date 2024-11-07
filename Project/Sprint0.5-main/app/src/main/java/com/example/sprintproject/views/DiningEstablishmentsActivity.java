@@ -24,7 +24,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Calendar;
 
@@ -129,6 +132,8 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
                     }
                 }
 
+                sortDiningByDateTime();
+
                 // Update the adapter to reflect the new data
                 diningListAdapter.notifyDataSetChanged();
             }
@@ -185,4 +190,21 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         diningViewModel.logNewDiningReservation(groupName, location, name, date, time, url);
         Toast.makeText(this, "Dining reservation added", Toast.LENGTH_SHORT).show();
     }
+
+    private void sortDiningByDateTime() {
+        allDiningEstablishments.sort((d1, d2) -> {
+            String dateTime1 = d1.getDate() + " " + d1.getTime();
+            String dateTime2 = d2.getDate() + " " + d2.getTime();
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            try {
+                Date date1 = format.parse(dateTime1);
+                Date date2 = format.parse(dateTime2);
+                return date1.compareTo(date2);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return 0;
+            }
+        });
+    }
+
 }
