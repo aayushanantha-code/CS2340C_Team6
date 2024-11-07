@@ -3,7 +3,6 @@ package com.example.sprintproject.views;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,13 +38,13 @@ public class AccommodationsActivity extends BottomNavigationActivity {
 
         EditText checkIn = findViewById(R.id.checkin_input);
         EditText checkout = findViewById(R.id.checkout_input);
-        checkIn.setOnClickListener(c->showDateEdit(checkIn));
-        checkout.setOnClickListener(c->showDateEdit(checkout));
+        checkIn.setOnClickListener(c -> showDateEdit(checkIn));
+        checkout.setOnClickListener(c -> showDateEdit(checkout));
 
         FrameLayout accommodationsBox = findViewById(R.id.accommodations_box);
         toggleAccommodations = findViewById(R.id.add_accommodation);
-        toggleAccommodations.setOnClickListener(c-> toggleAccomodationsView(accommodationsBox));
-      // Gets the group Name from intents (Use this for all database stuff)
+        toggleAccommodations.setOnClickListener(c -> toggleAccomodationsView(accommodationsBox));
+        // Gets the group Name from intents (Use this for all database stuff)
         String group = getIntent().getStringExtra("groupName");
     }
 

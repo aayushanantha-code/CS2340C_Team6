@@ -1,8 +1,6 @@
 package com.example.sprintproject.views;
 
 import android.app.AlertDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -114,6 +112,7 @@ public class LogisticsActivity extends BottomNavigationActivity {
     /**
      * Check if the user is already part of a group. If not, create a new group.
      * @param username The username of the logged-in user
+     * @param makeAGroupWarning Warning when group cannot be created
      */
     private void findUserGroup(String username, TextView makeAGroupWarning) {
         userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -161,35 +160,35 @@ public class LogisticsActivity extends BottomNavigationActivity {
         groupId = username + "'s group"; // Use the username as part of the group name
         // Add user to this new group
         userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        if (!user.getIsInGroup()) {
-                            Group group = new Group();
-                            groupDatabase.child(groupId).setValue(group).addOnSuccessListener(aVoid -> {
-                                user.joinGroup(groupId);
-                                groupDatabase.child(groupId).child("userList").child(username).setValue(user);
-                                userDatabase.child(username).setValue(user);
-                                invitedUsers.add(username); // Add inviter to the list
-                                invitedUsersAdapter.notifyDataSetChanged();
-                                Toast.makeText(LogisticsActivity.this, "New group created with you as the first member.", Toast.LENGTH_SHORT).show();
-                                makeAGroupWarning.setVisibility(View.GONE);
-                                graphButton.setVisibility(View.VISIBLE);
-                                listButton.setVisibility(View.VISIBLE);
-                                inviteButton.setVisibility(View.VISIBLE);
-                                addNoteButton.setVisibility(View.VISIBLE);
-                            }).addOnFailureListener(e -> Log.e("Firebase", "Failed to create new group", e));
-                        } else {
-                            Toast.makeText(LogisticsActivity.this, "You are already in a group.", Toast.LENGTH_SHORT).show();
-                        }
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    if (!user.getIsInGroup()) {
+                        Group group = new Group();
+                        groupDatabase.child(groupId).setValue(group).addOnSuccessListener(aVoid -> {
+                            user.joinGroup(groupId);
+                            groupDatabase.child(groupId).child("userList").child(username).setValue(user);
+                            userDatabase.child(username).setValue(user);
+                            invitedUsers.add(username); // Add inviter to the list
+                            invitedUsersAdapter.notifyDataSetChanged();
+                            Toast.makeText(LogisticsActivity.this, "New group created with you as the first member.", Toast.LENGTH_SHORT).show();
+                            makeAGroupWarning.setVisibility(View.GONE);
+                            graphButton.setVisibility(View.VISIBLE);
+                            listButton.setVisibility(View.VISIBLE);
+                            inviteButton.setVisibility(View.VISIBLE);
+                            addNoteButton.setVisibility(View.VISIBLE);
+                        }).addOnFailureListener(e -> Log.e("Firebase", "Failed to create new group", e));
+                    } else {
+                        Toast.makeText(LogisticsActivity.this, "You are already in a group.", Toast.LENGTH_SHORT).show();
                     }
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e("Firebase", "Failed to find user",
-                                databaseError.toException());
-                    }
-                });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("Firebase", "Failed to find user",
+                            databaseError.toException());
+                }
+            });
     }
 
     /**
@@ -224,6 +223,7 @@ public class LogisticsActivity extends BottomNavigationActivity {
     /**
      * Toggle the visibility of the pie chart.
      * @param pieChart_box The pie chart to toggle
+     * @param pieChart The specific pie chart to display
      */
     private void togglePieChart(FrameLayout pieChart_box, PieChart pieChart) {
         listBox.setVisibility(View.GONE);
