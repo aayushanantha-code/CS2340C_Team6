@@ -136,9 +136,23 @@
                 android:layout_height="wrap_content"
                 android:text="Add Reservation"
                 android:layout_gravity="center"/>
+
+
+
+
+
         </LinearLayout>
     </FrameLayout>
 
+    <ListView
+        android:id="@+id/dining_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp"
+        android:padding="10dp"
+        />
+        />
     <Button
         android:id="@+id/add_dining"
         android:layout_width="75dp"
