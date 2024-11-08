@@ -1,45 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="10dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:layout_margin="8dp"
+    android:background="#FFFFFF">
 
     <!-- Restaurant Name -->
     <TextView
-        android:id="@+id/restaurant_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="#000000"
-        android:text="Restaurant Name"
-        android:textStyle="bold" />
+    android:id="@+id/restaurant_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="16sp"
+    android:textColor="#000000"
+    android:text="Restaurant Name"
+    android:textStyle="bold" />
 
-
-    <!-- Optional: Address or additional details of the restaurant -->
+        <!-- Optional: Address or additional details of the restaurant -->
     <TextView
-        android:id="@+id/restaurant_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="#FFFFFF"
-        android:text="Restaurant Address" />
-
-    <TextView
-        android:id="@+id/location_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="#FFFFFF"
-        android:text="Location Name" />
+    android:id="@+id/restaurant_address"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="14sp"
+    android:textColor="#FFFFFF"
+    android:text="Restaurant Address" />
 
     <TextView
-        android:id="@+id/time_display"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="#FFFFFF"
-        android:text="Time Display" />
+    android:id="@+id/location_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="14sp"
+    android:textColor="#FFFFFF"
+    android:text="Location Name" />
 
-</LinearLayout>
+    <TextView
+    android:id="@+id/time_display"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="14sp"
+    android:textColor="#FFFFFF"
+    android:text="Time Display" />
+
+        </LinearLayout>

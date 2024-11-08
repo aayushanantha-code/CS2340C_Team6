@@ -46,6 +46,9 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
         String formattedDateTime = formatDateTime(dining.getDate(), dining.getTime());
         timeTextView.setText(formattedDateTime);
 
+        // Set the background color dynamically
+        convertView.setBackgroundColor(context.getResources().getColor(R.color.dining_entry_background));
+
         return convertView;
     }
 
