@@ -10,6 +10,9 @@ import android.widget.TextView;
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.Dining;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class DiningListAdapter extends ArrayAdapter<Dining> {
@@ -34,14 +37,27 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
         locationTextView.setText(dining.getLocation());
 
         TextView restaurantNameTextView = convertView.findViewById(R.id.restaurant_name);
-        restaurantNameTextView.setText(dining.getRestaurantName());  // Ensure this is set to the restaurant name
+        restaurantNameTextView.setText(dining.getRestaurantName());
 
         TextView diningAddressTextView = convertView.findViewById(R.id.restaurant_address);
         diningAddressTextView.setText(dining.getUrl());
 
         TextView timeTextView = convertView.findViewById(R.id.time_display);
-        timeTextView.setText(dining.getTime());
+        String formattedDateTime = formatDateTime(dining.getDate(), dining.getTime());
+        timeTextView.setText(formattedDateTime);
 
         return convertView;
+    }
+
+    private String formatDateTime(String date, String time) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm");
+        try {
+            Date parsedDate = inputFormat.parse(date + " " + time);
+            return outputFormat.format(parsedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return date + ", " + time;  // Fallback to original format in case of error
+        }
     }
 }

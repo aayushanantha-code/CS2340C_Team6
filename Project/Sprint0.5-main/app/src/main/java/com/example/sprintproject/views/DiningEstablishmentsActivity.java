@@ -203,9 +203,9 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
 
     private void sortDiningByDateTime() {
         allDiningEstablishments.sort((d1, d2) -> {
-            String dateTime1 = d1.getDate();
-            String dateTime2 = d2.getDate();
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            String dateTime1 = d1.getDate() + " " + d1.getTime();
+            String dateTime2 = d2.getDate() + " " + d2.getTime();
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             try {
                 Date date1 = format.parse(dateTime1);
                 Date date2 = format.parse(dateTime2);
