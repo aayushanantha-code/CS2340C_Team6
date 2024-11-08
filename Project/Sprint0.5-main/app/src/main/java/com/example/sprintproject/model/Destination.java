@@ -3,14 +3,13 @@ package com.example.sprintproject.model;
 import java.util.List;
 import java.util.ArrayList;
 
-
 public class Destination {
     private String name;
     private String start;
     private String end;
     private long duration;
     private List<Dining> diningList;
-
+    private List<Accommodation> accommodationList;  // New list for accommodations
 
     /**
      * Constructor for Destination
@@ -18,6 +17,7 @@ public class Destination {
     public Destination() {
         this("", "", "", 0);
     }
+
     /**
      * Constructor for Destination
      * @param name Name of the destination
@@ -31,6 +31,7 @@ public class Destination {
         this.end = end;
         this.duration = duration;
         this.diningList = new ArrayList<>();
+        this.accommodationList = new ArrayList<>();  // Initialize accommodationList
     }
 
     /**
@@ -106,10 +107,26 @@ public class Destination {
     }
 
     /**
-     * Add Dining
+     * Add Dining to the list
      * @param dining Dining
      */
     public void addDining(Dining dining) {
         diningList.add(dining);
+    }
+
+    /**
+     * Getters for Accommodation List
+     * @return List of Accommodation
+     */
+    public List<Accommodation> getAccommodationList() {
+        return accommodationList;
+    }
+
+    /**
+     * Add Accommodation to the list
+     * @param accommodation Accommodation
+     */
+    public void addAccommodation(Accommodation accommodation) {
+        accommodationList.add(accommodation);
     }
 }

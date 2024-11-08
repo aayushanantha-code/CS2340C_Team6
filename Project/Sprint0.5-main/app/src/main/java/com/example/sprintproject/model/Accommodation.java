@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Accommodation {
-    private Destination destination;
+    private String destination;
     private String name;
     private String checkinDate;
     private String checkoutDate;
@@ -15,7 +15,7 @@ public class Accommodation {
      * Constructor for Accommodation
      */
     public Accommodation() {
-        this.destination = new Destination();
+        this.destination = "";
         this.name = "";
         this.checkinDate = "";
         this.checkoutDate = "";
@@ -32,7 +32,7 @@ public class Accommodation {
      * @param numRooms Number of rooms
      * @param roomTypes Types of rooms
      */
-    public Accommodation(Destination dest, String name, String ciD,
+    public Accommodation(String dest, String name, String ciD,
                          String coD, int numRooms, List<String> roomTypes) {
         this.destination = dest;
         this.name = name;
@@ -46,7 +46,7 @@ public class Accommodation {
      * Getters for Destination
      * @return Destination of the accommodation
      */
-    public Destination getDestination() {
+    public String getDestination() {
         return destination;
     }
 
@@ -54,7 +54,7 @@ public class Accommodation {
      * Setters for Destination
      * @param destination Destination of the accommodation
      */
-    public void setDestination(Destination destination) {
+    public void setDestination(String destination) {
         this.destination = destination;
     }
 
