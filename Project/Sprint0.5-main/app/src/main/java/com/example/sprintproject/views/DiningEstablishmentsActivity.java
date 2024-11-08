@@ -191,18 +191,21 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         Toast.makeText(this, "Dining reservation added", Toast.LENGTH_SHORT).show();
 
         // Add the new dining reservation to the list and notify the adapter
-        Dining newDining = new Dining(name, date, time, url, location);
+        Dining newDining = new Dining(location, url, name, date, time);
         allDiningEstablishments.add(newDining);
-        sortDiningByDateTime();  // Optionally re-sort if needed
+        sortDiningByDateTime();  // Re-sort the list
         diningListAdapter.notifyDataSetChanged();  // Refresh the ListView
+
+        // Logging the new dining reservation
+        System.out.println("Added Dining: " + newDining.getRestaurantName() + ", Date: " + newDining.getDate() + ", Time: " + newDining.getTime());
     }
 
 
     private void sortDiningByDateTime() {
         allDiningEstablishments.sort((d1, d2) -> {
-            String dateTime1 = d1.getDate() + " " + d1.getTime();
-            String dateTime2 = d2.getDate() + " " + d2.getTime();
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            String dateTime1 = d1.getDate();
+            String dateTime2 = d2.getDate();
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             try {
                 Date date1 = format.parse(dateTime1);
                 Date date2 = format.parse(dateTime2);
@@ -212,6 +215,12 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
                 return 0;
             }
         });
+
+        // Logging the sorted list for debugging
+        System.out.println("Sorted Dining List:");
+        for (Dining dining : allDiningEstablishments) {
+            System.out.println("Dining: " + dining.getRestaurantName() + ", Date: " + dining.getDate() + ", Time: " + dining.getTime());
+        }
     }
 
 }
