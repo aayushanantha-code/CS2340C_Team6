@@ -191,10 +191,13 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         Toast.makeText(this, "Dining reservation added", Toast.LENGTH_SHORT).show();
 
         // Add the new dining reservation to the list and notify the adapter
-        Dining newDining = new Dining(name, date, time, url, location);
+        Dining newDining = new Dining(location, url, name, date, time);
         allDiningEstablishments.add(newDining);
-        sortDiningByDateTime();  // Optionally re-sort if needed
+        sortDiningByDateTime();  // Re-sort the list
         diningListAdapter.notifyDataSetChanged();  // Refresh the ListView
+
+        // Logging the new dining reservation
+        System.out.println("Added Dining: " + newDining.getRestaurantName() + ", Date: " + newDining.getDate() + ", Time: " + newDining.getTime());
     }
 
 
@@ -212,6 +215,12 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
                 return 0;
             }
         });
+
+        // Logging the sorted list for debugging
+        System.out.println("Sorted Dining List:");
+        for (Dining dining : allDiningEstablishments) {
+            System.out.println("Dining: " + dining.getRestaurantName() + ", Date: " + dining.getDate() + ", Time: " + dining.getTime());
+        }
     }
 
 }

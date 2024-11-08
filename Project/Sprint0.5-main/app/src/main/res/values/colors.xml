@@ -3,5 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="custom_divider_color">#777777</color>
-
+    <color name="dining_entry_background">#c14de8</color>
+    <color name="passed_reservation_background">#EAA6FF</color>
 </resources>
