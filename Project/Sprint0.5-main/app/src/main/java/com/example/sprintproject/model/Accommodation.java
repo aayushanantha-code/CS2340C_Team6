@@ -37,7 +37,7 @@ public class Accommodation {
         this.destination = dest;
         this.name = name;
         this.checkinDate = ciD;
-        this.checkoutDate = checkoutDate;
+        this.checkoutDate = coD;
         this.numRooms = numRooms;
         this.roomTypes = roomTypes;
     }
