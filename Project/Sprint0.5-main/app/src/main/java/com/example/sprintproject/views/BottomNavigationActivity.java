@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sprintproject.R;
@@ -36,10 +38,16 @@ public class BottomNavigationActivity extends AppCompatActivity {
                 userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String group = dataSnapshot.getValue(User.class).getGroupName();
-                        logisticsIntent.putExtra("username", username); // Pass the username
-                        logisticsIntent.putExtra("groupName", group); // Pass the Group
-                        startActivity(logisticsIntent);
+                        User user = dataSnapshot.getValue(User.class);
+                        if(user.getIsInGroup()) {
+                            String group = dataSnapshot.getValue(User.class).getGroupName();
+                            logisticsIntent.putExtra("username", username); // Pass the username
+                            logisticsIntent.putExtra("groupName", group); // Pass the Group
+                            startActivity(logisticsIntent);
+                        } else {
+                            String message = "Please join a group first";
+                            Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -63,10 +71,16 @@ public class BottomNavigationActivity extends AppCompatActivity {
                 userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String group = dataSnapshot.getValue(User.class).getGroupName();
-                        destinationsIntent.putExtra("username", username); // Pass the username
-                        destinationsIntent.putExtra("groupName", group); // Pass the Group
-                        startActivity(destinationsIntent);
+                        User user = dataSnapshot.getValue(User.class);
+                        if(user.getIsInGroup()) {
+                            String group = dataSnapshot.getValue(User.class).getGroupName();
+                            destinationsIntent.putExtra("username", username); // Pass the username
+                            destinationsIntent.putExtra("groupName", group); // Pass the Group
+                            startActivity(destinationsIntent);
+                        } else {
+                            String message = "Please join a group first";
+                            Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -89,10 +103,16 @@ public class BottomNavigationActivity extends AppCompatActivity {
                 userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String group = dataSnapshot.getValue(User.class).getGroupName();
-                        diningIntent.putExtra("username", username); // Pass the username
-                        diningIntent.putExtra("groupName", group); // Pass the Group
-                        startActivity(diningIntent);
+                        User user = dataSnapshot.getValue(User.class);
+                        if(user.getIsInGroup()) {
+                            String group = dataSnapshot.getValue(User.class).getGroupName();
+                            diningIntent.putExtra("username", username); // Pass the username
+                            diningIntent.putExtra("groupName", group); // Pass the Group
+                            startActivity(diningIntent);
+                        } else {
+                            String message = "Please join a group first";
+                            Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -115,10 +135,16 @@ public class BottomNavigationActivity extends AppCompatActivity {
                 userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String group = dataSnapshot.getValue(User.class).getGroupName();
-                        accomodationsIntent.putExtra("username", username); // Pass the username
-                        accomodationsIntent.putExtra("groupName", group); // Pass the Group
-                        startActivity(accomodationsIntent);
+                        User user = dataSnapshot.getValue(User.class);
+                        if(user.getIsInGroup()) {
+                            String group = dataSnapshot.getValue(User.class).getGroupName();
+                            accomodationsIntent.putExtra("username", username); // Pass the username
+                            accomodationsIntent.putExtra("groupName", group); // Pass the Group
+                            startActivity(accomodationsIntent);
+                        } else {
+                            String message = "Please join a group first";
+                            Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -141,10 +167,16 @@ public class BottomNavigationActivity extends AppCompatActivity {
                 userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        String group = dataSnapshot.getValue(User.class).getGroupName();
-                        communityIntent.putExtra("username", username); // Pass the username
-                        communityIntent.putExtra("groupName", group); // Pass the Group
-                        startActivity(communityIntent);
+                        User user = dataSnapshot.getValue(User.class);
+                        if(user.getIsInGroup()) {
+                            String group = dataSnapshot.getValue(User.class).getGroupName();
+                            communityIntent.putExtra("username", username); // Pass the username
+                            communityIntent.putExtra("groupName", group); // Pass the Group
+                            startActivity(communityIntent);
+                        } else {
+                            String message = "Please join a group first";
+                            Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
