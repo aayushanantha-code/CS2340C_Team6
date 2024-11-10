@@ -13,6 +13,7 @@ import com.example.sprintproject.model.Dining;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,8 +30,7 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).
-                    inflate(R.layout.dining_list_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.dining_list_item, parent, false);
         }
 
         Dining dining = diningList.get(position);
@@ -41,10 +41,16 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
         TextView timeTextView = convertView.findViewById(R.id.time_display);
 
         locationTextView.setText(dining.getLocation());
-        restaurantNameTextView.setText(dining.getRestaurantName());
         diningAddressTextView.setText(dining.getUrl());
         String formattedDateTime = formatDateTime(dining.getDate(), dining.getTime());
         timeTextView.setText(formattedDateTime);
+
+        // Check if the reservation date is today or tomorrow
+        if (isTodayOrTomorrow(dining.getDate())) {
+            restaurantNameTextView.setText(dining.getRestaurantName() + " (soon)");
+        } else {
+            restaurantNameTextView.setText(dining.getRestaurantName());
+        }
 
         // Check if the reservation date and time have passed
         if (isReservationPassed(dining.getDate(), dining.getTime())) {
@@ -52,15 +58,13 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
             applyStrikethrough(restaurantNameTextView);
             applyStrikethrough(diningAddressTextView);
             applyStrikethrough(timeTextView);
-            convertView.setBackgroundColor(context.getResources()
-                    .getColor(R.color.passed_reservation_background));
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.passed_reservation_background));
         } else {
             removeStrikethrough(locationTextView);
             removeStrikethrough(restaurantNameTextView);
             removeStrikethrough(diningAddressTextView);
             removeStrikethrough(timeTextView);
-            convertView.setBackgroundColor(context.getResources()
-                    .getColor(R.color.dining_entry_background));
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.dining_entry_background));
         }
 
         return convertView;
@@ -83,6 +87,27 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
         try {
             Date reservationDate = format.parse(date + " " + time);
             return reservationDate.before(new Date());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean isTodayOrTomorrow(String date) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date reservationDate = format.parse(date);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+
+            // Check if the date is today
+            if (format.format(calendar.getTime()).equals(format.format(reservationDate))) {
+                return true;
+            }
+
+            // Check if the date is tomorrow
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            return format.format(calendar.getTime()).equals(format.format(reservationDate));
         } catch (ParseException e) {
             e.printStackTrace();
             return false;
