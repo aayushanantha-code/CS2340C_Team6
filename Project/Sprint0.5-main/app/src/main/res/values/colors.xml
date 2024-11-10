@@ -5,4 +5,7 @@
     <color name="custom_divider_color">#777777</color>
     <color name="dining_entry_background">#c14de8</color>
     <color name="passed_reservation_background">#EAA6FF</color>
+    <color name="active_background">#FFFFFF</color>
+    <color name="expired_background">#FFCDD2</color> <!-- Light red background for expired -->
+
 </resources>
