@@ -30,7 +30,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Calendar;
 
-public class DiningEstablishmentsActivity extends BottomNavigationActivity implements DiningObserver {
+public class DiningEstablishmentsActivity
+        extends BottomNavigationActivity implements DiningObserver {
     private Button toggleDiningBox;
     private DatabaseReference groupDatabase;
     private String groupName;
@@ -106,7 +107,8 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity imple
                             ArrayAdapter<String> adapter =
                                     new ArrayAdapter<>(DiningEstablishmentsActivity.this,
                                             android.R.layout.simple_spinner_item, destinationNames);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            adapter.setDropDownViewResource(
+                                    android.R.layout.simple_spinner_dropdown_item);
                             locationSpinner.setAdapter(adapter);
                         }
                     }

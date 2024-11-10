@@ -143,22 +143,23 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
      * @param group the username of the group
      */
     public void fetchGroupDestinations(String group) {
-        groupDatabase.child(group).child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Setting up new Destination
-                ArrayList<Destination> destinationList = new ArrayList<>();
+        groupDatabase.child(group).child("destinationList")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Setting up new Destination
+                        ArrayList<Destination> destinationList = new ArrayList<>();
 
-                for (DataSnapshot destSnapshot : dataSnapshot.getChildren()) {
-                    String name = destSnapshot.child("name").getValue(String.class);
-                    String start = destSnapshot.child("start").getValue(String.class);
-                    String end = destSnapshot.child("end").getValue(String.class);
-                    long duration = destSnapshot.child("duration").getValue(long.class);
-                    Destination destination = new Destination(name, start, end, duration);
-                    if (destination != null) {
-                        destinationList.add(destination);
-                    }
-                }
+                        for (DataSnapshot destSnapshot : dataSnapshot.getChildren()) {
+                            String name = destSnapshot.child("name").getValue(String.class);
+                            String start = destSnapshot.child("start").getValue(String.class);
+                            String end = destSnapshot.child("end").getValue(String.class);
+                            long duration = destSnapshot.child("duration").getValue(long.class);
+                            Destination destination = new Destination(name, start, end, duration);
+                            if (destination != null) {
+                                destinationList.add(destination);
+                            }
+                        }
                         groupDestinations.clear();
                         if (destinationList != null && destinationList.size() > 0) {
                             if (destinationList.size() >= 5) {
@@ -217,10 +218,10 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                                 toggleLogTravelBox(logTravelBox);
                                 successfulText.setVisibility(View.VISIBLE);
                             } else {
-                        Toast.makeText(DestinationsActivity.this,
-                                "Destination Already Added", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                                Toast.makeText(DestinationsActivity.this,
+                                        "Destination Already Added", Toast.LENGTH_SHORT).show();
+                            }
+                        }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {

@@ -217,19 +217,22 @@ public class AccommodationsActivity extends BottomNavigationActivity {
         String numberOfRooms = numberOfRoomsSpinner.getSelectedItem().toString();
         String location = locationSpinner.getSelectedItem().toString();
 
-        if (name.isEmpty() || checkInDate.isEmpty() || checkOutDate.isEmpty() || location.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty() || checkInDate.isEmpty()
+                || checkOutDate.isEmpty() || location.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Check for duplicate accommodation (same name, check-in, check-out, location, room type, and number of rooms)
+        // Check for duplicate accommodation (same name, check-in,
+        // check-out, location, room type, and number of rooms)
         for (Accommodation accommodation : allAccommodations) {
-            if (accommodation.getName().equals(name) &&
-                    accommodation.getDestination().equals(location) &&
-                    accommodation.getCheckinDate().equals(checkInDate) &&
-                    accommodation.getCheckoutDate().equals(checkOutDate) &&
-                    accommodation.getRoomTypes().contains(roomType) &&
-                    Integer.toString(accommodation.getNumRooms()).equals(numberOfRooms)) {
+            if (accommodation.getName().equals(name)
+                    && accommodation.getDestination().equals(location)
+                    && accommodation.getCheckinDate().equals(checkInDate)
+                    && accommodation.getCheckoutDate().equals(checkOutDate)
+                    && accommodation.getRoomTypes().contains(roomType)
+                    && Integer.toString(accommodation.getNumRooms()).equals(numberOfRooms)) {
                 // Duplicate found, show message and return
                 Toast.makeText(this, "Can't have duplicates", Toast.LENGTH_SHORT).show();
                 return;
@@ -238,11 +241,12 @@ public class AccommodationsActivity extends BottomNavigationActivity {
 
         // No duplicates, proceed with adding the accommodation
         accommodationsViewModel.logNewAccommodationReservation(groupName, location, name,
-                checkInDate, checkOutDate, Integer.parseInt(numberOfRooms), Arrays.asList(roomType));
+                checkInDate, checkOutDate,
+                Integer.parseInt(numberOfRooms), Arrays.asList(roomType));
 
         // Create a new Accommodation object
-        Accommodation newAccommodation = new Accommodation(location, name, checkInDate, checkOutDate,
-                Integer.parseInt(numberOfRooms), Arrays.asList(roomType));
+        Accommodation newAccommodation = new Accommodation(location, name, checkInDate,
+                checkOutDate, Integer.parseInt(numberOfRooms), Arrays.asList(roomType));
         allAccommodations.add(newAccommodation);
         sortAccommodationsByDate();
         accommodationListAdapter.notifyDataSetChanged();  // Refresh the ListView

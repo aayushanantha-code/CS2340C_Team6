@@ -25,164 +25,45 @@ public class BottomNavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bottom_navigation);
         userDatabase = FirebaseDatabase.getInstance().getReference("users");
-        // Logistics Button
-        ImageButton logisticsButton = findViewById(R.id.icon_logistics);
-        logisticsButton.setOnClickListener(new View.OnClickListener() {
+
+        setupButtonWithGroupCheck(R.id.icon_logistics, LogisticsActivity.class);
+        setupButtonWithGroupCheck(R.id.icon_destinations, DestinationsActivity.class);
+        setupButtonWithGroupCheck(R.id.icon_dining, DiningEstablishmentsActivity.class);
+        setupButtonWithGroupCheck(R.id.icon_accommodations, AccommodationsActivity.class);
+        setupButtonWithGroupCheck(R.id.icon_travel_community, TravelCommunityActivity.class);
+    }
+
+    private void setupButtonWithGroupCheck(int buttonId, Class<?> targetActivity) {
+        ImageButton button = findViewById(buttonId);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent logisticsIntent = new Intent(BottomNavigationActivity.this,
-                        LogisticsActivity.class);
                 String username = getIntent().getStringExtra("username");
-                userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        if (user.getIsInGroup()) {
-                            String group = dataSnapshot.getValue(User.class).getGroupName();
-                            logisticsIntent.putExtra("username", username); // Pass the username
-                            logisticsIntent.putExtra("groupName", group); // Pass the Group
-                            startActivity(logisticsIntent);
-                        } else {
-                            String message = "Please join a group first";
-                            Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e("Firebase", "Failed to find group name",
-                                databaseError.toException());
-                    }
-                });
+                Intent intent = new Intent(BottomNavigationActivity.this, targetActivity);
+                checkGroupAndStartActivity(username, intent);
             }
         });
+    }
 
-        // Destinations Button
-        ImageButton destinationsButton = findViewById(R.id.icon_destinations);
-        destinationsButton.setOnClickListener(new View.OnClickListener() {
+    private void checkGroupAndStartActivity(String username, Intent intent) {
+        userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                Intent destinationsIntent = new Intent(BottomNavigationActivity.this,
-                        DestinationsActivity.class);
-                String username = getIntent().getStringExtra("username");
-                System.out.println(username);
-                userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        if (user.getIsInGroup()) {
-                            String group = dataSnapshot.getValue(User.class).getGroupName();
-                            destinationsIntent.putExtra("username", username); // Pass the username
-                            destinationsIntent.putExtra("groupName", group); // Pass the Group
-                            startActivity(destinationsIntent);
-                        } else {
-                            String message = "Please join a group first";
-                            Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e("Firebase", "Failed to find group name",
-                                databaseError.toException());
-                    }
-                });
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null && user.getIsInGroup()) {
+                    String group = user.getGroupName();
+                    intent.putExtra("username", username);
+                    intent.putExtra("groupName", group);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Please join a group first", Toast.LENGTH_SHORT).show();
+                }
             }
-        });
 
-        // Dining Button
-        ImageButton diningButton = findViewById(R.id.icon_dining);
-        diningButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent diningIntent = new Intent(BottomNavigationActivity.this,
-                        DiningEstablishmentsActivity.class);
-                String username = getIntent().getStringExtra("username");
-                userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        if (user.getIsInGroup()) {
-                            String group = dataSnapshot.getValue(User.class).getGroupName();
-                            diningIntent.putExtra("username", username); // Pass the username
-                            diningIntent.putExtra("groupName", group); // Pass the Group
-                            startActivity(diningIntent);
-                        } else {
-                            String message = "Please join a group first";
-                            Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e("Firebase", "Failed to find group name",
-                                databaseError.toException());
-                    }
-                });
-            }
-        });
-
-        // Accommodations Button
-        ImageButton accommodationsButton = findViewById(R.id.icon_accommodations);
-        accommodationsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent accomodationsIntent = new Intent(BottomNavigationActivity.this,
-                        AccommodationsActivity.class);
-                String username = getIntent().getStringExtra("username");
-                userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        if (user.getIsInGroup()) {
-                            String group = dataSnapshot.getValue(User.class).getGroupName();
-                            accomodationsIntent.putExtra("username", username); // Pass the username
-                            accomodationsIntent.putExtra("groupName", group); // Pass the Group
-                            startActivity(accomodationsIntent);
-                        } else {
-                            String message = "Please join a group first";
-                            Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e("Firebase", "Failed to find group name",
-                                databaseError.toException());
-                    }
-                });
-            }
-        });
-
-        // Community Button
-        ImageButton communityButton = findViewById(R.id.icon_travel_community);
-        communityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent communityIntent = new Intent(BottomNavigationActivity.this,
-                        TravelCommunityActivity.class);
-                String username = getIntent().getStringExtra("username");
-                userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
-                        if (user.getIsInGroup()) {
-                            String group = dataSnapshot.getValue(User.class).getGroupName();
-                            communityIntent.putExtra("username", username); // Pass the username
-                            communityIntent.putExtra("groupName", group); // Pass the Group
-                            startActivity(communityIntent);
-                        } else {
-                            String message = "Please join a group first";
-                            Toast.makeText(getApplication().getBaseContext(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e("Firebase", "Failed to find group name",
-                                databaseError.toException());
-                    }
-                });
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase", "Failed to find group name", databaseError.toException());
             }
         });
     }

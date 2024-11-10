@@ -32,7 +32,8 @@ public class AccommodationListAdapter extends ArrayAdapter<Accommodation> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.accommodation_list_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.accommodation_list_item,
+                    parent, false);
         }
 
         // Get the current accommodation object
@@ -66,7 +67,8 @@ public class AccommodationListAdapter extends ArrayAdapter<Accommodation> {
             applyStrikethrough(accommodationNameTextView);
             applyStrikethrough(checkinDateTextView);
             applyStrikethrough(checkoutDateTextView);
-            convertView.setBackgroundColor(Color.parseColor("#FFE0E0")); // Light red background for expired items
+            // Light red background for expired items
+            convertView.setBackgroundColor(Color.parseColor("#FFE0E0"));
         } else {
             removeStrikethrough(locationTextView);
             removeStrikethrough(accommodationNameTextView);
