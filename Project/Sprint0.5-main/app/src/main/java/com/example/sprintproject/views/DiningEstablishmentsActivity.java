@@ -12,11 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.Dining;
-import com.example.sprintproject.model.Destination;
 import com.example.sprintproject.viewmodels.DiningEstablishmentsViewModel;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,7 +47,8 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
                 (FrameLayout) findViewById(R.id.content_frame), true);
 
         groupName = getIntent().getStringExtra("groupName");
-        groupDatabase = FirebaseDatabase.getInstance().getReference().child("groups").child(groupName);
+        groupDatabase = FirebaseDatabase.getInstance()
+                .getReference().child("groups").child(groupName);
 
         locationSpinner = findViewById(R.id.location_spinner);
         destinationNames = new ArrayList<>();
@@ -58,7 +56,8 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         diningViewModel = new DiningEstablishmentsViewModel();
 
         diningListView = findViewById(R.id.dining_list);  // Initialize the ListView
-        diningListAdapter = new DiningListAdapter(this, allDiningEstablishments);  // Initialize the Adapter
+        diningListAdapter = new DiningListAdapter(this,
+                allDiningEstablishments);  // Initialize the Adapter
         diningListView.setAdapter(diningListAdapter);  // Set the adapter for the ListView
 
         loadDestinations();
@@ -82,45 +81,52 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
     }
 
     private void loadDestinations() {
-        groupDatabase.child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                destinationNames.clear();  // Clear the list to avoid duplication
-                allDiningEstablishments.clear();  // Clear the dining establishments list
+        groupDatabase.child("destinationList")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        destinationNames.clear();  // Clear the list to avoid duplication
+                        allDiningEstablishments.clear();  // Clear the dining establishments list
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Ensure that the snapshot has a "name" field before adding
-                    String destinationName = snapshot.child("name").getValue(String.class);
-                    if (destinationName != null) {
-                        destinationNames.add(destinationName);
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            // Ensure that the snapshot has a "name" field before adding
+                            String destinationName = snapshot.child("name").getValue(String.class);
+                            if (destinationName != null) {
+                                destinationNames.add(destinationName);
+                            }
+
+                            // Now, load all dining establishments for this destination
+                            loadDiningForDestination(snapshot);
+                        }
+
+                        if (destinationNames.isEmpty()) {
+                            Toast.makeText(DiningEstablishmentsActivity.this,
+                                    "No destinations found", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Create and set the adapter for the Spinner
+                            ArrayAdapter<String> adapter =
+                                    new ArrayAdapter<>(DiningEstablishmentsActivity.this,
+                                            android.R.layout.simple_spinner_item, destinationNames);
+                            adapter.setDropDownViewResource(android.R.layout
+                                    .simple_spinner_dropdown_item);
+                            locationSpinner.setAdapter(adapter);
+                        }
                     }
 
-                    // Now, load all dining establishments for this destination
-                    loadDiningForDestination(snapshot);
-                }
-
-                if (destinationNames.isEmpty()) {
-                    Toast.makeText(DiningEstablishmentsActivity.this, "No destinations found", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Create and set the adapter for the Spinner
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(DiningEstablishmentsActivity.this,
-                            android.R.layout.simple_spinner_item, destinationNames);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    locationSpinner.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(DiningEstablishmentsActivity.this, "Failed to load destinations: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(DiningEstablishmentsActivity.this,
+                                "Failed to load destinations: "
+                                        + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void loadDiningForDestination(DataSnapshot destinationSnapshot) {
         // Get the dining list for the current destination
         String destinationKey = destinationSnapshot.getKey();
-        DatabaseReference diningRef = groupDatabase.child("destinationList").child(destinationKey).child("diningList");
+        DatabaseReference diningRef = groupDatabase.child("destinationList")
+                .child(destinationKey).child("diningList");
 
         diningRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -128,7 +134,8 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
                 for (DataSnapshot diningSnapshot : dataSnapshot.getChildren()) {
                     Dining dining = diningSnapshot.getValue(Dining.class);
                     if (dining != null) {
-                        allDiningEstablishments.add(dining);  // Add dining to the allDiningEstablishments list
+                        // Add dining to the allDiningEstablishments list
+                        allDiningEstablishments.add(dining);
                     }
                 }
 
@@ -140,7 +147,9 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(DiningEstablishmentsActivity.this, "Failed to load dining establishments: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(DiningEstablishmentsActivity.this,
+                        "Failed to load dining establishments: "
+                                + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -156,8 +165,10 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
     private void showDateEdit(EditText reservationDate) {
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(DiningEstablishmentsActivity.this,
-                (view, year, month, dayOfMonth) -> reservationDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year),
-                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                (view, year, month, dayOfMonth) ->
+                        reservationDate.setText(dayOfMonth + "/" + (month + 1) + "/" + year),
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
@@ -197,7 +208,8 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         diningListAdapter.notifyDataSetChanged();  // Refresh the ListView
 
         // Logging the new dining reservation
-        System.out.println("Added Dining: " + newDining.getRestaurantName() + ", Date: " + newDining.getDate() + ", Time: " + newDining.getTime());
+        System.out.println("Added Dining: " + newDining.getRestaurantName()
+                + ", Date: " + newDining.getDate() + ", Time: " + newDining.getTime());
     }
 
 
@@ -219,7 +231,8 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         // Logging the sorted list for debugging
         System.out.println("Sorted Dining List:");
         for (Dining dining : allDiningEstablishments) {
-            System.out.println("Dining: " + dining.getRestaurantName() + ", Date: " + dining.getDate() + ", Time: " + dining.getTime());
+            System.out.println("Dining: " + dining.getRestaurantName()
+                    + ", Date: " + dining.getDate() + ", Time: " + dining.getTime());
         }
     }
 

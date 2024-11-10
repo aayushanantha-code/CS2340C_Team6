@@ -25,14 +25,16 @@ public class AccommodationListAdapter extends ArrayAdapter<Accommodation> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.accommodation_list_item, parent, false);
+            convertView = LayoutInflater.from(context).
+                    inflate(R.layout.accommodation_list_item, parent, false);
         }
 
         Accommodation accommodation = accommodationList.get(position);
 
         // Set destination (location of accommodation)
         TextView locationTextView = convertView.findViewById(R.id.location_name);
-        locationTextView.setText(accommodation.getDestination());  // Assuming Destination class has a getLocation() method
+        // Assuming Destination class has a getLocation() method
+        locationTextView.setText(accommodation.getDestination());
 
         // Set accommodation name
         TextView accommodationNameTextView = convertView.findViewById(R.id.accommodation_name);

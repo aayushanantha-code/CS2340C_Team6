@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.Accommodation;
-import com.example.sprintproject.model.Destination;
 import com.example.sprintproject.viewmodels.AccommodationsViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,7 +48,8 @@ public class AccommodationsActivity extends BottomNavigationActivity {
 
         groupName = getIntent().getStringExtra("groupName");
         Toast.makeText(this, groupName, Toast.LENGTH_SHORT).show();
-        groupDatabase = FirebaseDatabase.getInstance().getReference().child("groups").child(groupName);
+        groupDatabase = FirebaseDatabase.getInstance().getReference().
+                child("groups").child(groupName);
 
         locationSpinner = findViewById(R.id.location_spinner);
         destinationNames = new ArrayList<>();
@@ -67,14 +67,16 @@ public class AccommodationsActivity extends BottomNavigationActivity {
         Spinner roomTypeSpinner = findViewById(R.id.room_type_spinner);
 
         // Create an ArrayAdapter using the room types list
-        ArrayAdapter<String> roomTypeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, roomTypes);
+        ArrayAdapter<String> roomTypeAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, roomTypes);
         roomTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomTypeSpinner.setAdapter(roomTypeAdapter);
 
         // Number of rooms spinner (assuming you want numbers like 1, 2, 3, 4, etc.)
         List<String> numberOfRoomsList = Arrays.asList("1", "2", "3", "4", "5");
         Spinner numberOfRoomsSpinner = findViewById(R.id.number_of_rooms_spinner);
-        ArrayAdapter<String> numberOfRoomsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numberOfRoomsList);
+        ArrayAdapter<String> numberOfRoomsAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, numberOfRoomsList);
         numberOfRoomsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         numberOfRoomsSpinner.setAdapter(numberOfRoomsAdapter);
 
@@ -97,45 +99,52 @@ public class AccommodationsActivity extends BottomNavigationActivity {
     }
 
     private void loadDestinations() {
-        groupDatabase.child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                destinationNames.clear();  // Clear the list to avoid duplication
-                allAccommodations.clear();  // Clear the accommodations list
+        groupDatabase.child("destinationList")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        destinationNames.clear();  // Clear the list to avoid duplication
+                        allAccommodations.clear();  // Clear the accommodations list
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Ensure that the snapshot has a "name" field before adding
-                    String destinationName = snapshot.child("name").getValue(String.class);
-                    if (destinationName != null) {
-                        destinationNames.add(destinationName);
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            // Ensure that the snapshot has a "name" field before adding
+                            String destinationName = snapshot.child("name").getValue(String.class);
+                            if (destinationName != null) {
+                                destinationNames.add(destinationName);
+                            }
+
+                            // Now, load all accommodations for this destination
+                            loadAccommodationsForDestination(snapshot);
+                        }
+
+                        if (destinationNames.isEmpty()) {
+                            Toast.makeText(AccommodationsActivity.this,
+                                    "No destinations found", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Create and set the adapter for the Spinner
+                            ArrayAdapter<String> adapter =
+                                    new ArrayAdapter<>(AccommodationsActivity.this,
+                                    android.R.layout.simple_spinner_item, destinationNames);
+                            adapter.setDropDownViewResource(android.R.layout.
+                                    simple_spinner_dropdown_item);
+                            locationSpinner.setAdapter(adapter);
+                        }
                     }
 
-                    // Now, load all accommodations for this destination
-                    loadAccommodationsForDestination(snapshot);
-                }
-
-                if (destinationNames.isEmpty()) {
-                    Toast.makeText(AccommodationsActivity.this, "No destinations found", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Create and set the adapter for the Spinner
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(AccommodationsActivity.this,
-                            android.R.layout.simple_spinner_item, destinationNames);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    locationSpinner.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(AccommodationsActivity.this, "Failed to load destinations: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(AccommodationsActivity.this,
+                                "Failed to load destinations: "
+                                + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void loadAccommodationsForDestination(DataSnapshot destinationSnapshot) {
         String destinationKey = destinationSnapshot.getKey();
 
-        DatabaseReference accommodationsRef = groupDatabase.child("destinationList").child(destinationKey).child("accommodationList");
+        DatabaseReference accommodationsRef = groupDatabase.child("destinationList").
+                child(destinationKey).child("accommodationList");
 
         accommodationsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -143,29 +152,35 @@ public class AccommodationsActivity extends BottomNavigationActivity {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot accommodationSnapshot : dataSnapshot.getChildren()) {
                         try {
-                            Accommodation accommodation = accommodationSnapshot.getValue(Accommodation.class);
+                            Accommodation accommodation
+                                    = accommodationSnapshot.getValue(Accommodation.class);
                             if (accommodation != null) {
                                 allAccommodations.add(accommodation);
                             } else {
                                 // Log the issue for debugging
-                                System.out.println("Failed to parse accommodation data for key: " + accommodationSnapshot.getKey());
+                                System.out.println("Failed to parse accommodation data for key: "
+                                        + accommodationSnapshot.getKey());
                             }
                         } catch (Exception e) {
                             // Log any exceptions that occur during deserialization
-                            System.out.println("Error parsing accommodation data: " + e.getMessage());
+                            System.out.println("Error parsing accommodation data: "
+                                    + e.getMessage());
                         }
                     }
                     sortAccommodationsByDate();
                     accommodationListAdapter.notifyDataSetChanged();
                 } else {
                     // Handle case where there are no accommodations for this destination
-                    System.out.println("No accommodations found for destination: " + destinationKey);
+                    System.out.println("No accommodations found for destination: "
+                            + destinationKey);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(AccommodationsActivity.this, "Failed to load accommodations: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccommodationsActivity.this,
+                        "Failed to load accommodations: "
+                                + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -181,8 +196,10 @@ public class AccommodationsActivity extends BottomNavigationActivity {
     private void showDateEdit(EditText dateInput) {
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(AccommodationsActivity.this,
-                (view, year, month, dayOfMonth) -> dateInput.setText(dayOfMonth + "/" + (month + 1) + "/" + year),
-                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                (view, year, month, dayOfMonth) ->
+                        dateInput.setText(dayOfMonth + "/" + (month + 1) + "/" + year),
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
@@ -204,7 +221,8 @@ public class AccommodationsActivity extends BottomNavigationActivity {
         String numberOfRooms = numberOfRoomsSpinner.getSelectedItem().toString();
         String location = locationSpinner.getSelectedItem().toString();
 
-        if (name.isEmpty() || checkInDate.isEmpty() || checkOutDate.isEmpty() || location.isEmpty()) {
+        if (name.isEmpty() || checkInDate.isEmpty()
+                || checkOutDate.isEmpty() || location.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -212,10 +230,12 @@ public class AccommodationsActivity extends BottomNavigationActivity {
         List<String> roomTypes = new ArrayList<>();
         roomTypes.add(roomType);  // Assuming roomType is a String variable
         // Log new accommodation reservation
-        accommodationsViewModel.logNewAccommodationReservation(groupName, location, name, checkInDate, checkOutDate, Integer.parseInt(numberOfRooms), roomTypes);
+        accommodationsViewModel.logNewAccommodationReservation(groupName, location, name,
+                checkInDate, checkOutDate, Integer.parseInt(numberOfRooms), roomTypes);
 
-// Create a new Accommodation object
-        Accommodation newAccommodation = new Accommodation(location, name, checkInDate, checkOutDate, Integer.parseInt(numberOfRooms), roomTypes);
+        // Create a new Accommodation object
+        Accommodation newAccommodation = new Accommodation(location, name,
+                checkInDate, checkOutDate, Integer.parseInt(numberOfRooms), roomTypes);
         allAccommodations.add(newAccommodation);
         sortAccommodationsByDate();  // Optionally re-sort if needed
         accommodationListAdapter.notifyDataSetChanged();  // Refresh the ListView

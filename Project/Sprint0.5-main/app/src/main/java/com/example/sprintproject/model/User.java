@@ -50,7 +50,9 @@ public class User {
         return groupName;
     }
 
-    public void setGroupName(String groupName) { this.groupName = groupName; }
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 
     /**
      * Setter for User ID

@@ -27,7 +27,8 @@ public class DestinationsViewModel {
      * @param duration of the trip
      * @param group of the user
      */
-    public void logNewDestination(String name, String start, String end, long duration, String group) {
+    public void logNewDestination(String name, String start,
+                                  String end, long duration, String group) {
         groupDatabase = GroupDatabase.getInstance().getDatabaseReference();
         Destination newDestination = new Destination(name, start, end, duration);
         groupDatabase.child(group).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -43,7 +44,8 @@ public class DestinationsViewModel {
 
                 // Add the new Destination using the name as the key
                 groupDatabase.child(group).child("plannedDays").setValue(duration);
-                groupDatabase.child(group).child("destinationList").child(name).setValue(newDestination);
+                groupDatabase.child(group)
+                        .child("destinationList").child(name).setValue(newDestination);
             }
 
             @Override
