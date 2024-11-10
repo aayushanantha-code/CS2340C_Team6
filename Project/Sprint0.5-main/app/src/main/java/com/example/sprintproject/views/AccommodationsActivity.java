@@ -203,43 +203,51 @@ public class AccommodationsActivity extends BottomNavigationActivity {
         datePickerDialog.show();
     }
 
-    // Original addAccommodationToDestination() method
     private void addAccommodationToDestination() {
-        Toast.makeText(this, "interesting", Toast.LENGTH_SHORT).show();
         EditText nameInput = findViewById(R.id.name_input);
         EditText checkInInput = findViewById(R.id.checkin_input);
         EditText checkOutInput = findViewById(R.id.checkout_input);
-        //EditText urlInput = findViewById(R.id.url_input);
         Spinner roomTypeSpinner = findViewById(R.id.room_type_spinner);
         Spinner numberOfRoomsSpinner = findViewById(R.id.number_of_rooms_spinner);
 
         String name = nameInput.getText().toString();
         String checkInDate = checkInInput.getText().toString();
         String checkOutDate = checkOutInput.getText().toString();
-        //String url = urlInput.getText().toString();
         String roomType = roomTypeSpinner.getSelectedItem().toString();
         String numberOfRooms = numberOfRoomsSpinner.getSelectedItem().toString();
         String location = locationSpinner.getSelectedItem().toString();
 
-        if (name.isEmpty() || checkInDate.isEmpty()
-                || checkOutDate.isEmpty() || location.isEmpty()) {
+        if (name.isEmpty() || checkInDate.isEmpty() || checkOutDate.isEmpty() || location.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        List<String> roomTypes = new ArrayList<>();
-        roomTypes.add(roomType);  // Assuming roomType is a String variable
-        // Log new accommodation reservation
+        // Check for duplicate accommodation (same name, check-in, check-out, location, room type, and number of rooms)
+        for (Accommodation accommodation : allAccommodations) {
+            if (accommodation.getName().equals(name) &&
+                    accommodation.getDestination().equals(location) &&
+                    accommodation.getCheckinDate().equals(checkInDate) &&
+                    accommodation.getCheckoutDate().equals(checkOutDate) &&
+                    accommodation.getRoomTypes().contains(roomType) &&
+                    Integer.toString(accommodation.getNumRooms()).equals(numberOfRooms)) {
+                // Duplicate found, show message and return
+                Toast.makeText(this, "Can't have duplicates", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        // No duplicates, proceed with adding the accommodation
         accommodationsViewModel.logNewAccommodationReservation(groupName, location, name,
-                checkInDate, checkOutDate, Integer.parseInt(numberOfRooms), roomTypes);
+                checkInDate, checkOutDate, Integer.parseInt(numberOfRooms), Arrays.asList(roomType));
 
         // Create a new Accommodation object
-        Accommodation newAccommodation = new Accommodation(location, name,
-                checkInDate, checkOutDate, Integer.parseInt(numberOfRooms), roomTypes);
+        Accommodation newAccommodation = new Accommodation(location, name, checkInDate, checkOutDate,
+                Integer.parseInt(numberOfRooms), Arrays.asList(roomType));
         allAccommodations.add(newAccommodation);
-        sortAccommodationsByDate();  // Optionally re-sort if needed
+        sortAccommodationsByDate();
         accommodationListAdapter.notifyDataSetChanged();  // Refresh the ListView
     }
+
 
     private void sortAccommodationsByDate() {
         allAccommodations.sort((a1, a2) -> {
