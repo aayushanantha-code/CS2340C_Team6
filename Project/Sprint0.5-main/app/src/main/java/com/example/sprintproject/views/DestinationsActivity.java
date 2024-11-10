@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.ArrayList;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class DestinationsActivity extends BottomNavigationActivity implements DateComparison {
     private EditText estimatedStart;
@@ -148,7 +149,11 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                 ArrayList<Destination> destinationList = new ArrayList<>();
 
                 for (DataSnapshot destSnapshot : dataSnapshot.getChildren()) {
-                    Destination destination = destSnapshot.getValue(Destination.class);
+                    String name = destSnapshot.child("name").getValue(String.class);
+                    String start = destSnapshot.child("start").getValue(String.class);
+                    String end = destSnapshot.child("end").getValue(String.class);
+                    long duration = destSnapshot.child("duration").getValue(long.class);
+                    Destination destination = new Destination(name, start, end, duration);
                     if (destination != null) {
                         destinationList.add(destination);
                     }
@@ -201,6 +206,9 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                         account.logNewDestination(locationName, startDate, endDate, duration, group);
                         toggleLogTravelBox(logTravelBox);
                         successfulText.setVisibility(View.VISIBLE);
+                    } else {
+                        Toast.makeText(DestinationsActivity.this,
+                                "Destination Already Added", Toast.LENGTH_SHORT).show();
                     }
                 }
 
