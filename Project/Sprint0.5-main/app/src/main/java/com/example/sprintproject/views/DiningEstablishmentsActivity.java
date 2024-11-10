@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.example.sprintproject.R;
 import com.example.sprintproject.model.Dining;
+import com.example.sprintproject.model.DiningObserver;
+import com.example.sprintproject.model.DiningSubject;
 import com.example.sprintproject.viewmodels.DiningEstablishmentsViewModel;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,17 +30,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Calendar;
 
-public class DiningEstablishmentsActivity extends BottomNavigationActivity {
+public class DiningEstablishmentsActivity extends BottomNavigationActivity implements DiningObserver {
     private Button toggleDiningBox;
     private DatabaseReference groupDatabase;
     private String groupName;
     private Spinner locationSpinner;
     private List<String> destinationNames;
-    private List<Dining> allDiningEstablishments;  // List to store all dining establishments
+    private DiningSubject diningSubject;
     private DiningEstablishmentsViewModel diningViewModel;
 
-    private ListView diningListView;  // ListView to display dining establishments
-    private DiningListAdapter diningListAdapter;  // Adapter to bind data to ListView
+    private ListView diningListView;
+    private DiningListAdapter diningListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +54,13 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
 
         locationSpinner = findViewById(R.id.location_spinner);
         destinationNames = new ArrayList<>();
-        allDiningEstablishments = new ArrayList<>();  // Initialize the list
+        diningSubject = new DiningSubject();
+        diningSubject.addObserver(this);
         diningViewModel = new DiningEstablishmentsViewModel();
 
-        diningListView = findViewById(R.id.dining_list);  // Initialize the ListView
-        diningListAdapter = new DiningListAdapter(this,
-                allDiningEstablishments);  // Initialize the Adapter
-        diningListView.setAdapter(diningListAdapter);  // Set the adapter for the ListView
+        diningListView = findViewById(R.id.dining_list);
+        diningListAdapter = new DiningListAdapter(this, diningSubject.getDiningList());
+        diningListView.setAdapter(diningListAdapter);
 
         loadDestinations();
 
@@ -85,17 +87,15 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        destinationNames.clear();  // Clear the list to avoid duplication
-                        allDiningEstablishments.clear();  // Clear the dining establishments list
+                        destinationNames.clear();
+                        diningSubject.getDiningList().clear();
 
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            // Ensure that the snapshot has a "name" field before adding
                             String destinationName = snapshot.child("name").getValue(String.class);
                             if (destinationName != null) {
                                 destinationNames.add(destinationName);
                             }
 
-                            // Now, load all dining establishments for this destination
                             loadDiningForDestination(snapshot);
                         }
 
@@ -103,12 +103,10 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
                             Toast.makeText(DiningEstablishmentsActivity.this,
                                     "No destinations found", Toast.LENGTH_SHORT).show();
                         } else {
-                            // Create and set the adapter for the Spinner
                             ArrayAdapter<String> adapter =
                                     new ArrayAdapter<>(DiningEstablishmentsActivity.this,
                                             android.R.layout.simple_spinner_item, destinationNames);
-                            adapter.setDropDownViewResource(android.R.layout
-                                    .simple_spinner_dropdown_item);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             locationSpinner.setAdapter(adapter);
                         }
                     }
@@ -123,7 +121,6 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
     }
 
     private void loadDiningForDestination(DataSnapshot destinationSnapshot) {
-        // Get the dining list for the current destination
         String destinationKey = destinationSnapshot.getKey();
         DatabaseReference diningRef = groupDatabase.child("destinationList")
                 .child(destinationKey).child("diningList");
@@ -134,15 +131,11 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
                 for (DataSnapshot diningSnapshot : dataSnapshot.getChildren()) {
                     Dining dining = diningSnapshot.getValue(Dining.class);
                     if (dining != null) {
-                        // Add dining to the allDiningEstablishments list
-                        allDiningEstablishments.add(dining);
+                        diningSubject.addDining(dining);
                     }
                 }
 
                 sortDiningByDateTime();
-
-                // Update the adapter to reflect the new data
-                diningListAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -180,7 +173,6 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         timePickerDialog.show();
     }
 
-    // Original addDiningToDestination() method
     private void addDiningToDestination() {
         EditText nameInput = findViewById(R.id.name_input);
         EditText dateInput = findViewById(R.id.date_input);
@@ -201,20 +193,13 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
         diningViewModel.logNewDiningReservation(groupName, location, name, date, time, url);
         Toast.makeText(this, "Dining reservation added", Toast.LENGTH_SHORT).show();
 
-        // Add the new dining reservation to the list and notify the adapter
         Dining newDining = new Dining(location, url, name, date, time);
-        allDiningEstablishments.add(newDining);
-        sortDiningByDateTime();  // Re-sort the list
-        diningListAdapter.notifyDataSetChanged();  // Refresh the ListView
-
-        // Logging the new dining reservation
-        System.out.println("Added Dining: " + newDining.getRestaurantName()
-                + ", Date: " + newDining.getDate() + ", Time: " + newDining.getTime());
+        diningSubject.addDining(newDining);
+        sortDiningByDateTime();
     }
 
-
     private void sortDiningByDateTime() {
-        allDiningEstablishments.sort((d1, d2) -> {
+        diningSubject.getDiningList().sort((d1, d2) -> {
             String dateTime1 = d1.getDate() + " " + d1.getTime();
             String dateTime2 = d2.getDate() + " " + d2.getTime();
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -227,13 +212,10 @@ public class DiningEstablishmentsActivity extends BottomNavigationActivity {
                 return 0;
             }
         });
-
-        // Logging the sorted list for debugging
-        System.out.println("Sorted Dining List:");
-        for (Dining dining : allDiningEstablishments) {
-            System.out.println("Dining: " + dining.getRestaurantName()
-                    + ", Date: " + dining.getDate() + ", Time: " + dining.getTime());
-        }
     }
 
+    @Override
+    public void onDiningListChanged(List<Dining> updatedDiningList) {
+        diningListAdapter.notifyDataSetChanged();
+    }
 }
