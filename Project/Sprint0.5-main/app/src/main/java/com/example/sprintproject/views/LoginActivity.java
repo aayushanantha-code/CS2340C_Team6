@@ -51,11 +51,15 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     // Check if Username and Password match a User on Firebase
-                                    if (dataSnapshot.exists() && dataSnapshot.getValue(User.class).getPassword().equals(password)) {
-                                        String group = dataSnapshot.getValue(User.class).getGroupName();
-                                        Intent loginIntent = new Intent(LoginActivity.this, LogisticsActivity.class);
+                                    if (dataSnapshot.exists() && dataSnapshot.getValue(User.class)
+                                            .getPassword().equals(password)) {
+                                        String group = dataSnapshot.getValue(User.class)
+                                                .getGroupName();
+                                        Intent loginIntent = new Intent(LoginActivity.this,
+                                                LogisticsActivity.class);
                                         loginIntent.putExtra("username", username);
-                                        loginIntent.putExtra("groupname", group); // Pass the username
+                                        // Pass the username
+                                        loginIntent.putExtra("groupname", group);
                                         startActivity(loginIntent);
                                     } else {
                                         incorrectText.setVisibility(View.VISIBLE);

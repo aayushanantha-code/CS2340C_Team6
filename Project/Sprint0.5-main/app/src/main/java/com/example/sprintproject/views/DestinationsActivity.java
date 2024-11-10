@@ -103,7 +103,8 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
 
         // Initialize ListView and Adapter
         destinationsView = findViewById(R.id.destinations_View);
-        destinationsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupDestinations);
+        destinationsAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, groupDestinations);
         destinationsView.setAdapter(destinationsAdapter);
         //Create the List of Previous Destinations
 
@@ -158,26 +159,31 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                         destinationList.add(destination);
                     }
                 }
-                groupDestinations.clear();
-                if (destinationList != null && destinationList.size() > 0) {
-                    if (destinationList.size() >= 5) {
-                        for (int i = destinationList.size() - 5; i < destinationList.size(); i++) {
-                            groupDestinations.add(destinationList.get(i).getName() + " - " + destinationList.get(i).getDuration() + " days");
+                        groupDestinations.clear();
+                        if (destinationList != null && destinationList.size() > 0) {
+                            if (destinationList.size() >= 5) {
+                                for (int i = destinationList.size() - 5;
+                                     i < destinationList.size(); i++) {
+                                    groupDestinations.add(destinationList.get(i).getName()
+                                            + " - " + destinationList.get(i).getDuration()
+                                            + " days");
+                                }
+                            } else {
+                                for (int i = 0; i < destinationList.size(); i++) {
+                                    groupDestinations.add(destinationList.get(i).getName()
+                                            + " - " + destinationList.get(i).getDuration()
+                                            + " days");
+                                }
+                            }
                         }
-                    } else {
-                        for (int i = 0; i < destinationList.size(); i++) {
-                            groupDestinations.add(destinationList.get(i).getName() + " - " + destinationList.get(i).getDuration() + " days");
-                        }
+                        destinationsAdapter.notifyDataSetChanged();
                     }
-                }
-                destinationsAdapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failure
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Failure
+                    }
+                });
     }
 
     private void logTravel(String group) {
@@ -187,36 +193,40 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
         long duration = calculateDuration(startDate, endDate);
 
         if (!locationName.isEmpty() && this.isStartDateBeforeEndDate(startDate, endDate)) {
-            groupDatabase.child(group).child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    boolean destinationExists = false;
+            groupDatabase.child(group).child("destinationList")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            boolean destinationExists = false;
 
-                    for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
-                        String existingDestination = destinationSnapshot.child("name").getValue(String.class);
-                        if (existingDestination != null && existingDestination.equals(locationName)) {
-                            destinationExists = true;
-                            break;
-                        }
-                    }
+                            for (DataSnapshot destinationSnapshot : snapshot.getChildren()) {
+                                String existingDestination =
+                                        destinationSnapshot.child("name").getValue(String.class);
+                                if (existingDestination != null
+                                        && existingDestination.equals(locationName)) {
+                                    destinationExists = true;
+                                    break;
+                                }
+                            }
 
-                    if (!destinationExists) {
-                        //Continue to add new location
-                        DestinationsViewModel account = new DestinationsViewModel();
-                        account.logNewDestination(locationName, startDate, endDate, duration, group);
-                        toggleLogTravelBox(logTravelBox);
-                        successfulText.setVisibility(View.VISIBLE);
-                    } else {
+                            if (!destinationExists) {
+                                //Continue to add new location
+                                DestinationsViewModel account = new DestinationsViewModel();
+                                account.logNewDestination(locationName,
+                                        startDate, endDate, duration, group);
+                                toggleLogTravelBox(logTravelBox);
+                                successfulText.setVisibility(View.VISIBLE);
+                            } else {
                         Toast.makeText(DestinationsActivity.this,
                                 "Destination Already Added", Toast.LENGTH_SHORT).show();
                     }
                 }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    //error
-                }
-            });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            //error
+                        }
+                    });
         }
     }
     @Override

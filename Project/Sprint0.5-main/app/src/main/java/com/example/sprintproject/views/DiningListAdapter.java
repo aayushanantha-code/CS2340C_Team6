@@ -29,7 +29,8 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.dining_list_item, parent, false);
+            convertView = LayoutInflater.from(context).
+                    inflate(R.layout.dining_list_item, parent, false);
         }
 
         Dining dining = diningList.get(position);
@@ -51,13 +52,15 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
             applyStrikethrough(restaurantNameTextView);
             applyStrikethrough(diningAddressTextView);
             applyStrikethrough(timeTextView);
-            convertView.setBackgroundColor(context.getResources().getColor(R.color.passed_reservation_background));
+            convertView.setBackgroundColor(context.getResources()
+                    .getColor(R.color.passed_reservation_background));
         } else {
             removeStrikethrough(locationTextView);
             removeStrikethrough(restaurantNameTextView);
             removeStrikethrough(diningAddressTextView);
             removeStrikethrough(timeTextView);
-            convertView.setBackgroundColor(context.getResources().getColor(R.color.dining_entry_background));
+            convertView.setBackgroundColor(context.getResources()
+                    .getColor(R.color.dining_entry_background));
         }
 
         return convertView;

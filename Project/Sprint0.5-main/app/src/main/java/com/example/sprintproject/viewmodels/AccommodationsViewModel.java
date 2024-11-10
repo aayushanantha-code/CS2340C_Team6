@@ -33,21 +33,25 @@ public class AccommodationsViewModel {
                                                String checkinDate, String checkoutDate,
                                                int numRooms, List<String> roomTypes) {
         // Create a new Accommodation object
-        Accommodation newAccommodation = new Accommodation(location, name, checkinDate, checkoutDate, numRooms, roomTypes);
+        Accommodation newAccommodation = new Accommodation(location, name, checkinDate,
+                checkoutDate, numRooms, roomTypes);
 
         // Reference to the Firebase node for the group, destinationList, and location
-        groupDatabase.child(group).child("destinationList").child(location).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Check if the accommodationList node exists; if not, it will be created
-                groupDatabase.child(group).child("destinationList").child(location).child("accommodationList").child(name).setValue(newAccommodation);
-            }
+        groupDatabase.child(group).child("destinationList").
+                child(location).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Check if the accommodationList node exists; if not, it will be created
+                        groupDatabase.child(group).child("destinationList")
+                                .child(location).child("accommodationList")
+                                .child(name).setValue(newAccommodation);
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Log failure or handle it as needed
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Log failure or handle it as needed
+                    }
+                });
     }
 
     /**
@@ -57,7 +61,9 @@ public class AccommodationsViewModel {
      * @param allocatedRooms the number of rooms allocated
      */
     public void allocateAccommodationRooms(String group, String location, int allocatedRooms) {
-        groupDatabase.child(group).child("destinationList").child(location).child("allocatedAccommodationRooms").setValue(allocatedRooms);
+        groupDatabase.child(group).child("destinationList")
+                .child(location).child("allocatedAccommodationRooms")
+                .setValue(allocatedRooms);
     }
 
     /**
@@ -67,7 +73,8 @@ public class AccommodationsViewModel {
      * @param accommodationName the name of the accommodation
      * @param roomType the room type to be added
      */
-    public void addRoomTypeToAccommodation(String group, String location, String accommodationName, String roomType) {
+    public void addRoomTypeToAccommodation(String group, String location,
+                                           String accommodationName, String roomType) {
         groupDatabase.child(group).child("destinationList").child(location)
                 .child("accommodationList").child(accommodationName).child("roomTypes")
                 .push().setValue(roomType);
@@ -80,10 +87,12 @@ public class AccommodationsViewModel {
      * @param accommodationName the name of the accommodation
      * @param roomType the room type to be removed
      */
-    public void removeRoomTypeFromAccommodation(String group, String location, String accommodationName, String roomType) {
+    public void removeRoomTypeFromAccommodation(String group, String location,
+                                                String accommodationName, String roomType) {
         groupDatabase.child(group).child("destinationList").child(location)
                 .child("accommodationList").child(accommodationName).child("roomTypes")
-                .orderByValue().equalTo(roomType).addListenerForSingleValueEvent(new ValueEventListener() {
+                .orderByValue().equalTo(roomType).
+                addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {

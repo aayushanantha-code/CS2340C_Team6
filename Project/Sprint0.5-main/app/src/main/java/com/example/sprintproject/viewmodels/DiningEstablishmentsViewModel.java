@@ -26,21 +26,25 @@ public class DiningEstablishmentsViewModel {
      * @param time the time of the reservation
      * @param url the URL of the dining place
      */
-    public void logNewDiningReservation(String group, String location, String name, String date, String time, String url) {
+    public void logNewDiningReservation(String group, String location, String name,
+                                        String date, String time, String url) {
         Dining newDining = new Dining(location, url, name, date, time);
 
-        groupDatabase.child(group).child("destinationList").child(location).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Check if the diningList node exists; if not, it will be created
-                groupDatabase.child(group).child("destinationList").child(location).child("diningList").child(name).setValue(newDining);
-            }
+        groupDatabase.child(group).child("destinationList").child(location)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Check if the diningList node exists; if not, it will be created
+                        groupDatabase.child(group).child("destinationList")
+                                .child(location).child("diningList")
+                                .child(name).setValue(newDining);
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Log failure or handle it as needed
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Log failure or handle it as needed
+                    }
+                });
     }
 
     /**
@@ -50,6 +54,7 @@ public class DiningEstablishmentsViewModel {
      * @param allocatedSlots number of slots or reservations
      */
     public void allocateDiningSlots(String group, String location, int allocatedSlots) {
-        groupDatabase.child(group).child("destinationList").child(location).child("allocatedDiningSlots").setValue(allocatedSlots);
+        groupDatabase.child(group).child("destinationList")
+                .child(location).child("allocatedDiningSlots").setValue(allocatedSlots);
     }
 }

@@ -62,7 +62,8 @@ public class LogisticsActivity extends BottomNavigationActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_logistics, (FrameLayout) findViewById(R.id.content_frame), true);
+        getLayoutInflater().inflate(R.layout.activity_logistics,
+                (FrameLayout) findViewById(R.id.content_frame), true);
 
         // Initialize components
         makeAGroupWarning = findViewById(R.id.make_a_group);
@@ -76,7 +77,7 @@ public class LogisticsActivity extends BottomNavigationActivity {
 
         // Initialize Pie Chart
         PieChart pieChart = findViewById(R.id.pieChart);
-        pieChartFrame = findViewById(R.id.pieChart_box);
+        pieChartFrame = findViewById(R.id.pieChartBox);
         pieChartFrame.setVisibility(View.GONE);
 
         // Initialize Group and User Database
@@ -123,8 +124,10 @@ public class LogisticsActivity extends BottomNavigationActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot groupSnapshots : snapshot.getChildren()) {
-                                for (DataSnapshot userSnapshots : groupSnapshots.child("userList").getChildren()) {
-                                    if (username.equals(userSnapshots.getValue(User.class).getUserID())) {
+                                for (DataSnapshot userSnapshots
+                                        : groupSnapshots.child("userList").getChildren()) {
+                                    if (username.equals(userSnapshots.getValue(User.class)
+                                            .getUserID())) {
                                         groupId = groupSnapshots.getKey();
                                         loadInvitedUsers(groupId);
                                         break;
@@ -167,19 +170,24 @@ public class LogisticsActivity extends BottomNavigationActivity {
                         Group group = new Group();
                         groupDatabase.child(groupId).setValue(group).addOnSuccessListener(aVoid -> {
                             user.joinGroup(groupId);
-                            groupDatabase.child(groupId).child("userList").child(username).setValue(user);
+                            groupDatabase.child(groupId).child("userList")
+                                    .child(username).setValue(user);
                             userDatabase.child(username).setValue(user);
                             invitedUsers.add(username); // Add inviter to the list
                             invitedUsersAdapter.notifyDataSetChanged();
-                            Toast.makeText(LogisticsActivity.this, "New group created with you as the first member.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogisticsActivity.this,
+                                    "New group created with you as the first member.",
+                                    Toast.LENGTH_SHORT).show();
                             makeAGroupWarning.setVisibility(View.GONE);
                             graphButton.setVisibility(View.VISIBLE);
                             listButton.setVisibility(View.VISIBLE);
                             inviteButton.setVisibility(View.VISIBLE);
                             addNoteButton.setVisibility(View.VISIBLE);
-                        }).addOnFailureListener(e -> Log.e("Firebase", "Failed to create new group", e));
+                        }).addOnFailureListener(e -> Log.e("Firebase",
+                                "Failed to create new group", e));
                     } else {
-                        Toast.makeText(LogisticsActivity.this, "You are already in a group.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LogisticsActivity.this,
+                                "You are already in a group.", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -222,18 +230,18 @@ public class LogisticsActivity extends BottomNavigationActivity {
 
     /**
      * Toggle the visibility of the pie chart.
-     * @param pieChart_box The pie chart to toggle
+     * @param pieChartBox The pie chart to toggle
      * @param pieChart The specific pie chart to display
      */
-    private void togglePieChart(FrameLayout pieChart_box, PieChart pieChart) {
+    private void togglePieChart(FrameLayout pieChartBox, PieChart pieChart) {
         listBox.setVisibility(View.GONE);
-        if (pieChart_box.getVisibility() == View.VISIBLE) {
-            pieChart_box.setVisibility(View.GONE);
+        if (pieChartBox.getVisibility() == View.VISIBLE) {
+            pieChartBox.setVisibility(View.GONE);
             tooManyDays.setVisibility(View.GONE);
             graphButton.setText("Show Vacation Days");
         } else {
             drawPieChart(pieChart);
-            pieChart_box.setVisibility(View.VISIBLE);
+            pieChartBox.setVisibility(View.VISIBLE);
             graphButton.setText("Close");
 
         }
@@ -279,37 +287,46 @@ public class LogisticsActivity extends BottomNavigationActivity {
     }
 
     public void inviteUser(String invitedUsername) {
-        userDatabase.child(invitedUsername).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // User exists, proceed with the invitation
-                    User user = dataSnapshot.getValue(User.class);
-                    if (!user.getIsInGroup()) {
-                        groupDatabase.child(groupId).child("userList").child(invitedUsername).setValue(user).addOnSuccessListener(aVoid -> {
-                            // Add invited user to the list
-                            user.joinGroup(groupId);
-                            userDatabase.child(invitedUsername).setValue(user);
-                            invitedUsers.add(invitedUsername);
-                            invitedUsersAdapter.notifyDataSetChanged();
-                            Log.d("Firebase", "User invited: " + invitedUsername);
-                            Toast.makeText(LogisticsActivity.this, invitedUsername + " has been invited.",
+        userDatabase.child(invitedUsername)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // User exists, proceed with the invitation
+                            User user = dataSnapshot.getValue(User.class);
+                            if (!user.getIsInGroup()) {
+                                groupDatabase.child(groupId)
+                                        .child("userList").child(invitedUsername)
+                                        .setValue(user).addOnSuccessListener(aVoid -> {
+                                            // Add invited user to the list
+                                            user.joinGroup(groupId);
+                                            userDatabase.child(invitedUsername).setValue(user);
+                                            invitedUsers.add(invitedUsername);
+                                            invitedUsersAdapter.notifyDataSetChanged();
+                                            Log.d("Firebase", "User invited: " + invitedUsername);
+                                            Toast.makeText(LogisticsActivity.this, invitedUsername
+                                                    + " has been invited.",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }).addOnFailureListener(e -> Log.e("Firebase",
+                                                "Failed to invite user", e));
+                            } else {
+                                // User doesn't exist, show a message
+                                Toast.makeText(LogisticsActivity.this,
+                                        "User already in a group. :(",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(LogisticsActivity.this,
+                                    "User doesn't exist. Try again.",
                                     Toast.LENGTH_SHORT).show();
-                        }).addOnFailureListener(e -> Log.e("Firebase", "Failed to invite user", e));
-                    } else {
-                        // User doesn't exist, show a message
-                        Toast.makeText(LogisticsActivity.this, "User already in a group. :(", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } else {
-                    Toast.makeText(LogisticsActivity.this, "User doesn't exist. Try again.", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e("Firebase", "Failed to check if user exists",
+                                databaseError.toException());
                     }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase", "Failed to check if user exists",
-                        databaseError.toException());
-            }
-        });
+                });
     }
 
 
@@ -322,16 +339,20 @@ public class LogisticsActivity extends BottomNavigationActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Integer allocatedDays = dataSnapshot.child("allocatedVacationDays").getValue(Integer.class);
-                        Integer plannedDays = dataSnapshot.child("plannedDays").getValue(Integer.class);
-                        System.out.println("allocated:" + allocatedDays + "   planned:" + plannedDays);
+                        Integer allocatedDays = dataSnapshot
+                                .child("allocatedVacationDays").getValue(Integer.class);
+                        Integer plannedDays = dataSnapshot.child("plannedDays")
+                                .getValue(Integer.class);
+                        System.out.println("allocated:" + allocatedDays
+                                + "   planned:" + plannedDays);
                         if (allocatedDays != null && plannedDays
                                 != null && plannedDays <= allocatedDays) {
                             int unplannedAllocatedDays = allocatedDays - plannedDays;
 
 
                             List<PieEntry> entries = new ArrayList<>();
-                            entries.add(new PieEntry(unplannedAllocatedDays, "Unplanned Allotted Days"));
+                            entries.add(new PieEntry(unplannedAllocatedDays,
+                                    "Unplanned Allotted Days"));
                             entries.add(new PieEntry(plannedDays, "Planned Days"));
 
                             PieDataSet dataSet = new PieDataSet(entries, "Trip Days");
