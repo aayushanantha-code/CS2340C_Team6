@@ -98,6 +98,9 @@ public class AccommodationsActivity extends BottomNavigationActivity {
         checkOutDate.setOnClickListener(c -> showDateEdit(checkOutDate));
     }
 
+    /**
+     * Load the destinations for the group
+     */
     private void loadDestinations() {
         groupDatabase.child("destinationList")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -140,6 +143,10 @@ public class AccommodationsActivity extends BottomNavigationActivity {
                 });
     }
 
+    /**
+     * Load accommodations for a specific destination
+     * @param destinationSnapshot The snapshot of the destination
+     */
     private void loadAccommodationsForDestination(DataSnapshot destinationSnapshot) {
         String destinationKey = destinationSnapshot.getKey();
 
@@ -185,6 +192,10 @@ public class AccommodationsActivity extends BottomNavigationActivity {
         });
     }
 
+    /**
+     * Toggle the visibility of the accommodations box
+     * @param accommodationsBox The accommodations box to toggle
+     */
     private void toggleAccommodationBox(FrameLayout accommodationsBox) {
         if (accommodationsBox.getVisibility() == View.VISIBLE) {
             accommodationsBox.setVisibility(View.GONE);
@@ -193,6 +204,10 @@ public class AccommodationsActivity extends BottomNavigationActivity {
         }
     }
 
+    /**
+     * Show a date picker dialog for the specified EditText
+     * @param dateInput The EditText to show the date picker for
+     */
     private void showDateEdit(EditText dateInput) {
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(AccommodationsActivity.this,
@@ -203,6 +218,9 @@ public class AccommodationsActivity extends BottomNavigationActivity {
         datePickerDialog.show();
     }
 
+    /**
+     * Add an accommodation to the destination
+     */
     private void addAccommodationToDestination() {
         EditText nameInput = findViewById(R.id.name_input);
         EditText checkInInput = findViewById(R.id.checkin_input);
@@ -253,6 +271,9 @@ public class AccommodationsActivity extends BottomNavigationActivity {
     }
 
 
+    /**
+     * Sort accommodations by check-in date
+     */
     private void sortAccommodationsByDate() {
         allAccommodations.sort((a1, a2) -> {
             String date1 = a1.getCheckinDate();

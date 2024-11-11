@@ -23,12 +23,24 @@ public class AccommodationListAdapter extends ArrayAdapter<Accommodation> {
     private Context context;
     private List<Accommodation> accommodationList;
 
+    /**
+     * Constructor for the AccommodationListAdapter class
+     * @param context The context of the activity
+     * @param accommodationList The list of accommodations to display
+     */
     public AccommodationListAdapter(Context context, List<Accommodation> accommodationList) {
         super(context, 0, accommodationList);
         this.context = context;
         this.accommodationList = accommodationList;
     }
 
+    /**
+     * Method to get the view for each item in the list
+     * @param position The position of the item in the list
+     * @param convertView The view to convert
+     * @param parent The parent view group
+     * @return The view for the item at the specified position
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -76,11 +88,16 @@ public class AccommodationListAdapter extends ArrayAdapter<Accommodation> {
             removeStrikethrough(checkoutDateTextView);
             convertView.setBackgroundColor(Color.WHITE); // Default white background
         }
-
         return convertView;
     }
 
     // Method to check if the accommodation has expired using the checkout date
+
+    /**
+     * Method to check if the accommodation has expired using the checkout date
+     * @param accommodation The accommodation object to check
+     * @return True if the accommodation has expired, false otherwise
+     */
     private boolean isAccommodationExpired(Accommodation accommodation) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         try {
@@ -95,12 +112,20 @@ public class AccommodationListAdapter extends ArrayAdapter<Accommodation> {
     }
 
     // Method to apply strikethrough effect on a TextView
+    /**
+     * Method to apply strikethrough effect on a TextView
+     * @param textView The TextView to apply the effect to
+     */
     private void applyStrikethrough(TextView textView) {
         textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         textView.setTextColor(Color.RED); // Change text color to gray for expired items
     }
 
     // Method to remove strikethrough effect on a TextView
+    /**
+     * Method to remove strikethrough effect on a TextView
+     * @param textView The TextView to remove the effect from
+     */
     private void removeStrikethrough(TextView textView) {
         textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         textView.setTextColor(Color.BLACK); // Default black color for active items
