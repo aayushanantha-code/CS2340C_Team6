@@ -52,6 +52,7 @@ public class BottomNavigationActivity extends AppCompatActivity {
 
     /**
      * Checks if the user is in a group and starts the target activity if they are
+     * Sends the group and username to the target activity
      * @param username the username of the user
      * @param intent the intent to start the target activity
      */
