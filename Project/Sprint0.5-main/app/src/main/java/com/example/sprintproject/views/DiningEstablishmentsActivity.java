@@ -192,6 +192,16 @@ public class DiningEstablishmentsActivity
             return;
         }
 
+        // Check for duplicate dining reservation by name
+        for (Dining dining : diningSubject.getDiningList()) {
+            if (dining.getRestaurantName().equals(name)) {
+                // Duplicate found, show message and return
+                Toast.makeText(this, "Dining reservation with this name already exists", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        // No duplicates, proceed with adding the dining reservation
         diningViewModel.logNewDiningReservation(groupName, location, name, date, time, url);
         Toast.makeText(this, "Dining reservation added", Toast.LENGTH_SHORT).show();
 
