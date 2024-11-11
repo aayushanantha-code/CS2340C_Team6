@@ -248,6 +248,10 @@ public class DiningEstablishmentsActivity
         });
     }
 
+    /**
+     * Notifies the dining list adapter that the data has changed
+     * @param updatedDiningList The updated dining list
+     */
     @Override
     public void onDiningListChanged(List<Dining> updatedDiningList) {
         diningListAdapter.notifyDataSetChanged();
