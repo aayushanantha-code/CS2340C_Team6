@@ -216,7 +216,9 @@ public class DiningEstablishmentsActivity
 
         for (Dining dining : diningSubject.getDiningList()) {
             if (dining.getRestaurantName().equals(name)) {
-                Toast.makeText(this, "Dining reservation with this name already exists", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,
+                        "Dining reservation with this name already exists",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
         }
