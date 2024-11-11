@@ -83,6 +83,9 @@ public class DiningEstablishmentsActivity
         reservationTime.setOnClickListener(c -> showTimeEdit(reservationTime));
     }
 
+    /**
+     * Loads the destinations for the group
+     */
     private void loadDestinations() {
         groupDatabase.child("destinationList")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -122,6 +125,10 @@ public class DiningEstablishmentsActivity
                 });
     }
 
+    /**
+     * Loads the dining establishments for a destination
+     * @param destinationSnapshot The snapshot of the destination
+     */
     private void loadDiningForDestination(DataSnapshot destinationSnapshot) {
         String destinationKey = destinationSnapshot.getKey();
         DatabaseReference diningRef = groupDatabase.child("destinationList")
@@ -149,6 +156,10 @@ public class DiningEstablishmentsActivity
         });
     }
 
+    /**
+     * Toggles the visibility of the dining reservation box
+     * @param diningFrame The frame layout containing the dining reservation box
+     */
     private void toggleDiningBox(FrameLayout diningFrame) {
         if (diningFrame.getVisibility() == View.VISIBLE) {
             diningFrame.setVisibility(View.GONE);
@@ -157,6 +168,10 @@ public class DiningEstablishmentsActivity
         }
     }
 
+    /**
+     * Shows a date picker dialog for editing the reservation date
+     * @param reservationDate The edit text for the reservation date
+     */
     private void showDateEdit(EditText reservationDate) {
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(DiningEstablishmentsActivity.this,
@@ -167,6 +182,10 @@ public class DiningEstablishmentsActivity
         datePickerDialog.show();
     }
 
+    /**
+     * Shows a time picker dialog for editing the reservation time
+     * @param reservationTime The edit text for the reservation time
+     */
     private void showTimeEdit(EditText reservationTime) {
         final Calendar calendar = Calendar.getInstance();
         TimePickerDialog timePickerDialog = new TimePickerDialog(DiningEstablishmentsActivity.this,
@@ -175,6 +194,9 @@ public class DiningEstablishmentsActivity
         timePickerDialog.show();
     }
 
+    /**
+     * Adds a dining reservation to the destination
+     */
     private void addDiningToDestination() {
         EditText nameInput = findViewById(R.id.name_input);
         EditText dateInput = findViewById(R.id.date_input);

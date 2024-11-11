@@ -159,9 +159,12 @@ public class LogisticsActivity extends BottomNavigationActivity {
         });
     }
 
+    /**
+     * Create a new group with the given username.
+     * @param username The username of the logged-in user
+     */
     private void createNewGroup(String username) {
-        groupId = username + "'s group"; // Use the username as part of the group name
-        // Add user to this new group
+        groupId = username + "'s group";
         userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -247,6 +250,10 @@ public class LogisticsActivity extends BottomNavigationActivity {
         }
     }
 
+    /**
+     * Toggle the visibility of the user list.
+     * @param userList The user list to toggle
+     */
     private void toggleUserList(FrameLayout userList) {
         pieChartFrame.setVisibility(View.GONE);
         if (userList.getVisibility() == View.VISIBLE) {
@@ -286,6 +293,10 @@ public class LogisticsActivity extends BottomNavigationActivity {
         builder.show();
     }
 
+    /**
+     * Invite a user to the group.
+     * @param invitedUsername The username of the user to invite
+     */
     public void inviteUser(String invitedUsername) {
         userDatabase.child(invitedUsername)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -412,6 +423,10 @@ public class LogisticsActivity extends BottomNavigationActivity {
         builder.show();
     }
 
+    /**
+     * Add a note to the group.
+     * @param note The note to add
+     */
     private void addNote(String note) {
         String username = getIntent().getStringExtra("username");
         // Save the note under the correct groupId and username

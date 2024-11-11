@@ -21,12 +21,24 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
     private Context context;
     private List<Dining> diningList;
 
+    /**
+     * Constructor for the DiningListAdapter class
+     * @param context The context of the activity
+     * @param diningList The list of dining reservations to display
+     */
     public DiningListAdapter(Context context, List<Dining> diningList) {
         super(context, 0, diningList);
         this.context = context;
         this.diningList = diningList;
     }
 
+    /**
+     * Method to get the view for each item in the list
+     * @param position The position of the item in the list
+     * @param convertView The view to convert
+     * @param parent The parent view group
+     * @return The view for the item at the specified position
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -73,6 +85,12 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
         return convertView;
     }
 
+    /**
+     * Formats the date and time into a more readable format
+     * @param date The date of the reservation
+     * @param time The time of the reservation
+     * @return The formatted date and time
+     */
     private String formatDateTime(String date, String time) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         SimpleDateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm");
@@ -85,6 +103,12 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
         }
     }
 
+    /**
+     * Checks if the reservation has passed based on the date and time
+     * @param date The date of the reservation
+     * @param time The time of the reservation
+     * @return True if the reservation has passed, false otherwise
+     */
     private boolean isReservationPassed(String date, String time) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         try {
@@ -96,6 +120,11 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
         }
     }
 
+    /**
+     * Checks if the reservation date is today or tomorrow
+     * @param date The date of the reservation
+     * @return True if the reservation date is today or tomorrow, false otherwise
+     */
     private boolean isTodayOrTomorrow(String date) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         try {
@@ -117,10 +146,18 @@ public class DiningListAdapter extends ArrayAdapter<Dining> {
         }
     }
 
+    /**
+     * Applies a strikethrough effect to the text view
+     * @param textView The text view to apply the effect to
+     */
     private void applyStrikethrough(TextView textView) {
         textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
+    /**
+     * Removes the strikethrough effect from the text view
+     * @param textView The text view to remove the effect from
+     */
     private void removeStrikethrough(TextView textView) {
         textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
     }
