@@ -187,6 +187,10 @@ public class DestinationsActivity extends BottomNavigationActivity implements Da
                 });
     }
 
+    /**
+     * Logs the travel
+     * @param group the group of the user
+     */
     private void logTravel(String group) {
         String locationName = locationInput.getText().toString().trim();
         String startDate = estimatedStart.getText().toString().trim();

@@ -9,6 +9,9 @@ public class User {
     private String note;
     private String groupName;
 
+    /**
+     * Default constructor for User
+     */
     public User() {
     }
     /**
@@ -42,14 +45,26 @@ public class User {
         return password;
     }
 
+    /**
+     * Getter for the mote
+     * @return The note
+     */
     public String getNote() {
         return note;
     }
 
+    /**
+     * Getting for group name
+     * @return The group name
+     */
     public String getGroupName() {
         return groupName;
     }
 
+    /**
+     * Getter for Allocated Vacation Days
+     * @param groupName The group name
+     */
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
@@ -86,10 +101,18 @@ public class User {
         this.plannedDays += plannedDays;
     }
 
+    /**
+     * Getter for Allocated Vacation Days
+     * @return Whether the user is in a group
+     */
     public boolean getIsInGroup() {
         return isInGroup;
     }
 
+    /**
+     * Method that sets the user to be in a group
+     * @param groupName The group to join
+     */
     public void joinGroup(String groupName) {
         isInGroup = true;
         this.groupName = groupName;

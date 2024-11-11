@@ -33,6 +33,11 @@ public class BottomNavigationActivity extends AppCompatActivity {
         setupButtonWithGroupCheck(R.id.icon_travel_community, TravelCommunityActivity.class);
     }
 
+    /**
+     * Sets up a button to check if the user is in a group before starting the target activity
+     * @param buttonId the ID of the button to set up
+     * @param targetActivity the activity to start when the button is clicked
+     */
     private void setupButtonWithGroupCheck(int buttonId, Class<?> targetActivity) {
         ImageButton button = findViewById(buttonId);
         button.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +50,11 @@ public class BottomNavigationActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Checks if the user is in a group and starts the target activity if they are
+     * @param username the username of the user
+     * @param intent the intent to start the target activity
+     */
     private void checkGroupAndStartActivity(String username, Intent intent) {
         userDatabase.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
