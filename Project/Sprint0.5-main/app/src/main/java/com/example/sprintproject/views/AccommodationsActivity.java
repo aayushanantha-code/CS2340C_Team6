@@ -47,7 +47,7 @@ public class AccommodationsActivity extends BottomNavigationActivity {
                 (FrameLayout) findViewById(R.id.content_frame), true);
 
         groupName = getIntent().getStringExtra("groupName");
-        Toast.makeText(this, groupName, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, groupName, Toast.LENGTH_SHORT).show();
         groupDatabase = FirebaseDatabase.getInstance().getReference().
                 child("groups").child(groupName);
 
