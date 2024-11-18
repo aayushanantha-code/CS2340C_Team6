@@ -28,18 +28,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="75dp"/>
 
-    <!-- Add Post Button (Floating Action Button) -->
-    <Button
-        android:id="@+id/add_post"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:text="+"
-        android:textSize="24sp"
-        android:layout_marginBottom="100dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
     <!-- RecyclerView to display the list of items -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -52,12 +40,28 @@
         app:layout_constraintBottom_toTopOf="@+id/add_post"
         android:scrollbars="vertical" />
 
+    <TextView
+        android:id="@+id/initial_travel_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is where you and your friends' posts will appear!"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/darker_gray"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/title_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginTop="50dp"/>
+
 
     <Button
         android:id="@+id/button_view_recycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="View List"
+        android:text="Upadate List"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -66,6 +70,113 @@
         app:layout_constraintVertical_bias="0.866"
         app:layout_goneMarginLeft="16dp"/>
 
-    <!-- Need to add a new Framelayout for the Add Post box (Will probably copy from Destinations/Dining -->
+
+    <!-- New Post Overlay FrameLayout (Hidden Initially) -->
+    <FrameLayout
+        android:id="@+id/travel_post_box"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#80000000"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Post Linear Layout -->
+        <LinearLayout
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="25dp"
+            android:layout_gravity="center"
+            android:background="@android:color/white"
+            android:elevation="10dp">
+
+            <!-- Overlay Title -->
+            <TextView
+                android:id="@+id/overlay_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Travel Post"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Location Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Destination"
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <!-- Location Spinner -->
+            <Spinner
+                android:id="@+id/destination_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"/>
+
+
+            <!-- Travel Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Travel"
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <!-- Travel Input -->
+            <EditText
+                android:id="@+id/travel_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter form of Travel used"
+                android:background="@android:color/darker_gray"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Note Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notes"
+                android:textSize="25sp"
+                android:textColor="@android:color/black"/>
+
+            <!-- Note Input -->
+            <EditText
+                android:id="@+id/notes_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Notes about your trip"
+                android:background="@android:color/darker_gray"
+                android:padding="8dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Submit Button -->
+            <Button
+                android:id="@+id/post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Post"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Add Post Button (Floating Action Button) -->
+    <Button
+        android:id="@+id/add_post"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:text="+"
+        android:textSize="24sp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
