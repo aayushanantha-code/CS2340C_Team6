@@ -73,7 +73,7 @@
     <Button
         android:id="@+id/register_login_button"
         android:layout_width="0dp"
-        android:backgroundTint="#432b4a"
+        android:backgroundTint="@color/cardview_dark_background"
         android:textColor="@android:color/white"
         android:layout_height="wrap_content"
         app:layout_constraintWidth_percent="0.5"
