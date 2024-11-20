@@ -4,9 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,13 +13,15 @@ import com.example.sprintproject.model.TravelCommunityPost;
 
 import java.util.List;
 
-public class TravelCommunityAdapter extends RecyclerView.Adapter<TravelCommunityAdapter.postHolder> {
+public class TravelCommunityAdapter extends
+        RecyclerView.Adapter<TravelCommunityAdapter.postHolder> {
 
     private Context context;
     private List<TravelCommunityPost> postList;
     private postClickListener clickListener;
 
-    public TravelCommunityAdapter(Context context, List<TravelCommunityPost> postList, postClickListener clickListener) {
+    public TravelCommunityAdapter(Context context, List<TravelCommunityPost> postList,
+                                  postClickListener clickListener) {
         this.context = context;
         this.postList = postList;
         this.clickListener = clickListener;
@@ -38,7 +38,8 @@ public class TravelCommunityAdapter extends RecyclerView.Adapter<TravelCommunity
     public void onBindViewHolder(@NonNull postHolder holder, int position) {
         TravelCommunityPost post = postList.get(position);
         holder.title.setText(post.getUser());
-        String destinationAndDuration = post.getDestination().getName() + " for " + post.getDestination().getDuration() + " days";
+        String destinationAndDuration = post.getDestination().getName()
+                + " for " + post.getDestination().getDuration() + " days";
         holder.destinationAndDuration.setText(destinationAndDuration);
 
         // Set click listener on each item (acting as button)
@@ -54,8 +55,8 @@ public class TravelCommunityAdapter extends RecyclerView.Adapter<TravelCommunity
 
 
     public static class postHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView destinationAndDuration;
+        private TextView title;
+        private TextView destinationAndDuration;
 
         public postHolder(@NonNull View itemView) {
             super(itemView);
