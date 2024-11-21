@@ -38,6 +38,9 @@ public class TravelCommunityActivity extends
     private Button openPostList;
     private Button openAddPost;
     private Button post;
+    private FrameLayout popupBox;
+    private TextView userNameAndGroup, duration, startEndDate, accommodationField, diningReservationField, transportation, notes;
+    private Button closeButton;
     private TextView initialText;
     private FrameLayout addPostBox;
     private Spinner locationSpinner;
@@ -61,6 +64,18 @@ public class TravelCommunityActivity extends
         initialText = findViewById(R.id.initial_travel_text);
         addPostBox = findViewById(R.id.travel_post_box);
         locationSpinner = findViewById(R.id.destination_spinner);
+
+        popupBox = findViewById(R.id.frameLayout);
+        userNameAndGroup = findViewById(R.id.userName);
+        duration = findViewById(R.id.duration);
+        startEndDate = findViewById(R.id.startEndDate);
+        accommodationField = findViewById(R.id.accommodation);
+        diningReservationField = findViewById(R.id.diningReservations);
+        transportation = findViewById(R.id.transportation);
+        notes = findViewById(R.id.notes);
+        closeButton = findViewById(R.id.closeButton);
+
+
         post = findViewById(R.id.post);
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -79,6 +94,10 @@ public class TravelCommunityActivity extends
             openPostList();
         });
 
+        closeButton.setOnClickListener(v -> {
+            togglePopupBox();
+        });
+
         // Opens add Post box
         openAddPost.setOnClickListener(v -> {
             toggleAddPostBox();
@@ -93,9 +112,33 @@ public class TravelCommunityActivity extends
 
     @Override
     public void onPostClick(TravelCommunityPost post) {
-        // Will eventually update this to show a breakdown of the travel post
-        // This is the next BIG thing to implement
-        Toast.makeText(this, "Clicked on: " + post.getUser(), Toast.LENGTH_SHORT).show();
+        togglePopupBox();
+        Destination destination = post.getDestination();
+        userNameAndGroup.setText(post.getUser() + "'s trip to " + destination.getName());
+        duration.setText(post.getUser() + " will be staying for " + destination.getDuration() + " days");
+        startEndDate.setText(destination.getStart() + " to " + destination.getEnd());
+        if (destination.getAccommodationList().size() != 0) {
+            accommodationField.setText(post.getUser() + " will be staying at " + destination.getAccommodationList().get(0).getName());
+        } else {
+            accommodationField.setText("");
+        }
+        if (destination.getDiningList().size() != 0) {
+            diningReservationField.setText(post.getUser() + " reserved reservation at " + destination.getDiningList().get(0).getRestaurantName());
+        } else {
+            diningReservationField.setText("");
+        }
+
+        transportation.setText("Travelling via: " + post.getTravelType());
+        notes.setText("'" + post.getNotes() + "'");
+    }
+
+    public void togglePopupBox() {
+        if (popupBox.getVisibility() == View.GONE) {
+            addPostBox.setVisibility(View.GONE);
+            popupBox.setVisibility(View.VISIBLE);
+        } else {
+            popupBox.setVisibility(View.GONE);
+        }
     }
 
     private void openPostList() {
@@ -215,6 +258,7 @@ public class TravelCommunityActivity extends
     public void toggleAddPostBox() {
         if (addPostBox.getVisibility() == View.GONE) {
             loadDestinations();
+            popupBox.setVisibility(View.GONE);
             addPostBox.setVisibility(View.VISIBLE);
             openAddPost.setText("-");
         } else {

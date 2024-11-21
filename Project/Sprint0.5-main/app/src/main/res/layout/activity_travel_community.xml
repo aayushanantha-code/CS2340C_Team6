@@ -179,4 +179,95 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <!-- FrameLayout that will hold the popup -->
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <!-- The Popup Window layout -->
+        <LinearLayout
+            android:id="@+id/itineraryPopup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/popup_background"
+            android:padding="16dp"
+            android:layout_gravity="center">
+
+            <!-- Travel Itinerary Details -->
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Username's trip to Destination"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Username will be staying for X days"
+                android:gravity="center"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/startEndDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="StartDate to EndDate"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:paddingBottom="12dp"/>
+
+            <TextView
+                android:id="@+id/accommodation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Username will be staying at accomodation"
+                android:textSize="18sp"
+                android:paddingBottom="12dp"/>
+
+            <TextView
+                android:id="@+id/diningReservations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Username reserved reservation at dining"
+                android:textSize="18sp"
+                android:paddingBottom="12dp"/>
+
+            <TextView
+                android:id="@+id/transportation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Travelling via: transportation"
+                android:gravity="right"
+                android:textSize="16sp"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\'note\'"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:paddingBottom="8dp"/>
+
+            <!-- Close Button -->
+            <Button
+                android:id="@+id/closeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Close"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
