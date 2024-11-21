@@ -27,7 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TravelCommunityActivity extends BottomNavigationActivity implements TravelCommunityAdapter.postClickListener {
+public class TravelCommunityActivity extends
+        BottomNavigationActivity implements TravelCommunityAdapter.postClickListener {
     private RecyclerView recyclerView;
     private List<TravelCommunityPost> postList;
     private TravelCommunityAdapter postAdapter;
@@ -97,7 +98,7 @@ public class TravelCommunityActivity extends BottomNavigationActivity implements
         Toast.makeText(this, "Clicked on: " + post.getUser(), Toast.LENGTH_SHORT).show();
     }
 
-    private void openPostList () {
+    private void openPostList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         postAdapter = new TravelCommunityAdapter(this, postList, this);
         recyclerView.setAdapter(postAdapter);
@@ -116,39 +117,53 @@ public class TravelCommunityActivity extends BottomNavigationActivity implements
                     String notes = travelSnapshot.child("notes").getValue(String.class);
                     String travelType = travelSnapshot.child("travelType").getValue(String.class);
 
-                    String name = travelSnapshot.child("destination").child("name").getValue(String.class);
-                    String start = travelSnapshot.child("destination").child("start").getValue(String.class);
-                    String end = travelSnapshot.child("destination").child("end").getValue(String.class);
-                    long duration = travelSnapshot.child("destination").child("duration").getValue(long.class);
+                    String name = travelSnapshot.child("destination")
+                            .child("name").getValue(String.class);
+                    String start = travelSnapshot.child("destination")
+                            .child("start").getValue(String.class);
+                    String end = travelSnapshot.child("destination")
+                            .child("end").getValue(String.class);
+                    long duration = travelSnapshot.child("destination").child("duration")
+                            .getValue(long.class);
                     Destination destination = new Destination(name, start, end, duration);
 
                     // Getting all of destination's accommodations
-                    for (DataSnapshot accommodationsnapshot : travelSnapshot.child("destination").child("accomodationList").getChildren()) {
-                        String cID = accommodationsnapshot.child("checkinDate").getValue(String.class);
-                        String cOD = accommodationsnapshot.child("checkoutDate").getValue(String.class);
-                        String accomName = accommodationsnapshot.child("name").getValue(String.class);
-                        int numRooms = accommodationsnapshot.child("numRooms").getValue(Integer.class);
+                    for (DataSnapshot accommodationsnapshot : travelSnapshot.child(
+                            "destination").child("accomodationList").getChildren()) {
+                        String cID = accommodationsnapshot.child("checkinDate")
+                                .getValue(String.class);
+                        String cOD = accommodationsnapshot.child("checkoutDate")
+                                .getValue(String.class);
+                        String accomName = accommodationsnapshot.child("name")
+                                .getValue(String.class);
+                        int numRooms = accommodationsnapshot.child("numRooms")
+                                .getValue(Integer.class);
                         ArrayList<String> roomTypes = new ArrayList<String>();
                         // Getting roomTypes
-                        for (DataSnapshot roomSnapshot : accommodationsnapshot.child("roomTypes").getChildren()) {
+                        for (DataSnapshot roomSnapshot : accommodationsnapshot.child(
+                                "roomTypes").getChildren()) {
                             String room = roomSnapshot.getValue(String.class);
                             roomTypes.add(room);
                         }
-                        Accommodation accommodation = new Accommodation(name, cID, cOD, accomName, numRooms, roomTypes);
+                        Accommodation accommodation = new Accommodation(name, cID, cOD,
+                                accomName, numRooms, roomTypes);
                         destination.addAccommodation(accommodation);
                     }
 
                     // Getting all of destination's dining reservations
-                    for (DataSnapshot diningSnapshot : travelSnapshot.child("destination").child("diningList").getChildren()) {
+                    for (DataSnapshot diningSnapshot : travelSnapshot.child("destination")
+                            .child("diningList").getChildren()) {
                         String date = diningSnapshot.child("date").getValue(String.class);
-                        String diningName = diningSnapshot.child("restaurantName").getValue(String.class);
+                        String diningName = diningSnapshot.child("restaurantName")
+                                .getValue(String.class);
                         String time = diningSnapshot.child("time").getValue(String.class);
                         String url = diningSnapshot.child("url").getValue(String.class);
                         Dining dining = new Dining(name, url, diningName, date, time);
                         destination.addDining(dining);
                     }
 
-                    TravelCommunityPost travelPost = new TravelCommunityPost(username, destination, travelType, notes);
+                    TravelCommunityPost travelPost = new TravelCommunityPost(username,
+                            destination, travelType, notes);
                     postList.add(travelPost);
                     // Set up the RecyclerView with the adapter
                 }
@@ -162,7 +177,8 @@ public class TravelCommunityActivity extends BottomNavigationActivity implements
     }
 
     private void loadDestinations() {
-        groupDatabase.child(groupName).child("destinationList").addListenerForSingleValueEvent(new ValueEventListener() {
+        groupDatabase.child(groupName).child("destinationList")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         destinationNames.clear();
@@ -175,10 +191,14 @@ public class TravelCommunityActivity extends BottomNavigationActivity implements
                         }
 
                         if (destinationNames.isEmpty()) {
-                            Toast.makeText(TravelCommunityActivity.this, "No Destinations Found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TravelCommunityActivity.this,
+                                    "No Destinations Found", Toast.LENGTH_SHORT).show();
                         } else {
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(TravelCommunityActivity.this, android.R.layout.simple_spinner_item, destinationNames);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                                    TravelCommunityActivity.this,
+                                    android.R.layout.simple_spinner_item, destinationNames);
+                            adapter.setDropDownViewResource(
+                                    android.R.layout.simple_spinner_dropdown_item);
                             locationSpinner.setAdapter(adapter);
                         }
                     }
@@ -212,54 +232,68 @@ public class TravelCommunityActivity extends BottomNavigationActivity implements
         String destinationName = locationSpinner.getSelectedItem().toString();
 
         if (!travelType.isEmpty() &&  !notes.isEmpty() && !destinationName.isEmpty()) {
-            groupDatabase.child(groupName).child("destinationList").child(destinationName).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                // Remaking the Destination Object out of its components
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String name = dataSnapshot.child("name").getValue(String.class);
-                    String start = dataSnapshot.child("start").getValue(String.class);
-                    String end = dataSnapshot.child("end").getValue(String.class);
-                    long duration = dataSnapshot.child("duration").getValue(long.class);
-                    Destination destination = new Destination(name, start, end, duration);
+            groupDatabase.child(groupName).child("destinationList").
+                    child(destinationName).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        // Remaking the Destination Object out of its components
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String name = dataSnapshot.child("name").getValue(String.class);
+                            String start = dataSnapshot.child("start").getValue(String.class);
+                            String end = dataSnapshot.child("end").getValue(String.class);
+                            long duration = dataSnapshot.child("duration").getValue(long.class);
+                            Destination destination = new Destination(name, start, end, duration);
 
-                    // Getting all of destination's accommodations
-                    for (DataSnapshot accommodationsnapshot : dataSnapshot.child("accommodationList").getChildren()) {
-                        String cID = accommodationsnapshot.child("checkinDate").getValue(String.class);
-                        String cOD = accommodationsnapshot.child("checkoutDate").getValue(String.class);
-                        String accomName = accommodationsnapshot.child("name").getValue(String.class);
-                        int numRooms = accommodationsnapshot.child("numRooms").getValue(Integer.class);
-                        ArrayList<String> roomTypes = new ArrayList<String>();
-                        // Getting roomTypes
-                        for (DataSnapshot roomSnapshot : accommodationsnapshot.child("roomTypes").getChildren()) {
-                            String room = roomSnapshot.getValue(String.class);
-                            roomTypes.add(room);
+                            // Getting all of destination's accommodations
+                            for (DataSnapshot accommodationsnapshot : dataSnapshot.
+                                    child("accommodationList").getChildren()) {
+                                String cID = accommodationsnapshot.child("checkinDate")
+                                        .getValue(String.class);
+                                String cOD = accommodationsnapshot.child("checkoutDate")
+                                        .getValue(String.class);
+                                String accomName = accommodationsnapshot.child("name")
+                                        .getValue(String.class);
+                                int numRooms = accommodationsnapshot.child("numRooms")
+                                        .getValue(Integer.class);
+                                ArrayList<String> roomTypes = new ArrayList<String>();
+                                // Getting roomTypes
+                                for (DataSnapshot roomSnapshot : accommodationsnapshot
+                                        .child("roomTypes").getChildren()) {
+                                    String room = roomSnapshot.getValue(String.class);
+                                    roomTypes.add(room);
+                                }
+                                Accommodation accommodation = new Accommodation(name,
+                                        cID, cOD, accomName, numRooms, roomTypes);
+                                destination.addAccommodation(accommodation);
+                            }
+
+                            // Getting all of destination's dining reservations
+                            for (DataSnapshot diningSnapshot : dataSnapshot
+                                    .child("diningList").getChildren()) {
+                                String date = diningSnapshot.child("date")
+                                        .getValue(String.class);
+                                String diningName = diningSnapshot.child("restaurantName")
+                                        .getValue(String.class);
+                                String time = diningSnapshot.child("time")
+                                        .getValue(String.class);
+                                String url = diningSnapshot.child("url")
+                                        .getValue(String.class);
+                                Dining dining = new Dining(name, url, diningName, date, time);
+                                destination.addDining(dining);
+                            }
+
+                            TravelCommunityPost travelPost = new TravelCommunityPost(userName,
+                                    destination, travelType, notes);
+                            String postKey = userName + " - " + destination.getName();
+                            travelDatabase.child(postKey).setValue(travelPost);
                         }
-                        Accommodation accommodation = new Accommodation(name, cID, cOD, accomName, numRooms, roomTypes);
-                        destination.addAccommodation(accommodation);
-                    }
 
-                    // Getting all of destination's dining reservations
-                    for (DataSnapshot diningSnapshot : dataSnapshot.child("diningList").getChildren()) {
-                        String date = diningSnapshot.child("date").getValue(String.class);
-                        String diningName = diningSnapshot.child("restaurantName").getValue(String.class);
-                        String time = diningSnapshot.child("time").getValue(String.class);
-                        String url = diningSnapshot.child("url").getValue(String.class);
-                        Dining dining = new Dining(name, url, diningName, date, time);
-                        destination.addDining(dining);
-                    }
-
-                    TravelCommunityPost travelPost = new TravelCommunityPost(userName, destination, travelType, notes);
-                    String postKey = userName + " - " + destination.getName();
-                    travelDatabase.child(postKey).setValue(travelPost);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(TravelCommunityActivity.this,
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Toast.makeText(TravelCommunityActivity.this,
                             "Failed to create Destination Object: "
                                     + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                        }
+                    });
         }
     }
 }
