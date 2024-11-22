@@ -20,6 +20,12 @@ public class TravelCommunityAdapter extends
     private List<TravelCommunityPost> postList;
     private postClickListener clickListener;
 
+    /**
+     * Constructor for the TravelCommunityAdapterAdapter class
+     * @param context The context of the activity
+     * @param postList The list of travel posts to display
+     */
+
     public TravelCommunityAdapter(Context context, List<TravelCommunityPost> postList,
                                   postClickListener clickListener) {
         this.context = context;
