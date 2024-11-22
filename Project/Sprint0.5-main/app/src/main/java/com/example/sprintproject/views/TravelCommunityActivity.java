@@ -75,7 +75,7 @@ public class TravelCommunityActivity extends
         notes = findViewById(R.id.notes);
         closeButton = findViewById(R.id.closeButton);
 
-
+        // post ID here for clarity
         post = findViewById(R.id.post);
 
         recyclerView = findViewById(R.id.recyclerView);
