@@ -21,7 +21,7 @@ public class SplashActivity extends AppCompatActivity {
         Animation rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_animation);
 
         logoImageView.startAnimation(rotateAnimation);
-
+        //Flips over to the login page at the end of the splash activity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
