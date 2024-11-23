@@ -60,10 +60,17 @@ public class TravelCommunityAdapter extends
 
 
 
+    /**
+     * Inner class to hold the views for each item in the list
+     */
     public static class postHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private TextView destinationAndDuration;
 
+        /**
+         * Constructor for the postHolder class
+         * @param itemView The view for the item
+         */
         public postHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.post_user);
@@ -73,8 +80,14 @@ public class TravelCommunityAdapter extends
 
 
 
-    // Interface for item click listener
+    /**
+     * Interface for the click listener
+     */
     public interface postClickListener {
+        /**
+         * Method to handle the click event
+         * @param post The post that was clicked
+         */
         void onPostClick(TravelCommunityPost post);
     }
 }
