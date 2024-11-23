@@ -39,7 +39,13 @@ public class TravelCommunityActivity extends
     private Button openAddPost;
     private Button post;
     private FrameLayout popupBox;
-    private TextView userNameAndGroup, duration, startEndDate, accommodationField, diningReservationField, transportation, notes;
+    private TextView transportation;
+    private TextView duration;
+    private TextView startEndDate;
+    private TextView accommodationField;
+    private TextView userNameAndGroup;
+    private TextView diningReservationField;
+    private TextView notes;
     private Button closeButton;
     private TextView initialText;
     private FrameLayout addPostBox;
@@ -118,12 +124,14 @@ public class TravelCommunityActivity extends
         duration.setText(post.getUser() + " will be staying for " + destination.getDuration() + " days");
         startEndDate.setText(destination.getStart() + " to " + destination.getEnd());
         if (destination.getAccommodationList().size() != 0) {
-            accommodationField.setText(post.getUser() + " will be staying at " + destination.getAccommodationList().get(0).getName());
+            accommodationField.setText(post.getUser() + " will be staying at "
+                    + destination.getAccommodationList().get(0).getName());
         } else {
             accommodationField.setText("");
         }
         if (destination.getDiningList().size() != 0) {
-            diningReservationField.setText(post.getUser() + " reserved reservation at " + destination.getDiningList().get(0).getRestaurantName());
+            diningReservationField.setText(post.getUser() + " reserved reservation at "
+                    + destination.getDiningList().get(0).getRestaurantName());
         } else {
             diningReservationField.setText("");
         }
@@ -132,6 +140,9 @@ public class TravelCommunityActivity extends
         notes.setText("'" + post.getNotes() + "'");
     }
 
+    /**
+     * Toggles the visibility of the popup box
+     */
     public void togglePopupBox() {
         if (popupBox.getVisibility() == View.GONE) {
             addPostBox.setVisibility(View.GONE);
@@ -141,12 +152,18 @@ public class TravelCommunityActivity extends
         }
     }
 
+    /**
+     * Opens the post list
+     */
     private void openPostList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         postAdapter = new TravelCommunityAdapter(this, postList, this);
         recyclerView.setAdapter(postAdapter);
     }
 
+    /**
+     * Fills the post list with data from the database
+     */
     private void fillPostList() {
         travelDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -219,6 +236,9 @@ public class TravelCommunityActivity extends
         });
     }
 
+    /**
+     * Loads the destinations into the spinner
+     */
     private void loadDestinations() {
         groupDatabase.child(groupName).child("destinationList")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -255,6 +275,9 @@ public class TravelCommunityActivity extends
                 });
     }
 
+    /**
+     * Toggles the visibility of the add post box
+     */
     public void toggleAddPostBox() {
         if (addPostBox.getVisibility() == View.GONE) {
             loadDestinations();
@@ -267,6 +290,9 @@ public class TravelCommunityActivity extends
         }
     }
 
+    /**
+     * Adds a new post to the database
+     */
     private void addNewPost() {
         EditText travelInput = findViewById(R.id.travel_input);
         EditText noteInput = findViewById(R.id.notes_input);

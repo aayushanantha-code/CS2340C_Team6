@@ -13,6 +13,13 @@ public class TravelCommunityPost {
     public TravelCommunityPost() {
     }
 
+    /**
+     * Constructor for TravelCommunityPost
+     * @param username The username of the user
+     * @param destination The destination of the post
+     * @param travelType The type of travel
+     * @param notes The notes for the post
+     */
     public TravelCommunityPost(String username, Destination destination,
                                String travelType, String notes) {
         this.user = username;
@@ -21,18 +28,34 @@ public class TravelCommunityPost {
         this.travelType = travelType;
     }
 
+    /**
+     * Gets the destination of the post
+     * @return The destination of the post
+     */
     public Destination getDestination() {
         return destination;
     }
 
+    /**
+     * Gets the user of the post
+     * @return The user of the post
+     */
     public String getUser() {
         return user;
     }
 
+    /**
+     * Gets the travel type of the post
+     * @return The travel type of the post
+     */
     public String getTravelType() {
         return travelType;
     }
 
+    /**
+     * Gets the notes of the post
+     * @return The notes of the post
+     */
     public String getNotes() {
         return notes;
     }
