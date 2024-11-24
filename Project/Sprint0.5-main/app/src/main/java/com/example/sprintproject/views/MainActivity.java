@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
+        //switches from main activity to login activity
         findViewById(R.id.welcome_enter).setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
