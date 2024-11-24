@@ -53,6 +53,11 @@ public class TravelCommunityAdapter extends
         holder.itemView.setOnClickListener(v -> clickListener.onPostClick(post));
     }
 
+
+    /**
+     * Method to get the number of posts in the list
+     * @return number of posts in list
+     */
     @Override
     public int getItemCount() {
         return postList.size();
