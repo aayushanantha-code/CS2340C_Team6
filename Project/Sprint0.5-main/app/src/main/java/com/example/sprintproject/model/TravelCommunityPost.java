@@ -59,4 +59,21 @@ public class TravelCommunityPost {
     public String getNotes() {
         return notes;
     }
+
+    // Setters
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setDestination(Destination destination) {
+        this.destination = destination;
+    }
+
+    public void setTravelType(String travelType) {
+        this.travelType = travelType;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 }

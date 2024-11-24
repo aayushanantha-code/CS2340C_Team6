@@ -14,20 +14,21 @@ import com.example.sprintproject.model.TravelCommunityPost;
 import java.util.List;
 
 public class TravelCommunityAdapter extends
-        RecyclerView.Adapter<TravelCommunityAdapter.postHolder> {
+        RecyclerView.Adapter<TravelCommunityAdapter.PostHolder> {
 
     private Context context;
     private List<TravelCommunityPost> postList;
-    private postClickListener clickListener;
+    private PostClickListener clickListener;
 
     /**
      * Constructor for the TravelCommunityAdapterAdapter class
      * @param context The context of the activity
      * @param postList The list of travel posts to display
+     * @param clickListener The listener wheneveer user clicks
      */
 
     public TravelCommunityAdapter(Context context, List<TravelCommunityPost> postList,
-                                  postClickListener clickListener) {
+                                  PostClickListener clickListener) {
         this.context = context;
         this.postList = postList;
         this.clickListener = clickListener;
@@ -35,13 +36,13 @@ public class TravelCommunityAdapter extends
 
     @NonNull
     @Override
-    public postHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PostHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.travel_list_item, parent, false);
-        return new postHolder(view);
+        return new PostHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull postHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PostHolder holder, int position) {
         TravelCommunityPost post = postList.get(position);
         holder.title.setText(post.getUser());
         String destinationAndDuration = post.getDestination().getName()
@@ -63,7 +64,7 @@ public class TravelCommunityAdapter extends
     /**
      * Inner class to hold the views for each item in the list
      */
-    public static class postHolder extends RecyclerView.ViewHolder {
+    public static class PostHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private TextView destinationAndDuration;
 
@@ -71,7 +72,7 @@ public class TravelCommunityAdapter extends
          * Constructor for the postHolder class
          * @param itemView The view for the item
          */
-        public postHolder(@NonNull View itemView) {
+        public PostHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.post_user);
             destinationAndDuration = itemView.findViewById(R.id.post_destinationAndDuration);
@@ -83,7 +84,7 @@ public class TravelCommunityAdapter extends
     /**
      * Interface for the click listener
      */
-    public interface postClickListener {
+    public interface PostClickListener {
         /**
          * Method to handle the click event
          * @param post The post that was clicked
