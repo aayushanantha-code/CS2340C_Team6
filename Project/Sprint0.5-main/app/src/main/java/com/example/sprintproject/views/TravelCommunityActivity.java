@@ -35,6 +35,7 @@ public class TravelCommunityActivity extends
     private DatabaseReference travelDatabase;
     private DatabaseReference groupDatabase;
 
+    // Post list section for groups and spinner
     private Button openPostList;
     private Button openAddPost;
     private Button post;
