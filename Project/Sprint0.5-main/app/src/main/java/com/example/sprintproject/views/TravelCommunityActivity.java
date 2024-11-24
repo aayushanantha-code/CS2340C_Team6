@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TravelCommunityActivity extends
-        BottomNavigationActivity implements TravelCommunityAdapter.postClickListener {
+        BottomNavigationActivity implements TravelCommunityAdapter.PostClickListener {
     private RecyclerView recyclerView;
     private List<TravelCommunityPost> postList;
     private TravelCommunityAdapter postAdapter;
@@ -121,7 +121,8 @@ public class TravelCommunityActivity extends
         togglePopupBox();
         Destination destination = post.getDestination();
         userNameAndGroup.setText(post.getUser() + "'s trip to " + destination.getName());
-        duration.setText(post.getUser() + " will be staying for " + destination.getDuration() + " days");
+        duration.setText(post.getUser() + " will be staying for "
+                + destination.getDuration() + " days");
         startEndDate.setText(destination.getStart() + " to " + destination.getEnd());
         if (destination.getAccommodationList().size() != 0) {
             accommodationField.setText(post.getUser() + " will be staying at "
