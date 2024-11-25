@@ -60,19 +60,34 @@ public class TravelCommunityPost {
         return notes;
     }
 
-    // Setters
+    /**
+     * Sets the user of the post
+     * @param user The user of the post
+     */
     public void setUser(String user) {
         this.user = user;
     }
 
+    /**
+     * Sets the destination of the post
+     * @param destination The destination of the post
+     */
     public void setDestination(Destination destination) {
         this.destination = destination;
     }
 
+    /**
+     * Sets the travel type of the post
+     * @param travelType The travel type of the post
+     */
     public void setTravelType(String travelType) {
         this.travelType = travelType;
     }
 
+    /**
+     * Sets the notes of the post
+     * @param notes The notes of the post
+     */
     public void setNotes(String notes) {
         this.notes = notes;
     }
