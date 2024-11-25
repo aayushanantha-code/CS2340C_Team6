@@ -32,11 +32,9 @@ public class AccommodationsViewModel {
     public void logNewAccommodationReservation(String group, String location, String name,
                                                String checkinDate, String checkoutDate,
                                                int numRooms, List<String> roomTypes) {
-        // Create a new Accommodation object
         Accommodation newAccommodation = new Accommodation(location, name, checkinDate,
                 checkoutDate, numRooms, roomTypes);
 
-        // Reference to the Firebase node for the group, destinationList, and location
         groupDatabase.child(group).child("destinationList").
                 child(location).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
