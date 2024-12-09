@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Listing {
     private String name;
     private String description;
@@ -5,6 +8,7 @@ public class Listing {
     private String location;
     private String category;
     private String status;
+    private List reviews;
 
     public Listing(String name, String description, double price, String location, String category) {
         createListing(name, description, price, location, category, "Unsold");
@@ -17,6 +21,7 @@ public class Listing {
         this.location = location;
         this.category = category;
         this.status = status;
+        this.reviews = new ArrayList<Review>();
     }
     
     /**
@@ -113,5 +118,13 @@ public class Listing {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void addReview(Review review) {
+        reviews.add(review);
+    }
+
+    public void removeReview(Review review) {
+        reviews.remove(review);
     }
 }

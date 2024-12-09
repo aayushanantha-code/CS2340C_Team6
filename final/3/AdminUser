@@ -1,0 +1,14 @@
+public class AdminUser extends User {
+    public AdminUser(String username, String password) {
+        super(username, password);
+    }
+
+    public void removeUser(User user) {
+        for (User user: AccountManager.getUsers()) {
+            if (user.getUsername().equals(username)) {
+                AccountManager.getUsers().remove(user);
+                return;
+            }
+        }
+    }
+}

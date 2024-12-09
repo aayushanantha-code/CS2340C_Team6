@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class User implements AccountManager{
     private String userID;
     private String email;
