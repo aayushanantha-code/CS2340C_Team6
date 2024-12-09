@@ -1,5 +1,5 @@
 public class AccountManager {
-    public static List users;
+    private static List users;
 
     public AccountManager() {
         users = new ArrayList<User>();
@@ -11,5 +11,13 @@ public class AccountManager {
 
     public void removeUser(User user) {
         users.remove(user);
+    }
+
+    public List getUsers() {
+        return users;
+    }
+
+    public void setUsers(List users) {
+        this.users = users;
     }
 }

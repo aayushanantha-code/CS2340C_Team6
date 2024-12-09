@@ -1,6 +1,6 @@
 public class MarketplaceComponent {
-    public String componentName;
-    public String description;
+    private String componentName;
+    private String description;
 
     /**
      * Constructor for MarketplaceComponent
@@ -25,5 +25,21 @@ public class MarketplaceComponent {
 
     public void visualize() {
 
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setComponentName(String componentName) {
+        this.componentName = componentName;
+    }
+
+    public String getComponentName() {
+        return this.componentName;
     }
 }

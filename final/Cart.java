@@ -1,5 +1,5 @@
 public class Cart {
-    public List items;
+    private List items;
 
     /**
      * Constructor for Cart
@@ -24,5 +24,13 @@ public class Cart {
     public Item removeItem(Item item) {
         items.remove(item);
         return item;
+    }
+
+    public List getItems() {
+        return items;
+    }
+
+    public void setItems(List items) {
+        this.items = items;
     }
 }
